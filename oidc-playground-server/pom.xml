@@ -5,14 +5,14 @@
 
     <parent>
         <groupId>org.openconext</groupId>
-        <artifactId>oidc_playground</artifactId>
+        <artifactId>oidc-playground</artifactId>
         <version>10.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>oidc_playground_server</artifactId>
+    <artifactId>oidc-playground-server</artifactId>
     <packaging>jar</packaging>
-    <name>oidc_playground</name>
+    <name>oidc-playground-server</name>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>

@@ -4,15 +4,15 @@
 
     <parent>
         <groupId>org.openconext</groupId>
-        <artifactId>manage</artifactId>
+        <artifactId>oidc-playground</artifactId>
         <version>10.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>manage-gui</artifactId>
-    <packaging>pom</packaging>
-    <name>manage-gui</name>
-    <version>4.0.0-SNAPSHOT</version>
+    <artifactId>oidc-playground-client</artifactId>
+    <packaging>jar</packaging>
+    <name>oidc-playground-client</name>
+    <version>0.0.1-SNAPSHOT</version>
 
     <build>
         <plugins>
