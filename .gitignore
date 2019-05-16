@@ -1,0 +1,12 @@
+node_modules
+build
+*.log*
+.DS_Store
+.idea
+*.iml
+TODO.txt
+target
+client/dist
+client/coverage
+*.css
+seeds

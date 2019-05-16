@@ -1,0 +1,37 @@
+@import "../stylesheets/vars.scss";
+
+.mod-login {
+
+    background-color: $background;
+    padding: 0;
+
+    div.title {
+        font-size: 22px;
+        color: $dark-grey;
+        max-width: $medium;
+        margin: 20px auto;
+        padding: 10px 0 5px 0;
+
+        p {
+            padding: 10px 0 10px 0;
+        }
+
+        a {
+            display: inline-block;
+            font-size: 18px;
+            text-transform: uppercase;
+            text-decoration: none;
+            margin: 10px 0;
+            color: $blue;
+
+            &:hover {
+                font-weight: bolder;
+            }
+
+            svg {
+                margin-right: 10px;
+            }
+        }
+    }
+
+}
