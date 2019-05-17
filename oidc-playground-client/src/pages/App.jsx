@@ -5,9 +5,7 @@ import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom
 import NotFound from "./NotFound";
 import ServerError from "./ServerError";
 import Navigation from "../components/Navigation";
-import {config, reportError} from "../api";
-import "../locale/en";
-import "../locale/nl";
+import {config} from "../api";
 import ErrorDialog from "../components/ErrorDialog";
 import Footer from "../components/Footer";
 import Flash from "../components/Flash";
