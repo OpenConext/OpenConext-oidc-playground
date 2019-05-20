@@ -34,8 +34,6 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class Oidc {
 
-    static final ParameterizedTypeReference<Map<String, Object>> mapParameterizedTypeReference = new ParameterizedTypeReference<Map<String, Object>>() {
-    };
     static TypeReference<Map<String, Object>> mapTypeReference = new TypeReference<Map<String, Object>>() {
     };
 
@@ -82,6 +80,8 @@ public class Oidc {
         parameters.put("nonce", (String) body.get("nonce"));
         parameters.put("code_challenge", (String) body.get("code_challenge"));
         parameters.put("code_challenge_method", (String) body.get("code_challenge_method"));
+        parameters.put("client_id", (String) body.getOrDefault("client_id", clientId));
+
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString((String) body.get("authorization_endpoint"));
         parameters.forEach((key, value) -> {
             if (value != null) {
@@ -129,20 +129,23 @@ public class Oidc {
     }
 
     private Map<String, Object> doPost(Map<String, String> body, Map<String, String> requestBody, String endpoint) throws URISyntaxException {
+        String clientIdToUse = body.getOrDefault("client_id", clientId);
+        String secretToUse = body.getOrDefault("client_secret", secret);
         RequestEntity.BodyBuilder builder = RequestEntity
                 .post(new URI(endpoint))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         String authMethod = body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
         if (authMethod.equals("client_secret_post")) {
-            builder.header(HttpHeaders.AUTHORIZATION, new String(Base64.getEncoder().encode(String.format("%s:%s", clientId, secret).getBytes())));
+            builder.header(HttpHeaders.AUTHORIZATION, new String(Base64.getEncoder().encode(String.format("%s:%s", clientIdToUse, secretToUse).getBytes())));
         } else {
-            requestBody.put("client_id", clientId);
-            requestBody.put("client_secret", secret);
+            requestBody.put("client_id", clientIdToUse);
+            requestBody.put("client_secret", secretToUse);
         }
         RequestEntity<Map<String, String>> requestEntity = builder.body(requestBody);
 
-        ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(requestEntity, mapParameterizedTypeReference);
+        ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<Map<String, Object>>() {
+        });
         return responseEntity.getBody();
     }
 
