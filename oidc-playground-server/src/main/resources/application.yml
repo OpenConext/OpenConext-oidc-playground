@@ -2,6 +2,15 @@ logging:
   level:
     root: INFO
 
+server:
+  port : 8081
+
+oidc:
+  discovery_endpoint: "classpath:/discovery_endpoint.json"
+#  discovery_endpoint: "https://oidcng.test2.surfconext.nl/oidc/.well-known/openid-configuration"
+  client_id: playground
+  secret: secret
+  redirect_uri: http://localhost:3000/redirect
 
 management:
   endpoints:
