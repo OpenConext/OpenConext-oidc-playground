@@ -32,7 +32,7 @@ import java.util.Map;
 
 @RestController
 @SuppressWarnings("unchecked")
-public class Oidc {
+public class Oidc implements URLSupport {
 
     static TypeReference<Map<String, Object>> mapTypeReference = new TypeReference<Map<String, Object>>() {
     };
@@ -78,6 +78,7 @@ public class Oidc {
         }
         parameters.put("redirect_uri", redirectUri);
         parameters.put("nonce", (String) body.get("nonce"));
+        parameters.put("state", (String) body.get("state"));
         parameters.put("code_challenge", (String) body.get("code_challenge"));
         parameters.put("code_challenge_method", (String) body.get("code_challenge_method"));
         parameters.put("client_id", (String) body.getOrDefault("client_id", clientId));
@@ -85,7 +86,7 @@ public class Oidc {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString((String) body.get("authorization_endpoint"));
         parameters.forEach((key, value) -> {
             if (value != null) {
-                builder.queryParam(key, value);
+                builder.queryParam(key, encode(value));
             }
         });
         return Collections.singletonMap("url", builder.build().toString());
