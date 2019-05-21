@@ -26,17 +26,16 @@ function validateResponse(showErrorDialog) {
       window.location.reload(true);
     }
     return res;
-
   };
 }
 
 function validFetch(path, options, headers = {}, showErrorDialog = true) {
   const contentHeaders = {
-    "Accept": "application/json",
+    Accept: "application/json",
     "Content-Type": "application/json",
     ...headers
   };
-  const fetchOptions = Object.assign({}, {headers: contentHeaders}, options, {
+  const fetchOptions = Object.assign({}, { headers: contentHeaders }, options, {
     credentials: "same-origin",
     redirect: "manual"
   });
@@ -50,12 +49,13 @@ function validFetch(path, options, headers = {}, showErrorDialog = true) {
 }
 
 function fetchJson(path, options = {}, headers = {}, showErrorDialog = true) {
-  return validFetch(path, options, headers, showErrorDialog)
-    .then(res => res.json());
+  return validFetch(path, options, headers, showErrorDialog).then(res =>
+    res.json()
+  );
 }
 
 function postPutJson(path, body, method) {
-  return fetchJson(path, {method: method, body: JSON.stringify(body)});
+  return fetchJson(path, { method: method, body: JSON.stringify(body) });
 }
 
 // function queryParam(options) {

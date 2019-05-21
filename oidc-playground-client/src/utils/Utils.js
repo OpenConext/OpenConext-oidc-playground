@@ -1,10 +1,3 @@
-export function stopEvent(e) {
-  if (e !== undefined && e !== null) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-}
-
 export function isEmpty(obj) {
   if (obj === undefined || obj === null) {
     return true;
@@ -21,10 +14,22 @@ export function isEmpty(obj) {
   return false;
 }
 
-
-const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+const S4 = () =>
+  (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 
 export function pseudoGuid() {
-  return (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+  return (
+    S4() +
+    S4() +
+    "-" +
+    S4() +
+    "-4" +
+    S4().substr(0, 3) +
+    "-" +
+    S4() +
+    "-" +
+    S4() +
+    S4() +
+    S4()
+  ).toLowerCase();
 }
-

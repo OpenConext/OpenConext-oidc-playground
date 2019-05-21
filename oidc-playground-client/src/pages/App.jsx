@@ -1,29 +1,20 @@
 import React from "react";
 import "./App.scss";
-import Header from "../components/Header";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import NotFound from "./NotFound";
-import ServerError from "./ServerError";
-import Navigation from "../components/Navigation";
-import {config, reportError} from "../api";
-import ErrorDialog from "../components/ErrorDialog";
-import Footer from "../components/Footer";
-import Home from "./Home";
-import {addIcons} from "../utils/IconLibrary";
-import {pseudoGuid} from "../utils/Utils";
+import { reportError } from "../api";
+import { ErrorDialog } from "../components";
+import { addIcons } from "../utils/IconLibrary";
+import { pseudoGuid } from "../utils/Utils";
 
 addIcons();
 
 class App extends React.Component {
-
   constructor(props, context) {
     super(props, context);
     this.state = {
       loading: true,
-      config: {},
       error: false,
       errorDialogOpen: false,
-      errorDialogAction: () => this.setState({errorDialogOpen: false})
+      errorDialogAction: () => this.setState({ errorDialogOpen: false })
     };
 
     window.onerror = (msg, url, line, col, err) => {
@@ -31,7 +22,7 @@ class App extends React.Component {
         this.props.history.push("/404");
         return;
       }
-      this.setState({errorDialogOpen: true});
+      this.setState({ errorDialogOpen: true });
       const info = err || {};
       const response = info.response || {};
       const error = {
@@ -53,7 +44,9 @@ class App extends React.Component {
     const location = window.location;
     const alreadyRetried = location.href.indexOf("guid") > -1;
     if (alreadyRetried) {
-      window.location.href = `${location.protocol}//${location.hostname}${location.port ? ":" + location.port : ""}/error`;
+      window.location.href = `${location.protocol}//${location.hostname}${
+        location.port ? ":" + location.port : ""
+      }/error`;
     } else {
       //302 redirects from Shib are cached by the browser. We force a one-time reload
       const guid = pseudoGuid();
@@ -63,44 +56,25 @@ class App extends React.Component {
 
   componentDidMount() {
     const location = window.location;
+
     if (location.href.indexOf("error") > -1) {
-      this.setState({loading: false});
-    } else {
-      config()
-        .then(res => this.setState({config: res}))
-        .catch(() => this.handleBackendDown());
+      this.setState({ loading: false });
     }
   }
 
   render() {
-    const {
-      loading, errorDialogAction, errorDialogOpen, config
-    } = this.state;
+    const { loading, errorDialogAction, errorDialogOpen } = this.state;
+
     if (loading) {
-      return null; // render null when app is not ready yet
+      return null;
     }
     return (
-      <Router>
-        <div className="app-container">
-          <div>
-            <Header config={config}/>
-            <Navigation/>
-            <ErrorDialog isOpen={errorDialogOpen}
-                         close={errorDialogAction}/>
-          </div>
-          }
-          <Switch>
-            <Route path="/"
-                   render={props => <Home {...props}/>}/>
-
-            <Route path="/error" render={props => <ServerError {...props}/>}/>
-
-            <Route render={props => <NotFound {...props}/>}/>
-          </Switch>
-          <Footer/>
+      <div className="app-container">
+        <div>
+          <ErrorDialog isOpen={errorDialogOpen} close={errorDialogAction} />
         </div>
-      </Router>
-
+        App
+      </div>
     );
   }
 }
