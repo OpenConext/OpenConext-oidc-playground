@@ -1,0 +1,25 @@
+language: java
+jdk:
+- oraclejdk8
+node_js:
+- '8'
+matrix:
+  fast_finish: true
+
+cache:
+  yarn: true
+  directories:
+  - node_modules
+before_install:
+- pip install --user codecov
+- nvm install 8
+- npm install -g yarn
+- yarn install
+install:
+- cd oidc-playground-client && yarn install && cd ..
+- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script:
+- mvn test
+- cd oidc-playground-client && yarn install && CI=true yarn test && yarn build
+after_success:
+- codecov
