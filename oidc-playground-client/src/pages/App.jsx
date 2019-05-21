@@ -1,14 +1,13 @@
 import React from "react";
 import "./App.scss";
 import Header from "../components/Header";
-import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import NotFound from "./NotFound";
 import ServerError from "./ServerError";
 import Navigation from "../components/Navigation";
-import {config} from "../api";
+import {config, reportError} from "../api";
 import ErrorDialog from "../components/ErrorDialog";
 import Footer from "../components/Footer";
-import Flash from "../components/Flash";
 import Home from "./Home";
 import {addIcons} from "../utils/IconLibrary";
 import {pseudoGuid} from "../utils/Utils";
@@ -26,6 +25,7 @@ class App extends React.Component {
       errorDialogOpen: false,
       errorDialogAction: () => this.setState({errorDialogOpen: false})
     };
+
     window.onerror = (msg, url, line, col, err) => {
       if (err && err.response && err.response.status === 404) {
         this.props.history.push("/404");
@@ -83,24 +83,19 @@ class App extends React.Component {
       <Router>
         <div className="app-container">
           <div>
-            <Flash/>
-            <Header currentUser={currentUser} impersonator={impersonator} config={config}/>
-            <Navigation currentUser={currentUser} impersonator={impersonator}/>
+            <Header config={config}/>
+            <Navigation/>
             <ErrorDialog isOpen={errorDialogOpen}
                          close={errorDialogAction}/>
           </div>
           }
           <Switch>
-            <Route exact path="/" render={() => {
-              return currentUser.guest ? <Redirect to="/login"/> : <Redirect to="/home"/>
-            }}/>
-
-            <Route path="/home"
+            <Route path="/"
                    render={props => <Home {...props}/>}/>
 
             <Route path="/error" render={props => <ServerError {...props}/>}/>
 
-            <Route render={props => <NotFound currentUser={currentUser} {...props}/>}/>
+            <Route render={props => <NotFound {...props}/>}/>
           </Switch>
           <Footer/>
         </div>

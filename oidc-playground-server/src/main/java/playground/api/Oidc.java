@@ -54,12 +54,12 @@ public class Oidc implements URLSupport {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    @GetMapping("/oidc/api/discovery")
+    @GetMapping("/discovery")
     public Map<String, Object> discovery() throws IOException {
         return objectMapper.readValue(discoveryEndpoint.getInputStream(), mapTypeReference);
     }
 
-    @PostMapping(value = {"/oidc/api/authorization_code", "/oidc/api/implicit"})
+    @PostMapping(value = {"/authorization_code", "/implicit"})
     public Map<String, String> authorize(@RequestBody Map<String, Object> body) throws URISyntaxException {
         Map<String, String> parameters = new HashMap<>();
 
@@ -92,29 +92,29 @@ public class Oidc implements URLSupport {
         return Collections.singletonMap("url", builder.build().toString());
     }
 
-    @PostMapping("oidc/api/token")
+    @PostMapping("/token")
     public Map<String, Object> token(@RequestBody Map<String, String> body) throws URISyntaxException {
         body.put("redirect_uri", redirectUri);
         return doToken(body, "authorization_code");
     }
 
-    @PostMapping("/oidc/api/client_credentials")
+    @PostMapping("/client_credentials")
     public Map<String, Object> clientCredentials(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, URISyntaxException {
         return doToken(body, "client_credentials");
     }
 
-    @PostMapping("/oidc/api/refresh_token")
+    @PostMapping("/refresh_token")
     public Map<String, Object> refreshToken(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, URISyntaxException {
 
         return doToken(body, "refresh_token");
     }
 
-    @PostMapping("oidc/api/introspect")
+    @PostMapping("/introspect")
     public Map<String, Object> introspect(@RequestBody Map<String, String> body) throws URISyntaxException {
         return doPost(body, Collections.singletonMap("token", body.get("token")), body.get("introspect_endpoint"));
     }
 
-    @PostMapping("oidc/api/userinfo")
+    @PostMapping("/userinfo")
     public Map<String, Object> userinfo(@RequestBody Map<String, String> body) throws URISyntaxException {
         return doPost(body, Collections.singletonMap("token", body.get("token")), body.get("userinfo_endpoint"));
     }

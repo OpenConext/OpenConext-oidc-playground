@@ -1,5 +1,4 @@
 import spinner from "../utils/Spin";
-import {isEmpty} from "../utils/Utils";
 
 //Internal API
 function validateResponse(showErrorDialog) {
@@ -8,7 +7,7 @@ function validateResponse(showErrorDialog) {
 
     if (!res.ok) {
       if (res.type === "opaqueredirect") {
-        setTimeout(() => window.location.reload(true), 100);
+        setTimeout(() => window.location.reload(), 100);
         return res;
       }
       const error = new Error(res.statusText);
@@ -59,16 +58,20 @@ function postPutJson(path, body, method) {
   return fetchJson(path, {method: method, body: JSON.stringify(body)});
 }
 
-function queryParam(options) {
-  const entries = Object.entries(options[0]);
-  return entries.reduce((acc, entry) => isEmpty(entry[1]) ? acc : acc + `${entry[0]}=${entry[1]}&`, "?");
-}
+// function queryParam(options) {
+//   const entries = Object.entries(options[0]);
+//   return entries.reduce((acc, entry) => isEmpty(entry[1]) ? acc : acc + `${entry[0]}=${entry[1]}&`, "?");
+// }
 
 //Base
 export function health() {
-  return fetchJson("/health");
+  return fetchJson("/actuator/health");
 }
 
 export function config() {
-  return fetchJson("/config");
+  return fetchJson("/oidc/api/config");
+}
+
+export function reportError(error) {
+  return postPutJson("/oidc/api/error", error, "post");
 }

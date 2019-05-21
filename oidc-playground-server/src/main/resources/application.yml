@@ -4,6 +4,9 @@ logging:
 
 server:
   port : 8081
+  server-header:
+  servlet:
+    context-path: /oidc/api
 
 oidc:
   discovery_endpoint: "classpath:/discovery_endpoint.json"
@@ -11,6 +14,11 @@ oidc:
   client_id: playground
   secret: secret
   redirect_uri: http://localhost:3000/redirect
+
+gui:
+  disclaimer:
+    background-color: red
+    content: LOCAL
 
 management:
   endpoints:
