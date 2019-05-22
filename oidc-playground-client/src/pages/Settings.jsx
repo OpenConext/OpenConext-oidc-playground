@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.scss";
 import { ReactSelect } from "components";
+import { GrantType } from "components/settings";
 import { discovery } from "api";
 
 export function Settings() {
@@ -66,14 +67,11 @@ export function Settings() {
           />
         </fieldset>
 
-        <fieldset>
-          <label>Grant type</label>
-          <ReactSelect
-            value={grantType}
-            options={config.grant_types_supported}
-            onChange={setGrantType}
-          />
-        </fieldset>
+        <GrantType
+          value={grantType}
+          options={config.grant_types_supported}
+          onChange={setGrantType}
+        />
 
         <fieldset>
           <label>Response type</label>
