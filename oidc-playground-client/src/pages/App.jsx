@@ -1,8 +1,9 @@
 import React from "react";
 import "./App.scss";
-import { discovery, reportError } from "../api";
-import { ErrorDialog } from "../components";
-import { addIcons } from "../utils/IconLibrary";
+import { Settings } from "pages";
+import { reportError } from "api";
+import { ErrorDialog } from "components";
+import { addIcons } from "utils/IconLibrary";
 
 addIcons();
 

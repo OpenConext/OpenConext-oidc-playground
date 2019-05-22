@@ -1,4 +1,4 @@
-import spinner from "../utils/Spin";
+import spinner from "utils/Spin";
 
 //Internal API
 function validateResponse(showErrorDialog) {
