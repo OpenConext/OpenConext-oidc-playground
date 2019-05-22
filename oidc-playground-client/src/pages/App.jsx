@@ -12,38 +12,11 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      loading: true,
       error: false,
-      errorDialogOpen: false,
-      config: {
-        authorization_endpoint: "",
-        claims_parameter_supported: false,
-        claims_supported: [],
-        code_challenge_methods_supported: [],
-        grant_types_supported: [],
-        id_token_signing_alg_values_supported: [],
-        introspect_endpoint: "",
-        issuer: "",
-        jwks_uri: "",
-        response_modes_supported: [],
-        response_types_supported: [],
-        scopes_supported: [],
-        subject_types_supported: [],
-        token_endpoint_auth_methods_supported: [],
-        token_endpoint: "",
-        userinfo_endpoint: ""
-      }
+      errorDialogOpen: false
     };
 
     this.handleErrors();
-  }
-
-  componentDidMount() {
-    if (window.location.href.indexOf("error") > -1) {
-      this.setState({ loading: false });
-    } else {
-      discovery().then(res => this.setState({ config: res, loading: false }));
-    }
   }
 
   handleErrors() {
@@ -72,19 +45,13 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { loading, errorDialogOpen } = this.state;
-
-    if (loading) {
-      return null;
-    }
-
     return (
       <div className="app-container">
         <ErrorDialog
-          isOpen={errorDialogOpen}
+          isOpen={this.state.errorDialogOpen}
           close={() => this.setState({ errorDialogOpen: false })}
         />
-        App
+        <Settings />
       </div>
     );
   }
