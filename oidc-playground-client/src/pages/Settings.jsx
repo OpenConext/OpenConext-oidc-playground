@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.scss";
 import { ReactSelect } from "components";
-import { GrantType } from "components/settings";
+import { GrantType, ResponseType } from "components/settings";
 import { discovery } from "api";
 
 export function Settings() {
@@ -73,14 +73,12 @@ export function Settings() {
           onChange={setGrantType}
         />
 
-        <fieldset>
-          <label>Response type</label>
-          <ReactSelect
-            value={responseType}
-            options={config.response_types_supported}
-            onChange={setResponseType}
-          />
-        </fieldset>
+        <ResponseType
+          value={responseType}
+          options={config.response_types_supported}
+          onChange={setResponseType}
+          moderators={{ authProtocol, grantType }}
+        />
 
         <fieldset>
           <label>Response mode</label>
