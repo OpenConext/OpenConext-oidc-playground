@@ -2,8 +2,11 @@ package playground.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.ResponseType;
+import com.nimbusds.oauth2.sdk.util.OrderedJSONObject;
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -16,6 +19,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,13 +28,14 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@RestController()
 @SuppressWarnings("unchecked")
 public class Oidc implements URLSupport {
 
@@ -107,7 +112,6 @@ public class Oidc implements URLSupport {
 
     @PostMapping("/refresh_token")
     public Map<String, Object> refreshToken(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, URISyntaxException {
-
         return doToken(body, "refresh_token");
     }
 
@@ -120,6 +124,17 @@ public class Oidc implements URLSupport {
     public Map<String, Object> userinfo(@RequestBody Map<String, String> body) throws URISyntaxException {
         return doPost(body, Collections.singletonMap("token", body.get("token")), body.get("userinfo_endpoint"));
     }
+
+    @GetMapping(value = "/decode_jwt", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String decodeJwtToken(@RequestParam("jwt") String jwt) throws IOException, ParseException {
+        SignedJWT signedJWT = SignedJWT.parse(jwt);
+        JSONObject result = new OrderedJSONObject();
+        result.put("header", signedJWT.getHeader().toJSONObject());
+        result.put("payload", signedJWT.getJWTClaimsSet().toJSONObject());
+
+        return result.toJSONString();
+    }
+
 
     private Map<String, Object> doToken(Map<String, String> body, String grantType) throws URISyntaxException {
         HashMap<String, String> requestBody = new HashMap<>();

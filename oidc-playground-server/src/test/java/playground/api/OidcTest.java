@@ -1,12 +1,14 @@
 package playground.api;
 
 import io.restassured.mapper.TypeRef;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.util.UriComponentsBuilder;
 import playground.AbstractIntegrationTest;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,6 +72,26 @@ public class OidcTest extends AbstractIntegrationTest {
 
         assertEquals(expected, queryParams);
     }
+
+    @Test
+    public void decodeJwtToken() throws IOException {
+        Map<String, Object> map = objectMapper.readValue(new ClassPathResource("oidc_response.json").getInputStream(), mapTypeReference);
+        String idToken = (String) map.get("id_token");
+
+        Map<String, Map<String, Object>> result = given()
+                .header("Content-type", "application/json")
+                .queryParam("jwt", idToken)
+                .get("oidc/api/decode_jwt")
+                .as(new TypeRef<Map<String, Map<String, Object>>>() {
+                });
+
+        Map<String, Object> header = result.get("header");
+        assertEquals("oidc", header.get("kid"));
+
+        Map<String, Object> payload = result.get("payload");
+        assertEquals("playground_client", payload.get("aud"));
+    }
+
 
     private Map<String, String> doPost(Map<String, Object> body) {
         String url = given()

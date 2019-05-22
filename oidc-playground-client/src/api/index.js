@@ -21,11 +21,6 @@ function validateResponse(showErrorDialog) {
       throw error;
     }
 
-    // const sessionAlive = res.headers.get("x-session-alive");
-    // if (sessionAlive !== "true") {
-    //   window.location.reload(true);
-    // }
-
     return res;
   };
 }
@@ -63,6 +58,10 @@ function postPutJson(path, body, method) {
 //Base
 export function discovery() {
   return fetchJson("/oidc/api/discovery");
+}
+
+export function decodeJWT(jwt) {
+  return fetchJson(`/oidc/api/decode_jwt?jwt=${jwt}`)
 }
 
 export function reportError(error) {
