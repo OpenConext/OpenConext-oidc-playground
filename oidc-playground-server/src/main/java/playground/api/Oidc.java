@@ -76,12 +76,14 @@ public class Oidc implements URLSupport {
         if (!CollectionUtils.isEmpty(requestedClaims)) {
             parameters.put("claims", claims(requestedClaims));
         }
+        parameters.put("client_id", (String) body.getOrDefault("client_id", clientId));
         parameters.put("redirect_uri", redirectUri);
         parameters.put("nonce", (String) body.get("nonce"));
         parameters.put("state", (String) body.get("state"));
         parameters.put("code_challenge", (String) body.get("code_challenge"));
         parameters.put("code_challenge_method", (String) body.get("code_challenge_method"));
-        parameters.put("client_id", (String) body.getOrDefault("client_id", clientId));
+        parameters.put("acr_values", (String) body.get("acr_values"));
+
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString((String) body.get("authorization_endpoint"));
         parameters.forEach((key, value) -> {
