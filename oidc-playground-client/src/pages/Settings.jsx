@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.scss";
 import { ReactSelect } from "components";
-import { GrantType, ResponseType } from "components/settings";
+import { GrantType, ResponseType, ResponseMode } from "components/settings";
 import { discovery } from "api";
 
 export function Settings() {
@@ -80,14 +80,12 @@ export function Settings() {
           moderators={{ authProtocol, grantType }}
         />
 
-        <fieldset>
-          <label>Response mode</label>
-          <ReactSelect
-            value={responseMode}
-            options={config.response_modes_supported}
-            onChange={setResponseMode}
-          />
-        </fieldset>
+        <ResponseMode
+          value={responseMode}
+          options={config.response_modes_supported}
+          onChange={setResponseMode}
+          moderators={{ grantType }}
+        />
 
         <fieldset>
           <label>Scopes</label>
