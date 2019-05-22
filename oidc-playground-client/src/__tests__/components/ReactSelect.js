@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from 'enzyme';
+import { shallow } from "enzyme";
 import { ReactSelect } from "components";
 
 const props = {
@@ -7,6 +7,5 @@ const props = {
 };
 
 it("renders without crashing", () => {
-
   shallow(<ReactSelect {...props} />);
 });

@@ -1,15 +1,19 @@
 import React from "react";
 import { ReactSelect } from "components";
 
-export function GrantType(props) {
-  function sanitizeOptions(options) {
-    return options.filter(opt => opt !== "refresh_token");
-  }
+function sanitizeOptions(options) {
+  return options.filter(opt => opt !== "refresh_token");
+}
 
+export function GrantType(props) {
   return (
     <fieldset>
       <label>Grant type</label>
-      <ReactSelect {...props} options={sanitizeOptions(props.options)} />
+      <ReactSelect
+        {...props}
+        className="select-grant-type"
+        options={sanitizeOptions(props.options)}
+      />
     </fieldset>
   );
 }

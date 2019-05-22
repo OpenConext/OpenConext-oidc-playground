@@ -15,7 +15,13 @@ export function Scopes(props) {
   return (
     <fieldset>
       <label>Scopes</label>
-      <ReactSelect {...props} fixedValues={fixedValues} isMulti freeFormat />
+      <ReactSelect
+        {...props}
+        className="select-scopes"
+        fixedValues={fixedValues}
+        isMulti
+        freeFormat
+      />
     </fieldset>
   );
 }
