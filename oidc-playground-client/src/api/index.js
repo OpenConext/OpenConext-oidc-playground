@@ -20,11 +20,12 @@ function validateResponse(showErrorDialog) {
       }
       throw error;
     }
-    const sessionAlive = res.headers.get("x-session-alive");
 
-    if (sessionAlive !== "true") {
-      window.location.reload(true);
-    }
+    // const sessionAlive = res.headers.get("x-session-alive");
+    // if (sessionAlive !== "true") {
+    //   window.location.reload(true);
+    // }
+
     return res;
   };
 }
@@ -40,6 +41,7 @@ function validFetch(path, options, headers = {}, showErrorDialog = true) {
     redirect: "manual"
   });
   spinner.start();
+
   return fetch(path, fetchOptions)
     .then(validateResponse(showErrorDialog))
     .catch(err => {
@@ -58,18 +60,9 @@ function postPutJson(path, body, method) {
   return fetchJson(path, { method: method, body: JSON.stringify(body) });
 }
 
-// function queryParam(options) {
-//   const entries = Object.entries(options[0]);
-//   return entries.reduce((acc, entry) => isEmpty(entry[1]) ? acc : acc + `${entry[0]}=${entry[1]}&`, "?");
-// }
-
 //Base
-export function health() {
-  return fetchJson("/actuator/health");
-}
-
-export function config() {
-  return fetchJson("/oidc/api/config");
+export function discovery() {
+  return fetchJson("/oidc/api/discovery");
 }
 
 export function reportError(error) {
