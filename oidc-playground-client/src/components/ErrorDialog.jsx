@@ -11,13 +11,16 @@ export function ErrorDialog({ isOpen = false, close }) {
       overlayClassName="confirmation-dialog-overlay"
       ariaHideApp={false}
     >
-      <section className="dialog-header error">Error</section>
+      <section className="dialog-header error">Unexpected error</section>
       <section className="dialog-content">
-        <h2>Things broke.</h2>
+        <h2>
+          This is embarrassing; an unexpected error has occurred. It has been
+          logged and reported. Please try again.
+        </h2>
       </section>
       <section className="dialog-buttons">
         <button className="button white error" onClick={e => close(e)}>
-          OK
+          Close
         </button>
       </section>
     </Modal>
