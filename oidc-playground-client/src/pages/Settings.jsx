@@ -5,7 +5,8 @@ import {
   GrantType,
   ResponseType,
   ResponseMode,
-  Scopes
+  Scopes,
+  CodeChallenge
 } from "components/settings";
 import { discovery } from "api";
 
@@ -117,22 +118,18 @@ export function Settings() {
           />
         </fieldset>
 
-        <fieldset>
-          <label>Code challenge</label>
-          <input
-            value={codeChallenge}
-            onChange={e => setCodeChallenge(e.target.value)}
-          />
-        </fieldset>
-
-        <fieldset>
-          <label>Code challenge method</label>
-          <ReactSelect
-            value={codeChallengeMethod}
-            options={config.code_challenge_methods_supported}
-            onChange={setCodeChallengeMethod}
-          />
-        </fieldset>
+        <CodeChallenge
+          codeChallenge={{
+            value: codeChallenge,
+            onChange: setCodeChallenge
+          }}
+          codeChallengeMethod={{
+            value: codeChallengeMethod,
+            options: config.code_challenge_methods_supported,
+            onChange: setCodeChallengeMethod
+          }}
+          moderators={{ grantType }}
+        />
 
         <button type="submit">Submit</button>
       </form>
