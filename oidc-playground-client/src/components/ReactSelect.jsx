@@ -2,17 +2,27 @@ import React from "react";
 import Select from "react-select";
 import Creatable from "react-select/lib/Creatable";
 
+const styles = {
+  multiValueRemove: (base, state) => {
+    return state.data.isFixed ? { ...base, display: "none" } : base;
+  }
+};
+
 function formatOptions(options) {
   return options.map(opt => ({ value: opt, label: opt }));
 }
 
-function formatValue(value, options, freeFormat) {
+function formatValue(value, options, freeFormat, fixedValues) {
   if (!freeFormat && !options.includes(value)) {
     return null;
   }
 
   if (Array.isArray(value)) {
-    return value.map(val => ({ value: val, label: val }));
+    return value.map(val => ({
+      value: val,
+      label: val,
+      isFixed: fixedValues.includes(val)
+    }));
   }
 
   return { value, label: value };
@@ -27,15 +37,20 @@ function formatReturnValue(option) {
 }
 
 export function ReactSelect(props) {
-  const { isMulti, freeFormat } = props;
+  const { freeFormat, fixedValues, ...rest } = props;
 
-  const value = formatValue(props.value, props.options, freeFormat);
+  const value = formatValue(
+    props.value,
+    props.options,
+    freeFormat,
+    fixedValues
+  );
   const options = formatOptions(props.options);
   const onChange = option => props.onChange(formatReturnValue(option));
 
   if (freeFormat) {
-    return <Creatable {...{ value, options, onChange, isMulti }} />;
+    return <Creatable {...{ ...rest, value, options, onChange, styles }} />;
   }
 
-  return <Select {...{ value, options, onChange, isMulti }} />;
+  return <Select {...{ ...rest, value, options, onChange, styles }} />;
 }

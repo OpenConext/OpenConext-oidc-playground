@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./App.scss";
 import { ReactSelect } from "components";
-import { GrantType, ResponseType, ResponseMode } from "components/settings";
+import {
+  GrantType,
+  ResponseType,
+  ResponseMode,
+  Scopes
+} from "components/settings";
 import { discovery } from "api";
 
 export function Settings() {
@@ -87,16 +92,12 @@ export function Settings() {
           moderators={{ grantType }}
         />
 
-        <fieldset>
-          <label>Scopes</label>
-          <ReactSelect
-            value={scopes}
-            options={config.scopes_supported}
-            onChange={setScopes}
-            isMulti
-            freeFormat
-          />
-        </fieldset>
+        <Scopes
+          value={scopes}
+          options={config.scopes_supported}
+          onChange={setScopes}
+          moderators={{ authProtocol }}
+        />
 
         <fieldset>
           <label>Token endpoint</label>
