@@ -42,7 +42,7 @@ public class Env {
 
     }
 
-    @PostMapping("/error")
+    @PostMapping("/report_error")
     public void error(@RequestBody Map<String, Object> payload) throws
             JsonProcessingException, UnknownHostException {
         payload.put("dateTime", new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss").format(new Date()));

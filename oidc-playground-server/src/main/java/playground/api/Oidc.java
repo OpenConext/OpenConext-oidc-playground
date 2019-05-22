@@ -16,9 +16,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -36,10 +39,14 @@ import java.util.List;
 import java.util.Map;
 
 @RestController()
+@RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @SuppressWarnings("unchecked")
 public class Oidc implements URLSupport {
 
     static TypeReference<Map<String, Object>> mapTypeReference = new TypeReference<Map<String, Object>>() {
+    };
+
+    static ParameterizedTypeReference<Map<String, Object>> mapResponseType = new ParameterizedTypeReference<Map<String, Object>>() {
     };
 
     @Value("${oidc.discovery_endpoint}")
@@ -72,7 +79,7 @@ public class Oidc implements URLSupport {
         parameters.put("response_type", responseType.toString());
         List<String> scopes = (List<String>) body.get("scope");
         if (!CollectionUtils.isEmpty(scopes)) {
-            parameters.put("scope", " ".join(" ", scopes));
+            parameters.put("scope", String.join(" ", scopes));
         }
         if (!responseType.impliesCodeFlow()) {
             parameters.put("response_mode", (String) body.getOrDefault("response_mode", "fragment"));
@@ -99,34 +106,41 @@ public class Oidc implements URLSupport {
         return Collections.singletonMap("url", builder.build().toString());
     }
 
-    @PostMapping("/token")
-    public Map<String, Object> token(@RequestBody Map<String, String> body) throws URISyntaxException {
+    @PostMapping(value = {"/token"})
+    public Map<String, Object> token(@RequestBody Map<String, Object> body) throws URISyntaxException {
         body.put("redirect_uri", redirectUri);
-        return doToken(body, "authorization_code");
+        Map<String, Object> result = doToken(body, "authorization_code");
+        return result;
     }
 
     @PostMapping("/client_credentials")
-    public Map<String, Object> clientCredentials(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, URISyntaxException {
-        return doToken(body, "client_credentials");
+    public Map<String, Object> clientCredentials(@RequestBody Map<String, Object> body) throws URISyntaxException {
+        Map<String, Object> result = doToken(body, "client_credentials");
+        return result;
     }
 
     @PostMapping("/refresh_token")
-    public Map<String, Object> refreshToken(@RequestBody Map<String, String> body) throws UnsupportedEncodingException, URISyntaxException {
+    public Map<String, Object> refreshToken(@RequestBody Map<String, Object> body) throws URISyntaxException {
         return doToken(body, "refresh_token");
     }
 
     @PostMapping("/introspect")
-    public Map<String, Object> introspect(@RequestBody Map<String, String> body) throws URISyntaxException {
-        return doPost(body, Collections.singletonMap("token", body.get("token")), body.get("introspect_endpoint"));
+    public Map<String, Object> introspect(@RequestBody Map<String, Object> body) throws URISyntaxException {
+        return doPost(body, Collections.singletonMap("token", (String) body.get("token")), (String) body.get("introspect_endpoint"));
     }
 
     @PostMapping("/userinfo")
-    public Map<String, Object> userinfo(@RequestBody Map<String, String> body) throws URISyntaxException {
-        return doPost(body, Collections.singletonMap("token", body.get("token")), body.get("userinfo_endpoint"));
+    public Map<String, Object> userinfo(@RequestBody Map<String, Object> body) throws URISyntaxException {
+        return doPost(body, Collections.singletonMap("token", (String) body.get("token")), (String) body.get("userinfo_endpoint"));
     }
 
-    @GetMapping(value = "/decode_jwt", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String decodeJwtToken(@RequestParam("jwt") String jwt) throws IOException, ParseException {
+    @GetMapping("/proxy")
+    public Map proxy(@RequestParam("uri") String uri) {
+        return restTemplate.getForEntity(uri, Map.class).getBody();
+    }
+
+    @GetMapping("/decode_jwt")
+    public String decodeJwtToken(@RequestParam("jwt") String jwt) throws ParseException {
         SignedJWT signedJWT = SignedJWT.parse(jwt);
         JSONObject result = new OrderedJSONObject();
         result.put("header", signedJWT.getHeader().toJSONObject());
@@ -136,35 +150,41 @@ public class Oidc implements URLSupport {
     }
 
 
-    private Map<String, Object> doToken(Map<String, String> body, String grantType) throws URISyntaxException {
+    private Map<String, Object> doToken(Map<String, Object> body, String grantType) throws URISyntaxException {
         HashMap<String, String> requestBody = new HashMap<>();
         requestBody.put("grant_type", grantType);
 
         if (body.containsKey("scope")) {
-            requestBody.put("scope", body.get("scope"));
+            List<String> scopes = (List<String>) body.get("scope");
+            if (!CollectionUtils.isEmpty(scopes)) {
+                requestBody.put("scope", String.join(" ", (List<String>) body.get("scope")));
+            }
         }
-        return doPost(body, requestBody, body.get("token_endpoint"));
+        return doPost(body, requestBody, (String) body.get("token_endpoint"));
     }
 
-    private Map<String, Object> doPost(Map<String, String> body, Map<String, String> requestBody, String endpoint) throws URISyntaxException {
-        String clientIdToUse = body.getOrDefault("client_id", clientId);
-        String secretToUse = body.getOrDefault("client_secret", secret);
+    private Map<String, Object> doPost(Map<String, Object> body, Map<String, String> requestBody, String endpoint) throws URISyntaxException {
+        String clientIdToUse = (String) body.getOrDefault("client_id", clientId);
+        String secretToUse = (String) body.getOrDefault("client_secret", secret);
         RequestEntity.BodyBuilder builder = RequestEntity
                 .post(new URI(endpoint))
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        String authMethod = body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
+        String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
         if (authMethod.equals("client_secret_post")) {
             builder.header(HttpHeaders.AUTHORIZATION, new String(Base64.getEncoder().encode(String.format("%s:%s", clientIdToUse, secretToUse).getBytes())));
         } else {
             requestBody.put("client_id", clientIdToUse);
             requestBody.put("client_secret", secretToUse);
         }
-        RequestEntity<Map<String, String>> requestEntity = builder.body(requestBody);
 
-        ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<Map<String, Object>>() {
-        });
-        return responseEntity.getBody();
+        LinkedMultiValueMap form = new LinkedMultiValueMap();
+        requestBody.forEach((k,v)-> form.set(k,v));
+        RequestEntity<MultiValueMap<String, String>> requestEntity = builder.body(form);
+
+        ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(requestEntity, mapResponseType);
+        return exchange.getBody();
     }
 
     private String claims(List<String> requestedClaims) {
