@@ -12,17 +12,27 @@ function formatOptions(options) {
   return options.map(opt => ({ value: opt, label: opt }));
 }
 
-function formatValue(value, options, freeFormat, fixedValues) {
-  if (!freeFormat && !options.includes(value)) {
-    return null;
+function formatArrayValue(value, options, freeFormat, fixedValues) {
+  let values = value;
+
+  if (!freeFormat) {
+    values = value.filter(val => !options.includes(value));
   }
 
+  return values.map(val => ({
+    value: val,
+    label: val,
+    isFixed: fixedValues.includes(val)
+  }));
+}
+
+function formatValue(value, options, freeFormat, fixedValues) {
   if (Array.isArray(value)) {
-    return value.map(val => ({
-      value: val,
-      label: val,
-      isFixed: fixedValues.includes(val)
-    }));
+    return formatArrayValue(value, options, freeFormat, fixedValues);
+  }
+
+  if (!freeFormat && !options.includes(value)) {
+    return null;
   }
 
   return { value, label: value };
@@ -37,7 +47,7 @@ function formatReturnValue(option) {
 }
 
 export function ReactSelect(props) {
-  const { freeFormat, fixedValues, ...rest } = props;
+  const { freeFormat, fixedValues = [], ...rest } = props;
 
   const value = formatValue(
     props.value,
