@@ -41,6 +41,8 @@ export function Settings() {
   const [response_type, setResponseType] = useState("");
   const [scopes, setScopes] = useState([]);
   const [token_endpoint, setTokenEndpoint] = useState("client_secret_basic");
+  const [state, setState] = useState("example");
+  const [nonce, setNonce] = useState("example");
 
   useEffect(() => {
     if (window.location.href.indexOf("error") > -1) {
@@ -131,6 +133,16 @@ export function Settings() {
           }}
           moderators={{ grant_type }}
         />
+
+        <fieldset>
+          <label>State</label>
+          <input value={state} onChange={e => setState(e.target.value)} />
+        </fieldset>
+
+        <fieldset>
+          <label>Nonce</label>
+          <input value={nonce} onChange={e => setNonce(e.target.value)} />
+        </fieldset>
 
         <button type="submit">Submit</button>
       </form>
