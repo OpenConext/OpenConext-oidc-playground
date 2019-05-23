@@ -3,7 +3,7 @@ import { ReactSelect } from "components";
 import { isEmpty } from "utils/Utils";
 
 export function ResponseMode(props) {
-  if (props.moderators.grantType !== "implicit") {
+  if (props.moderators.grant_type !== "implicit") {
     props.onChange("");
     return null;
   }

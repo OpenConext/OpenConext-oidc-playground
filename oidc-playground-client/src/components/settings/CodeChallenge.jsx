@@ -2,7 +2,7 @@ import React from "react";
 import { ReactSelect } from "components";
 
 export function CodeChallenge(props) {
-  if (props.moderators.grantType !== "authorization_code") {
+  if (props.moderators.grant_type !== "authorization_code") {
     props.codeChallenge.onChange("");
     props.codeChallengeMethod.onChange("");
 

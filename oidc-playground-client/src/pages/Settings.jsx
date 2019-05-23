@@ -32,15 +32,15 @@ export function Settings() {
     userinfo_endpoint: ""
   });
 
-  const [authProtocol, setAuthProtocol] = useState("OpenID");
-  const [grantType, setGrantType] = useState("");
-  const [responseType, setResponseType] = useState("");
-  const [responseMode, setResponseMode] = useState("");
-  const [scopes, setScopes] = useState([]);
-  const [tokenEndpoint, setTokenEndpoint] = useState("client_secret_basic");
+  const [auth_protocol, setAuthProtocol] = useState("OpenID");
   const [claims, setClaims] = useState([]);
-  const [codeChallenge, setCodeChallenge] = useState("");
-  const [codeChallengeMethod, setCodeChallengeMethod] = useState("");
+  const [code_challenge_method, setCodeChallengeMethod] = useState("");
+  const [code_challenge, setCodeChallenge] = useState("");
+  const [grant_type, setGrantType] = useState("");
+  const [response_mode, setResponseMode] = useState("");
+  const [response_type, setResponseType] = useState("");
+  const [scopes, setScopes] = useState([]);
+  const [token_endpoint, setTokenEndpoint] = useState("client_secret_basic");
 
   useEffect(() => {
     if (window.location.href.indexOf("error") > -1) {
@@ -67,43 +67,43 @@ export function Settings() {
         <fieldset>
           <label>Authorization protocol</label>
           <ReactSelect
-            value={authProtocol}
+            value={auth_protocol}
             options={["OpenID", "Oauth2"]}
             onChange={setAuthProtocol}
           />
         </fieldset>
 
         <GrantType
-          value={grantType}
+          value={grant_type}
           options={config.grant_types_supported}
           onChange={setGrantType}
         />
 
         <ResponseType
-          value={responseType}
+          value={response_type}
           options={config.response_types_supported}
           onChange={setResponseType}
-          moderators={{ authProtocol, grantType }}
+          moderators={{ auth_protocol, grant_type }}
         />
 
         <ResponseMode
-          value={responseMode}
+          value={response_mode}
           options={config.response_modes_supported}
           onChange={setResponseMode}
-          moderators={{ grantType }}
+          moderators={{ grant_type }}
         />
 
         <Scopes
           value={scopes}
           options={config.scopes_supported}
           onChange={setScopes}
-          moderators={{ authProtocol }}
+          moderators={{ auth_protocol }}
         />
 
         <fieldset>
           <label>Token endpoint</label>
           <ReactSelect
-            value={tokenEndpoint}
+            value={token_endpoint}
             options={config.token_endpoint_auth_methods_supported}
             onChange={setTokenEndpoint}
           />
@@ -120,15 +120,15 @@ export function Settings() {
 
         <CodeChallenge
           codeChallenge={{
-            value: codeChallenge,
+            value: code_challenge,
             onChange: setCodeChallenge
           }}
           codeChallengeMethod={{
-            value: codeChallengeMethod,
+            value: code_challenge_method,
             options: config.code_challenge_methods_supported,
             onChange: setCodeChallengeMethod
           }}
-          moderators={{ grantType }}
+          moderators={{ grant_type }}
         />
 
         <button type="submit">Submit</button>

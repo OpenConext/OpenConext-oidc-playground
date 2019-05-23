@@ -4,7 +4,7 @@ import { ReactSelect } from "components";
 export function Scopes(props) {
   var fixedValues = [];
 
-  if (props.moderators.authProtocol === "OpenID") {
+  if (props.moderators.auth_protocol === "OpenID") {
     fixedValues = ["openid"];
 
     if (!props.value.includes("openid")) {

@@ -1,9 +1,9 @@
 import React from "react";
 import { ReactSelect } from "components";
 
-function sanitizeOptions(options, { authProtocol, grantType }) {
-  if (authProtocol === "OpenID") {
-    switch (grantType) {
+function sanitizeOptions(options, { auth_protocol, grant_type }) {
+  if (auth_protocol === "OpenID") {
+    switch (grant_type) {
       case "authorization_code":
         return ["token"];
       case "implicit":
@@ -15,7 +15,7 @@ function sanitizeOptions(options, { authProtocol, grantType }) {
     }
   }
 
-  switch (grantType) {
+  switch (grant_type) {
     case "authorization_code":
       return ["code"];
     case "implicit":
