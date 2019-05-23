@@ -115,6 +115,7 @@ export function Settings() {
             value={claims}
             options={config.claims_supported}
             onChange={setClaims}
+            isMulti
           />
         </fieldset>
 
