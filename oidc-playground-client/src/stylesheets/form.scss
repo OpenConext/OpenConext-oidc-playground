@@ -1,0 +1,76 @@
+@import "./vars.scss";
+
+$inputPadding: 0 10px;
+
+$borderRadius: 4px;
+$borderWidth: 1px;
+$borderColor: $border;
+$hoverBorderColor: $blue;
+
+$fontFamily: "Roboto";
+$fontSize: 16px;
+$fontStyle: normal;
+$fontWeight: 400;
+$color: $dark-grey;
+
+$transition: all 100ms;
+
+// attrs for the ReactSelect component
+:export {
+  inputPadding: $inputPadding;
+  borderColor: $borderColor;
+  borderRadius: $borderRadius;
+  borderWidth: $borderWidth;
+  hoverBorderColor: $hoverBorderColor;
+  fontFamily: $fontFamily;
+  fontSize: $fontSize;
+  fontStyle: $fontStyle;
+  fontWeight: $fontWeight;
+  color: $color;
+  transition: $transition;
+}
+
+form {
+  margin: 20px;
+  padding: 20px;
+  max-width: 600px;
+
+  background-color: white;
+
+  fieldset {
+    margin-bottom: 20px;
+    border: none;
+
+    label {
+      display: block;
+      margin-left: 1px;
+      margin-bottom: 5px;
+
+      font-size: $fontSize;
+      color: black;
+    }
+
+    input {
+      width: 100%;
+      min-height: 40px;
+      padding: $inputPadding;
+
+      border-style: solid;
+      border-radius: $borderRadius;
+      border-color: $borderColor;
+      border-width: $borderWidth;
+
+      font-size: $fontSize;
+      font-family: $fontFamily;
+      font-style: $fontStyle;
+      font-weight: $fontWeight;
+      color: $color;
+
+      transition: $transition;
+
+      &:hover {
+        border-color: $hoverBorderColor;
+      }
+    }
+  }
+}

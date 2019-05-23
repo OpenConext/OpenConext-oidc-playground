@@ -1,10 +1,46 @@
 import React from "react";
 import Select from "react-select";
 import Creatable from "react-select/lib/Creatable";
+import form from "../stylesheets/form.scss";
 
 const styles = {
   multiValueRemove: (base, state) => {
     return state.data.isFixed ? { ...base, display: "none" } : base;
+  },
+  input: (base, _) => {
+    return { ...base, margin: 0, paddingBottom: 0, paddingTop: 0 };
+  },
+  valueContainer: (base, _) => {
+    return { ...base, padding: form.inputPadding };
+  },
+  singleValue: (base, _) => {
+    return { ...base, color: form.color };
+  },
+  control: (base, _) => {
+    const {
+      borderColor,
+      borderRadius,
+      borderWidth,
+      fontFamily,
+      fontSize,
+      fontStyle,
+      fontWeight,
+      transition,
+      hoverBorderColor
+    } = form;
+
+    return {
+      ...base,
+      borderColor,
+      borderRadius,
+      borderWidth,
+      fontFamily,
+      fontSize,
+      fontStyle,
+      fontWeight,
+      transition,
+      "&:hover": { borderColor: hoverBorderColor }
+    };
   }
 };
 
