@@ -5,7 +5,7 @@ function sanitizeOptions(options, { auth_protocol, grant_type }) {
   if (auth_protocol === "OpenID") {
     switch (grant_type) {
       case "authorization_code":
-        return ["token"];
+        return ["code"];
       case "implicit":
         return options.filter(opt => !["code", "token"].includes(opt));
       case "client_credentials":

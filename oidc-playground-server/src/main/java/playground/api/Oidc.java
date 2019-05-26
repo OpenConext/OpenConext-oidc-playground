@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -99,7 +100,7 @@ public class Oidc implements URLSupport {
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString((String) body.get("authorization_endpoint"));
         parameters.forEach((key, value) -> {
-            if (value != null) {
+            if (StringUtils.hasText(value)) {
                 builder.queryParam(key, encode(value));
             }
         });

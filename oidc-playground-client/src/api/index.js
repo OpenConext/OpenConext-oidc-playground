@@ -60,6 +60,11 @@ export function discovery() {
   return fetchJson("/oidc/api/discovery");
 }
 
+export function formPost() {
+  const body = arguments[0];
+  return postPutJson(`/oidc/api/${body.grant_type}`, body, "POST");
+}
+
 export function decodeJWT(jwt) {
   return fetchJson(`/oidc/api/decode_jwt?jwt=${jwt}`)
 }

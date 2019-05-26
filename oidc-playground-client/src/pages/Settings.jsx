@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import "./App.scss";
-import { ReactSelect } from "components";
-import {
-  GrantType,
-  ResponseType,
-  ResponseMode,
-  Scopes,
-  CodeChallenge
-} from "components/settings";
-import { discovery } from "api";
+import {ReactSelect} from "components";
+import {CodeChallenge, GrantType, ResponseMode, ResponseType, Scopes} from "components/settings";
+import {discovery, formPost} from "api";
 
 export function Settings() {
   const [loading, setLoading] = useState(true);
@@ -55,12 +49,22 @@ export function Settings() {
     }
   }, []);
 
-  function handleSubmit(e) {
+  const handleSubmit = e => {
     e.preventDefault();
-    console.log("SUBMIT");
-  }
+    const body = {
+      ...config, auth_protocol, claims, code_challenge_method, code_challenge, grant_type, response_mode, response_type,
+      scopes, state, nonce
+    };
+    formPost(body).then(json => {
+      //TODO use the url for a redirect
+      console.log(json.url);
+    });
 
-  if (loading) return null;
+  };
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <div className="settings">
@@ -85,21 +89,21 @@ export function Settings() {
           value={response_type}
           options={config.response_types_supported}
           onChange={setResponseType}
-          moderators={{ auth_protocol, grant_type }}
+          moderators={{auth_protocol, grant_type}}
         />
 
         <ResponseMode
           value={response_mode}
           options={config.response_modes_supported}
           onChange={setResponseMode}
-          moderators={{ grant_type }}
+          moderators={{grant_type}}
         />
 
         <Scopes
           value={scopes}
           options={config.scopes_supported}
           onChange={setScopes}
-          moderators={{ auth_protocol }}
+          moderators={{auth_protocol}}
         />
 
         <fieldset>
@@ -131,17 +135,17 @@ export function Settings() {
             options: config.code_challenge_methods_supported,
             onChange: setCodeChallengeMethod
           }}
-          moderators={{ grant_type }}
+          moderators={{grant_type}}
         />
 
         <fieldset>
           <label>State</label>
-          <input value={state} onChange={e => setState(e.target.value)} />
+          <input value={state} onChange={e => setState(e.target.value)}/>
         </fieldset>
 
         <fieldset>
           <label>Nonce</label>
-          <input value={nonce} onChange={e => setNonce(e.target.value)} />
+          <input value={nonce} onChange={e => setNonce(e.target.value)}/>
         </fieldset>
 
         <button type="submit">Submit</button>
