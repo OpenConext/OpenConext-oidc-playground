@@ -110,14 +110,12 @@ public class Oidc implements URLSupport {
     @PostMapping(value = {"/token"})
     public Map<String, Object> token(@RequestBody Map<String, Object> body) throws URISyntaxException {
         body.put("redirect_uri", redirectUri);
-        Map<String, Object> result = doToken(body, "authorization_code");
-        return result;
+        return doToken(body, "authorization_code");
     }
 
     @PostMapping("/client_credentials")
     public Map<String, Object> clientCredentials(@RequestBody Map<String, Object> body) throws URISyntaxException {
-        Map<String, Object> result = doToken(body, "client_credentials");
-        return result;
+        return doToken(body, "client_credentials");
     }
 
     @PostMapping("/refresh_token")
@@ -182,10 +180,7 @@ public class Oidc implements URLSupport {
 
         LinkedMultiValueMap form = new LinkedMultiValueMap();
         requestBody.forEach((k,v)-> form.set(k,v));
-        RequestEntity<MultiValueMap<String, String>> requestEntity = builder.body(form);
-
-        ResponseEntity<Map<String, Object>> exchange = restTemplate.exchange(requestEntity, mapResponseType);
-        return exchange.getBody();
+        return restTemplate.exchange(builder.body(form), mapResponseType).getBody();
     }
 
     private String claims(List<String> requestedClaims) {
