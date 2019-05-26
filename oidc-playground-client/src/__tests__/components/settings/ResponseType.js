@@ -33,7 +33,7 @@ describe("sanitizing the options passed to select", () => {
 
     it("with grantType authorization_code", () => {
       setSelectProps({ authProtocol, grantType: "authorization_code" });
-      expect(selectProps.options).toEqual(["token"]);
+      expect(selectProps.options).toEqual(["code"]);
     });
 
     it("with grantType implicit", () => {
