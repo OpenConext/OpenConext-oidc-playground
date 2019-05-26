@@ -69,7 +69,7 @@ export function Settings() {
   return (
     <div className="settings">
       <h2>Settings</h2>
-      <form onSubmit={e => handleSubmit(e)}>
+      <form onSubmit={handleSubmit}>
         <fieldset>
           <label>Authorization protocol</label>
           <ReactSelect
