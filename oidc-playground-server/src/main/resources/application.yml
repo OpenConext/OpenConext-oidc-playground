@@ -9,9 +9,9 @@ server:
     context-path: /oidc/api
 
 oidc:
-  discovery_endpoint: "classpath:/discovery_endpoint.json"
-#  discovery_endpoint: "https://oidcng.test2.surfconext.nl/oidc/.well-known/openid-configuration"
-  client_id: playground
+#  discovery_endpoint: "classpath:/discovery_endpoint.json"
+  discovery_endpoint: "https://oidcng.test2.surfconext.nl/oidc/.well-known/openid-configuration"
+  client_id: playground_client
   secret: secret
   redirect_uri: http://localhost:3000/redirect
 
