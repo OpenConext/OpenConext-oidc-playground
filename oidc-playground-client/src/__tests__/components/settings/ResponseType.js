@@ -5,8 +5,8 @@ import { ResponseType } from "components/settings";
 const props = {
   options: [],
   moderators: {
-    authProtocol: "",
-    grantType: ""
+    auth_protocol: "",
+    grant_type: ""
   }
 };
 
@@ -28,40 +28,40 @@ describe("sanitizing the options passed to select", () => {
     selectProps = comp.find(".select-response-type").props();
   };
 
-  describe("with authProtocol OpenID", () => {
-    const authProtocol = "OpenID";
+  describe("with auth_protocol OpenID", () => {
+    const auth_protocol = "OpenID";
 
-    it("with grantType authorization_code", () => {
-      setSelectProps({ authProtocol, grantType: "authorization_code" });
+    it("with grant_type authorization_code", () => {
+      setSelectProps({ auth_protocol, grant_type: "authorization_code" });
       expect(selectProps.options).toEqual(["code"]);
     });
 
-    it("with grantType implicit", () => {
-      setSelectProps({ authProtocol, grantType: "implicit" });
+    it("with grant_type implicit", () => {
+      setSelectProps({ auth_protocol, grant_type: "implicit" });
       expect(selectProps.options).toEqual(["id_token", "thing"]);
     });
 
-    it("with grantType client_credentials", () => {
-      setSelectProps({ authProtocol, grantType: "client_credentials" });
+    it("with grant_type client_credentials", () => {
+      setSelectProps({ auth_protocol, grant_type: "client_credentials" });
       expect(selectProps.options).toEqual(["token", "id_token"]);
     });
   });
 
-  describe("with authProtocol Oauth2", () => {
-    const authProtocol = "Oauth2";
+  describe("with auth_protocol Oauth2", () => {
+    const auth_protocol = "Oauth2";
 
-    it("with grantType authorization_code", () => {
-      setSelectProps({ authProtocol, grantType: "authorization_code" });
+    it("with grant_type authorization_code", () => {
+      setSelectProps({ auth_protocol, grant_type: "authorization_code" });
       expect(selectProps.options).toEqual(["code"]);
     });
 
-    it("with grantType implicit", () => {
-      setSelectProps({ authProtocol, grantType: "implicit" });
+    it("with grant_type implicit", () => {
+      setSelectProps({ auth_protocol, grant_type: "implicit" });
       expect(selectProps.options).toEqual(["token"]);
     });
 
-    it("with grantType client_credentials", () => {
-      setSelectProps({ authProtocol, grantType: "client_credentials" });
+    it("with grant_type client_credentials", () => {
+      setSelectProps({ auth_protocol, grant_type: "client_credentials" });
       expect(selectProps.options).toEqual(["token"]);
     });
   });

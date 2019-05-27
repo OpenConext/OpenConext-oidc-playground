@@ -11,14 +11,14 @@ it("renders without crashing", () => {
   shallow(<ResponseMode {...props} />);
 });
 
-it("renders null if grantType is not implicit", () => {
+it("renders null if grant_type is not implicit", () => {
   const comp = shallow(<ResponseMode {...props} />);
   expect(comp.isEmptyRender()).toEqual(true);
 });
 
-it("renders if grantType is implicit", () => {
+it("renders if grant_type is implicit", () => {
   const comp = shallow(
-    <ResponseMode {...props} moderators={{ grantType: "implicit" }} />
+    <ResponseMode {...props} moderators={{ grant_type: "implicit" }} />
   );
   expect(comp.isEmptyRender()).toEqual(false);
 });

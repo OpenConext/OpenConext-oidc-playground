@@ -12,11 +12,11 @@ it("renders without crashing", () => {
   shallow(<Scopes {...props} />);
 });
 
-describe("authProtocol", () => {
+describe("auth_protocol", () => {
   var selectProps;
 
-  const setSelectProps = authProtocol => {
-    selectProps = shallow(<Scopes {...props} moderators={{ authProtocol }} />)
+  const setSelectProps = auth_protocol => {
+    selectProps = shallow(<Scopes {...props} moderators={{ auth_protocol }} />)
       .update()
       .find(".select-scopes")
       .props();
