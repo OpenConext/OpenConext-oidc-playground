@@ -1,14 +1,21 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./App.scss";
-import {ReactSelect} from "components";
-import {CodeChallenge, GrantType, ResponseMode, ResponseType, Scopes} from "components/settings";
-import {discovery, formPost} from "api";
+import { ReactSelect } from "components";
+import {
+  CodeChallenge,
+  GrantType,
+  ResponseMode,
+  ResponseType,
+  Scopes
+} from "components/settings";
+import { discovery, formPost } from "api";
 
 export function Settings() {
   const [loading, setLoading] = useState(true);
 
   const [config, setConfig] = useState({
     authorization_endpoint: "",
+    acr_values_supported: [],
     claims_parameter_supported: false,
     claims_supported: [],
     code_challenge_methods_supported: [],
@@ -27,6 +34,7 @@ export function Settings() {
   });
 
   const [auth_protocol, setAuthProtocol] = useState("OpenID");
+  const [acr_values, setAcrValues] = useState([]);
   const [claims, setClaims] = useState([]);
   const [code_challenge_method, setCodeChallengeMethod] = useState("");
   const [code_challenge, setCodeChallenge] = useState("");
@@ -51,15 +59,26 @@ export function Settings() {
 
   const handleSubmit = e => {
     e.preventDefault();
+
     const body = {
-      ...config, auth_protocol, claims, code_challenge_method, code_challenge, grant_type, response_mode, response_type,
-      scopes, state, nonce
+      ...config,
+      auth_protocol,
+      acr_values: acr_values.join(" "),
+      claims,
+      code_challenge_method,
+      code_challenge,
+      grant_type,
+      response_mode,
+      response_type,
+      scopes,
+      state,
+      nonce
     };
+
     formPost(body).then(json => {
       //TODO use the url for a redirect
       console.log(json.url);
     });
-
   };
 
   if (loading) {
@@ -89,21 +108,21 @@ export function Settings() {
           value={response_type}
           options={config.response_types_supported}
           onChange={setResponseType}
-          moderators={{auth_protocol, grant_type}}
+          moderators={{ auth_protocol, grant_type }}
         />
 
         <ResponseMode
           value={response_mode}
           options={config.response_modes_supported}
           onChange={setResponseMode}
-          moderators={{grant_type}}
+          moderators={{ grant_type }}
         />
 
         <Scopes
           value={scopes}
           options={config.scopes_supported}
           onChange={setScopes}
-          moderators={{auth_protocol}}
+          moderators={{ auth_protocol }}
         />
 
         <fieldset>
@@ -135,17 +154,27 @@ export function Settings() {
             options: config.code_challenge_methods_supported,
             onChange: setCodeChallengeMethod
           }}
-          moderators={{grant_type}}
+          moderators={{ grant_type }}
         />
 
         <fieldset>
           <label>State</label>
-          <input value={state} onChange={e => setState(e.target.value)}/>
+          <input value={state} onChange={e => setState(e.target.value)} />
         </fieldset>
 
         <fieldset>
           <label>Nonce</label>
-          <input value={nonce} onChange={e => setNonce(e.target.value)}/>
+          <input value={nonce} onChange={e => setNonce(e.target.value)} />
+        </fieldset>
+
+        <fieldset>
+          <label>ACR values</label>
+          <ReactSelect
+            value={acr_values}
+            options={config.acr_values_supported}
+            onChange={setAcrValues}
+            isMulti
+          />
         </fieldset>
 
         <button type="submit">Submit</button>
