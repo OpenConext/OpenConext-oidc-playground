@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.scss";
-import { ReactSelect } from "components";
+import { ReactSelect, RetrieveContent } from "components";
 import {
   CodeChallenge,
   GrantType,
@@ -76,6 +76,7 @@ export function Settings() {
     };
 
     formPost(body).then(json => {
+      // window.location.replace(json.url);
       //TODO use the url for a redirect
       console.log(json.url);
     });
@@ -185,6 +186,18 @@ export function Settings() {
             Submit
           </button>
         </fieldset>
+      </form>
+
+      <form>
+        <fieldset className="form-header">
+          <h2>Retrieve content</h2>
+        </fieldset>
+
+        <RetrieveContent
+          token="access_token_value"
+          introspect_endpoint={config.introspect_endpoint}
+          userinfo_endpoint={config.userinfo_endpoint}
+        />
       </form>
     </div>
   );

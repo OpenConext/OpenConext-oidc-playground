@@ -21,8 +21,9 @@
     margin-right: 15px;
   }
 
-  &.disabled {
-    cursor: no-drop;
+  &:disabled {
+    color: $lighter-grey;
+    cursor: not-allowed;
   }
 
   i {
@@ -31,7 +32,6 @@
   }
 
   &.blue,
-  &.grey,
   &.red,
   &.green {
     color: white;
@@ -50,10 +50,7 @@
       background-color: $red;
     }
   }
-  &.grey {
-    background-color: $lighter-grey;
-    cursor: not-allowed;
-  }
+
   &.red {
     background-color: $red;
   }

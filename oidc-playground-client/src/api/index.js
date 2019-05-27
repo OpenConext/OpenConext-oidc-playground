@@ -65,8 +65,20 @@ export function formPost() {
   return postPutJson(`/oidc/api/${body.grant_type}`, body, "POST");
 }
 
+export function postIntrospect() {
+  console.log("postIntrospect");
+}
+
+export function postUserinfo() {
+  console.log("postUserinfo");
+}
+
+export function getJwksCertificates() {
+  console.log("getJwksCertificates");
+}
+
 export function decodeJWT(jwt) {
-  return fetchJson(`/oidc/api/decode_jwt?jwt=${jwt}`)
+  return fetchJson(`/oidc/api/decode_jwt?jwt=${jwt}`);
 }
 
 export function reportError(error) {
