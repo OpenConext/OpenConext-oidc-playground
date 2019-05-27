@@ -86,9 +86,12 @@ export function Settings() {
   }
 
   return (
-    <div className="settings">
-      <h2>Settings</h2>
+    <div>
       <form onSubmit={handleSubmit}>
+        <fieldset className="form-header">
+          <h2>Settings</h2>
+        </fieldset>
+
         <fieldset>
           <label>Authorization protocol</label>
           <ReactSelect
@@ -177,7 +180,11 @@ export function Settings() {
           />
         </fieldset>
 
-        <button type="submit">Submit</button>
+        <fieldset>
+          <button type="submit" className="button blue">
+            Submit
+          </button>
+        </fieldset>
       </form>
     </div>
   );

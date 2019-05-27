@@ -2,8 +2,12 @@
 
 .app-container {
   display: flex;
-  position: relative;
-  min-height: 100vh;
   flex-direction: column;
+
+  min-height: 100vh;
+  padding: 20px;
+
+  position: relative;
+
   background-color: $background;
 }
