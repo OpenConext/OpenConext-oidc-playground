@@ -108,19 +108,21 @@ export function Settings() {
           onChange={setGrantType}
         />
 
-        <ResponseType
-          value={response_type}
-          options={config.response_types_supported}
-          onChange={setResponseType}
-          moderators={{ auth_protocol, grant_type }}
-        />
+        <div className="field-block">
+          <ResponseType
+            value={response_type}
+            options={config.response_types_supported}
+            onChange={setResponseType}
+            moderators={{ auth_protocol, grant_type }}
+          />
 
-        <ResponseMode
-          value={response_mode}
-          options={config.response_modes_supported}
-          onChange={setResponseMode}
-          moderators={{ grant_type }}
-        />
+          <ResponseMode
+            value={response_mode}
+            options={config.response_modes_supported}
+            onChange={setResponseMode}
+            moderators={{ grant_type }}
+          />
+        </div>
 
         <Scopes
           value={scopes}
@@ -148,28 +150,32 @@ export function Settings() {
           />
         </fieldset>
 
-        <CodeChallenge
-          codeChallenge={{
-            value: code_challenge,
-            onChange: setCodeChallenge
-          }}
-          codeChallengeMethod={{
-            value: code_challenge_method,
-            options: config.code_challenge_methods_supported,
-            onChange: setCodeChallengeMethod
-          }}
-          moderators={{ grant_type }}
-        />
+        <div className="field-block">
+          <CodeChallenge
+            codeChallenge={{
+              value: code_challenge,
+              onChange: setCodeChallenge
+            }}
+            codeChallengeMethod={{
+              value: code_challenge_method,
+              options: config.code_challenge_methods_supported,
+              onChange: setCodeChallengeMethod
+            }}
+            moderators={{ grant_type }}
+          />
+        </div>
 
-        <fieldset>
-          <label>State</label>
-          <input value={state} onChange={e => setState(e.target.value)} />
-        </fieldset>
+        <div className="field-block">
+          <fieldset>
+            <label>State</label>
+            <input value={state} onChange={e => setState(e.target.value)} />
+          </fieldset>
 
-        <fieldset>
-          <label>Nonce</label>
-          <input value={nonce} onChange={e => setNonce(e.target.value)} />
-        </fieldset>
+          <fieldset>
+            <label>Nonce</label>
+            <input value={nonce} onChange={e => setNonce(e.target.value)} />
+          </fieldset>
+        </div>
 
         <fieldset>
           <label>ACR values</label>

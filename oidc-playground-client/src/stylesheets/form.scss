@@ -86,6 +86,16 @@ form {
     }
   }
 
+  .field-block {
+    display: flex;
+    flex-wrap: wrap;
+
+    fieldset {
+      flex: 1;
+      min-width: 230px;
+    }
+  }
+
   h2 {
     background: $blue;
   }
