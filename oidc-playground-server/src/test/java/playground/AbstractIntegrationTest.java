@@ -19,7 +19,7 @@ import java.nio.charset.Charset;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {"oidc.discovery_endpoint=classpath:/discovery_endpoint.json"})
 public abstract class AbstractIntegrationTest implements URLSupport {
 
     @LocalServerPort

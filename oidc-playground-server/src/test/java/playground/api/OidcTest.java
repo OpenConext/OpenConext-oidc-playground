@@ -57,7 +57,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("claims", "{\"id_token\":{\"edumember_is_member_of\":null,\"email\":null}}")
                 .p("response_type", "code")
                 .p("redirect_uri", "http://localhost:3000/redirect")
-                .p("client_id", "playground")
+                .p("client_id", "playground_client")
                 .p("nonce", "some_nonce");
 
         assertEquals(expected, queryParams);
@@ -78,7 +78,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("response_type", "implicit")
                 .p("response_mode", "fragment")
                 .p("redirect_uri", "http://localhost:3000/redirect")
-                .p("client_id", "playground")
+                .p("client_id", "playground_client")
                 .p("state", "example");
 
         assertEquals(expected, queryParams);
