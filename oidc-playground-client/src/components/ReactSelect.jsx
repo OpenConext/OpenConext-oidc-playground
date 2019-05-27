@@ -4,9 +4,6 @@ import Creatable from "react-select/lib/Creatable";
 import form from "../stylesheets/form.scss";
 
 const styles = {
-  multiValueRemove: (base, state) => {
-    return state.data.isFixed ? { ...base, display: "none" } : base;
-  },
   input: (base, _) => {
     return { ...base, margin: 0, paddingBottom: 0, paddingTop: 0 };
   },
@@ -15,6 +12,35 @@ const styles = {
   },
   singleValue: (base, _) => {
     return { ...base, color: form.color };
+  },
+  multiValue: (base, state) => {
+    return {
+      ...base,
+      backgroundColor: state.data.isFixed ? form.grey : form.blue
+    };
+  },
+  multiValueLabel: (base, state) => {
+    return {
+      ...base,
+      color: "white",
+      fontSize: form.fontSize,
+      padding: "3px 6px",
+      paddingRight: state.data.isFixed ? 6 : 2
+    };
+  },
+  multiValueRemove: (base, state) => {
+    return {
+      ...base,
+      color: "white",
+      padding: 2,
+      borderRadius: 0,
+      borderTopRightRadius: 2,
+      borderBottomRightRadius: 2,
+      ":hover": {
+        backgroundColor: form.red
+      },
+      display: state.data.isFixed ? "none" : "flex"
+    };
   },
   control: (base, _) => {
     const {
