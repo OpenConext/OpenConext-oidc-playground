@@ -1,15 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ReactSelect } from "components";
 import { isEmpty } from "utils/Utils";
 
 export function ResponseMode(props) {
-  if (props.moderators.grant_type !== "implicit") {
-    props.onChange("");
-    return null;
-  }
+  const { moderators, value, onChange } = props;
 
-  if (isEmpty(props.value)) {
-    props.onChange("fragment");
+  useEffect(
+    () => {
+      if (moderators.grant_type === "implicit") {
+        if (isEmpty(value)) {
+          onChange("fragment");
+        }
+        return;
+      }
+
+      onChange("");
+    },
+    [moderators.grant_type, value, onChange]
+  );
+
+  if (moderators.grant_type !== "implicit") {
+    return null;
   }
 
   return (

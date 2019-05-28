@@ -15,33 +15,38 @@ export function RetrieveContent(props) {
   };
 
   return (
-    <fieldset>
-      <button
-        type="button"
-        className="button introspect"
-        disabled={!props.introspect_endpoint}
-        onClick={handleIntrospect}
-      >
-        Introspect
-      </button>
+    <form>
+      <fieldset className="form-header">
+        <h2>Retrieve content</h2>
+      </fieldset>
+      <fieldset>
+        <button
+          type="button"
+          className="button introspect"
+          disabled={!props.introspect_endpoint}
+          onClick={handleIntrospect}
+        >
+          Introspect
+        </button>
 
-      <button
-        type="button"
-        className="button userinfo"
-        disabled={!props.userinfo_endpoint}
-        onClick={handleUserInfo}
-      >
-        Userinfo
-      </button>
+        <button
+          type="button"
+          className="button userinfo"
+          disabled={!props.userinfo_endpoint}
+          onClick={handleUserInfo}
+        >
+          Userinfo
+        </button>
 
-      <button
-        type="button"
-        className="button jwks"
-        disabled={!props.jwks_uri}
-        onClick={handleJwks}
-      >
-        JWKS certificates
-      </button>
-    </fieldset>
+        <button
+          type="button"
+          className="button jwks"
+          disabled={!props.jwks_uri}
+          onClick={handleJwks}
+        >
+          JWKS certificates
+        </button>
+      </fieldset>
+    </form>
   );
 }

@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ReactSelect } from "components";
 
 export function CodeChallenge(props) {
-  if (props.moderators.grant_type !== "authorization_code") {
-    props.codeChallenge.onChange("");
-    props.codeChallengeMethod.onChange("");
+  const { moderators, codeChallenge, codeChallengeMethod } = props;
 
+  useEffect(
+    () => {
+      if (moderators.grant_type !== "authorization_code") {
+        codeChallenge.onChange("");
+        codeChallengeMethod.onChange("");
+      }
+    },
+    [moderators.grant_type, codeChallenge, codeChallengeMethod]
+  );
+
+  if (moderators.grant_type !== "authorization_code") {
     return null;
   }
 
