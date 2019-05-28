@@ -3,7 +3,6 @@ package playground;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
-import io.restassured.parsing.Parser;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -19,7 +18,8 @@ import java.nio.charset.Charset;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {"oidc.discovery_endpoint=classpath:/discovery_endpoint.json"})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {"oidc.discovery_endpoint=classpath:/discovery_endpoint.json"})
 public abstract class AbstractIntegrationTest implements URLSupport {
 
     @LocalServerPort
