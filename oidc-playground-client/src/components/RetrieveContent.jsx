@@ -19,7 +19,7 @@ export function RetrieveContent(props) {
       <fieldset className="form-header">
         <h2>Retrieve content</h2>
       </fieldset>
-      <fieldset>
+      <fieldset className="button-group">
         <button
           type="button"
           className="button introspect"

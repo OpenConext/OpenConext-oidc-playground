@@ -1,0 +1,18 @@
+.__json-pretty__ {
+  padding: 20px;
+  line-height: 1.3;
+  color: $darker-blue;
+  font-size: 14px;
+  background: $light-grey;
+  overflow: auto;
+
+  .__json-key__ {
+    color: $blue;
+  }
+
+  .__json-value__,
+  .__json-string__,
+  .__json-boolean__ {
+    color: $darker-blue;
+  }
+}

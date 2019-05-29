@@ -37,7 +37,7 @@ export class Config extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="config">
         <SettingsForm config={this.state.config} />
         <RetrieveContent
           token="access_token_value"

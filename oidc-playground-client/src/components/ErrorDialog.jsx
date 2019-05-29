@@ -1,6 +1,5 @@
 import React from "react";
 import Modal from "react-modal";
-import "./ErrorDialog.scss";
 
 export function ErrorDialog({ isOpen = false, close }) {
   return (

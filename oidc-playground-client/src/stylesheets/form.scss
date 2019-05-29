@@ -37,7 +37,6 @@ form {
   $form-space: 20px;
   padding-bottom: ($form-space / 2);
   margin-bottom: $form-space;
-  max-width: 600px;
 
   background-color: white;
 
@@ -53,6 +52,14 @@ form {
         color: white;
         font-weight: bold;
         font-size: 16px;
+      }
+    }
+
+    &.button-group {
+      padding-bottom: 0px;
+
+      > * {
+        margin-bottom: 10px;
       }
     }
 
