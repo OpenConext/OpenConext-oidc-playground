@@ -1,8 +1,13 @@
 package playground.api;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
+import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import io.restassured.http.ContentType;
 import io.restassured.mapper.TypeRef;
+import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -11,6 +16,7 @@ import playground.AbstractIntegrationTest;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -18,6 +24,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
+import static com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod.S256;
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -50,7 +57,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("claims", Arrays.asList("email", "edumember_is_member_of"))
                 .p("nonce", "some_nonce");
 
-        Map<String, String> queryParams = doPost(body);
+        Map<String, String> queryParams = doPostForAuthorize(body, "authorization_code");
 
         Map<String, Object> expected = new FluentMap()
                 .p("scope", "openid groups")
@@ -71,7 +78,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("scope", Arrays.asList("openid", "groups"))
                 .p("state", "example");
 
-        Map<String, String> queryParams = doPost(body);
+        Map<String, String> queryParams = doPostForAuthorize(body, "authorization_code");
 
         Map<String, Object> expected = new FluentMap()
                 .p("scope", "openid groups")
@@ -141,13 +148,17 @@ public class OidcTest extends AbstractIntegrationTest {
         assertEquals("playground_client", payload.get("aud"));
     }
 
+    @Test
+    public void codeChallenge() {
+        Map<String, Object> result = doPost(new HashMap<>(), "code_challenge").as(mapTypeRef);
 
-    private Map<String, String> doPost(Map<String, Object> body) {
-        String url = given()
-                .header("Content-type", "application/json")
-                .accept(ContentType.JSON)
-                .body(body)
-                .post("/oidc/api/authorization_code")
+        assertTrue(Base64.isBase64((String) result.get("codeChallenge")));
+        assertEquals(43, ((String) result.get("codeVerifier")).length());
+        assertEquals(S256, CodeChallengeMethod.parse((String) result.get("codeChallengeMethod")));
+    }
+
+    private Map<String, String> doPostForAuthorize(Map<String, Object> body, String path) {
+        String url = doPost(body, path)
                 .then()
                 .extract()
                 .path("url");
@@ -159,6 +170,15 @@ public class OidcTest extends AbstractIntegrationTest {
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> decode(e.getValue())));
+    }
+
+    private Response doPost(Map<String, Object> body, String path) {
+        return given()
+                .header("Content-type", "application/json")
+                .accept(ContentType.JSON)
+                .body(body)
+                .post("/oidc/api/" + path);
+
     }
 
 

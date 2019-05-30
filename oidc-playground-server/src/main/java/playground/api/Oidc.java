@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.ResponseType;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallenge;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
+import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import com.nimbusds.oauth2.sdk.util.OrderedJSONObject;
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
 import net.minidev.json.JSONObject;
@@ -70,6 +73,19 @@ public class Oidc implements URLSupport {
     @GetMapping("/discovery")
     public Map<String, Object> discovery() throws IOException {
         return objectMapper.readValue(discoveryEndpoint.getInputStream(), mapTypeReference);
+    }
+
+    @PostMapping("code_challenge")
+    public Map<String, String> codeChallenge(@RequestBody Map<String, String> body) {
+        CodeChallengeMethod method = CodeChallengeMethod.parse(body.getOrDefault("codeChallengeMethod",
+                CodeChallengeMethod.S256.getValue()));
+        CodeVerifier codeVerifier = new CodeVerifier();
+        CodeChallenge codeChallenge = CodeChallenge.compute(method,
+                new CodeVerifier(body.getOrDefault("codeVerifier", codeVerifier.getValue())));
+        body.put("codeChallenge", codeChallenge.getValue());
+        body.put("codeVerifier", codeChallenge.getValue());
+        body.put("codeChallengeMethod", method.getValue());
+        return body;
     }
 
     @PostMapping(value = {"/authorization_code", "/implicit"})

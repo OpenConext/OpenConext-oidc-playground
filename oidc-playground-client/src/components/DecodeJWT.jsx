@@ -1,7 +1,7 @@
 import React from "react";
 import JSONPretty from "react-json-pretty";
 
-import { decodeJWT } from "../api";
+import {decodeJWT} from "../api";
 
 export class DecodeJWT extends React.Component {
   state = {
@@ -18,19 +18,20 @@ export class DecodeJWT extends React.Component {
   };
 
   componentDidMount() {
-    decodeJWT(this.props.access_token)
-      .then(accessTokenJWT =>
-        this.setState({ accessTokenJWT, decodedAccessToken: true })
-      )
-      .catch(err => console.log("err", err));
+    Promise.all([decodeJWT(this.props.access_token), decodeJWT(this.props.id_token)])
+      .then(tokensJWT =>
+        this.setState({
+          accessTokenJWT: tokensJWT[0],
+          decodedAccessToken: true,
+          idTokenJWT: tokensJWT[1],
+          decodedIdToken: true
+        })
+      ).catch(err => console.log("err", err));
 
-    decodeJWT(this.props.id_token)
-      .then(idTokenJWT => this.setState({ idTokenJWT, decodedIdToken: true }))
-      .catch(err => console.log("err", err));
   }
 
   render() {
-    const { decodedAccessToken, decodedIdToken } = this.state;
+    const {decodedAccessToken, decodedIdToken} = this.state;
 
     if (!decodedAccessToken && !decodedIdToken) {
       return null;
@@ -39,10 +40,10 @@ export class DecodeJWT extends React.Component {
     return (
       <>
         {decodedAccessToken && (
-          <JSONPretty id="json-pretty" data={this.state.accessTokenJWT} />
+          <JSONPretty id="json-pretty" data={this.state.accessTokenJWT}/>
         )}
         {decodedIdToken && (
-          <JSONPretty id="json-pretty" data={this.state.idTokenJWT} />
+          <JSONPretty id="json-pretty" data={this.state.idTokenJWT}/>
         )}
       </>
     );
