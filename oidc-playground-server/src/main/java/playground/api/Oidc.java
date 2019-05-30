@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -65,6 +67,12 @@ public class Oidc implements URLSupport {
     @Value("${oidc.redirect_uri}")
     private String redirectUri;
 
+    @Value("${oidc.redirect_uri_form_post}")
+    private String redirectUriFormPost;
+
+    @Value("${oidc.client_redirect_uri}")
+    private String clientRedirectUri;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -75,7 +83,7 @@ public class Oidc implements URLSupport {
         return objectMapper.readValue(discoveryEndpoint.getInputStream(), mapTypeReference);
     }
 
-    @PostMapping("code_challenge")
+    @PostMapping(value = "/code_challenge")
     public Map<String, String> codeChallenge(@RequestBody Map<String, String> body) {
         CodeChallengeMethod method = CodeChallengeMethod.parse(body.getOrDefault("codeChallengeMethod",
                 CodeChallengeMethod.S256.getValue()));
@@ -88,6 +96,17 @@ public class Oidc implements URLSupport {
         return body;
     }
 
+    @PostMapping(value = "/redirect", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public void redirectFormPost(@RequestParam MultiValueMap<String,String> form, HttpServletResponse response) throws IOException {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(clientRedirectUri);
+        form.forEach((key, value) -> {
+            if (!CollectionUtils.isEmpty(value)) {
+                builder.queryParam(key, encode(value.get(0)));
+            }
+        });
+        response.sendRedirect(builder.build().toUriString());
+    }
+
     @PostMapping(value = {"/authorization_code", "/implicit"})
     public Map<String, String> authorize(@RequestBody Map<String, Object> body) throws URISyntaxException {
         Map<String, String> parameters = new HashMap<>();
@@ -98,15 +117,22 @@ public class Oidc implements URLSupport {
         if (!CollectionUtils.isEmpty(scopes)) {
             parameters.put("scope", String.join(" ", scopes));
         }
+        String responseMode = (String) body.getOrDefault("response_mode", "fragment");
         if (!responseType.impliesCodeFlow()) {
-            parameters.put("response_mode", (String) body.getOrDefault("response_mode", "fragment"));
+            parameters.put("response_mode", responseMode);
         }
         List<String> requestedClaims = (List<String>) body.get("claims");
         if (!CollectionUtils.isEmpty(requestedClaims)) {
             parameters.put("claims", claims(requestedClaims));
         }
         parameters.put("client_id", (String) body.getOrDefault("client_id", clientId));
-        parameters.put("redirect_uri", redirectUri);
+
+        if (!responseType.impliesCodeFlow() && responseMode.equals("form_post")) {
+            parameters.put("redirect_uri", redirectUriFormPost);
+        } else {
+            parameters.put("redirect_uri", redirectUri);
+        }
+
         parameters.put("nonce", (String) body.get("nonce"));
         parameters.put("state", (String) body.get("state"));
         parameters.put("code_challenge", (String) body.get("code_challenge"));
@@ -120,7 +146,7 @@ public class Oidc implements URLSupport {
                 builder.queryParam(key, encode(value));
             }
         });
-        return Collections.singletonMap("url", builder.build().toString());
+        return Collections.singletonMap("url", builder.build().toUriString());
     }
 
     @PostMapping(value = {"/token"})

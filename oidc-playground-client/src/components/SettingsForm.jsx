@@ -22,7 +22,7 @@ export class SettingsForm extends React.Component {
       grant_type: "authorization_code",
       response_mode: "",
       response_type: "code",
-      scopes: [],
+      scope: [],
       token_endpoint: "client_secret_basic",
       state: "example",
       nonce: "example"
@@ -62,7 +62,7 @@ export class SettingsForm extends React.Component {
       nonce,
       response_mode,
       response_type,
-      scopes,
+      scope,
       state,
       token_endpoint
     } = this.state;
@@ -105,9 +105,9 @@ export class SettingsForm extends React.Component {
         </div>
 
         <Scopes
-          value={scopes}
+          value={scope}
           options={this.props.config.scopes_supported}
-          onChange={val => this.setValue("scopes", val)}
+          onChange={val => this.setValue("scope", val)}
           moderators={{ auth_protocol }}
         />
 

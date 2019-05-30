@@ -1,16 +1,15 @@
 package playground.api;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-
 import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import io.restassured.http.ContentType;
 import io.restassured.mapper.TypeRef;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
 import playground.AbstractIntegrationTest;
 
@@ -155,6 +154,17 @@ public class OidcTest extends AbstractIntegrationTest {
         assertTrue(Base64.isBase64((String) result.get("codeChallenge")));
         assertEquals(43, ((String) result.get("codeVerifier")).length());
         assertEquals(S256, CodeChallengeMethod.parse((String) result.get("codeChallengeMethod")));
+    }
+
+    @Test
+    public void redirect() {
+        given().redirects().follow(false)
+                .header("Content-type", MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .formParams(new FluentMap().p("state", "value").p("code", "123456"))
+                .post("/oidc/api/redirect")
+                .then()
+                .header("Location", "http://localhost:3000/redirect?code=123456&state=value");
+
     }
 
     private Map<String, String> doPostForAuthorize(Map<String, Object> body, String path) {
