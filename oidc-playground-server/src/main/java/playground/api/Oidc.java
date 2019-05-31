@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.util.CollectionUtils;
@@ -36,14 +35,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Base64.getEncoder;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController()
@@ -99,7 +96,7 @@ public class Oidc implements URLSupport {
     }
 
     @PostMapping(value = "/redirect", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public void redirectFormPost(@RequestParam MultiValueMap<String,String> form, HttpServletResponse response) throws IOException {
+    public void redirectFormPost(@RequestParam MultiValueMap<String, String> form, HttpServletResponse response) throws IOException {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(clientRedirectUri);
         form.forEach((key, value) -> {
             if (!CollectionUtils.isEmpty(value)) {
@@ -217,14 +214,14 @@ public class Oidc implements URLSupport {
         String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
         if (authMethod.equals("client_secret_basic")) {
             builder.header(AUTHORIZATION, "Basic " +
-                    new String(getEncoder().encode(String.format("%s:%s", clientIdToUse, secretToUse).getBytes())));
+                    new String(encode(String.format("%s:%s", clientIdToUse, secretToUse))));
         } else {
             requestBody.put("client_id", clientIdToUse);
             requestBody.put("client_secret", secretToUse);
         }
 
         LinkedMultiValueMap form = new LinkedMultiValueMap();
-        requestBody.forEach((k,v)-> form.set(k,v));
+        requestBody.forEach((k, v) -> form.set(k, v));
         RequestEntity<LinkedMultiValueMap> requestEntity = builder.body(form);
 
         Map<String, Object> result = new HashMap();

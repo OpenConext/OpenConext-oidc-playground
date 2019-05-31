@@ -10,6 +10,8 @@ import {
 import { formPost } from "api";
 import {authorizationProtocol, tokenEndpointAuthentication} from "./settings/Tooltips";
 
+const excludedClaims = ["aud", "nbf", "iss", "exp", "iat", "jti", "nonce", "at_hash", "c_hash", "s_hash", "at_hash", "sub", "uids"];
+
 export class SettingsForm extends React.Component {
   constructor(props) {
     super(props);
@@ -131,7 +133,7 @@ export class SettingsForm extends React.Component {
           <label>Requested claims</label>
           <ReactSelect
             value={claims}
-            options={this.props.config.claims_supported}
+            options={this.props.config.claims_supported.filter(claim => excludedClaims.includes(claim))}
             onChange={val => this.setValue("claims", val)}
             isMulti
           />
