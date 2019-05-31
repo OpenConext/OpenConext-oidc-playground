@@ -19,7 +19,7 @@ const props = {
     scopes_supported: [],
     subject_types_supported: [],
     token_endpoint_auth_methods_supported: [],
-    token_endpoint: "",
+    token_endpoint_auth_method: "",
     userinfo_endpoint: ""
   }
 };

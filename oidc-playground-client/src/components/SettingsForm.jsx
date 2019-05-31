@@ -1,5 +1,5 @@
 import React from "react";
-import { ReactSelect } from "components";
+import { ReactSelect, InfoLabel } from "components";
 import {
   CodeChallenge,
   GrantType,
@@ -8,6 +8,7 @@ import {
   Scopes
 } from "components/settings";
 import { formPost } from "api";
+import {authorizationProtocol, tokenEndpointAuthentication} from "./settings/Tooltips";
 
 export class SettingsForm extends React.Component {
   constructor(props) {
@@ -23,7 +24,7 @@ export class SettingsForm extends React.Component {
       response_mode: "",
       response_type: "code",
       scope: [],
-      token_endpoint: "client_secret_basic",
+      token_endpoint_auth_method: "client_secret_basic",
       state: "example",
       nonce: "example"
     };
@@ -41,7 +42,12 @@ export class SettingsForm extends React.Component {
     e.preventDefault();
 
     formPost(this.getSanitizedBody()).then(json => {
-      window.location.replace(json.url);
+      if (json.url) {
+        window.location.replace(json.url);
+      } else {
+        //TODO update data
+      }
+
     });
   }
 
@@ -64,7 +70,7 @@ export class SettingsForm extends React.Component {
       response_type,
       scope,
       state,
-      token_endpoint
+      token_endpoint_auth_method
     } = this.state;
 
     return (
@@ -74,7 +80,7 @@ export class SettingsForm extends React.Component {
         </fieldset>
 
         <fieldset>
-          <label>Authorization protocol</label>
+          <InfoLabel label="Authorization protocol" toolTip={authorizationProtocol()}/>
           <ReactSelect
             value={auth_protocol}
             options={["OpenID", "Oauth2"]}
@@ -86,6 +92,7 @@ export class SettingsForm extends React.Component {
           value={grant_type}
           options={this.props.config.grant_types_supported}
           onChange={val => this.setValue("grant_type", val)}
+          moderators={{ auth_protocol }}
         />
 
         <div className="field-block">
@@ -112,16 +119,16 @@ export class SettingsForm extends React.Component {
         />
 
         <fieldset>
-          <label>Token endpoint</label>
+          <InfoLabel label="Token endpoint authentication" toolTip={tokenEndpointAuthentication()}/>
           <ReactSelect
-            value={token_endpoint}
+            value={token_endpoint_auth_method}
             options={this.props.config.token_endpoint_auth_methods_supported}
-            onChange={val => this.setValue("token_endpoint", val)}
+            onChange={val => this.setValue("token_endpoint_auth_method", val)}
           />
         </fieldset>
 
         <fieldset>
-          <label>Claims</label>
+          <label>Requested claims</label>
           <ReactSelect
             value={claims}
             options={this.props.config.claims_supported}

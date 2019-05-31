@@ -1,0 +1,36 @@
+@import "../stylesheets/vars.scss";
+
+div.info-label {
+  display: flex;
+  color: $blue;
+  span.tool-tip-section {
+    opacity: .1;
+    display: inline-block;
+    padding: 0 5px;
+    font-size: 12px;
+    cursor: pointer;
+    &:hover {
+      opacity: 1;
+    }
+    .inner-tooltip {
+      padding: 5px 15px;
+      h3 {
+        font-size: 16px;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.__react_component_tooltip {
+  opacity: 1 !important;
+  border-radius: $br;
+  box-shadow: 1px 2px 4px 1px $hover;
+  background-color: $lightest-grey;
+  color: $dark-grey;
+}
+
+.__react_component_tooltip.place-top:after {
+  border-top-color: $lighter-grey !important;
+}

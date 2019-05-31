@@ -39,9 +39,11 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Base64.getEncoder;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController()
@@ -52,7 +54,7 @@ public class Oidc implements URLSupport {
     static TypeReference<Map<String, Object>> mapTypeReference = new TypeReference<Map<String, Object>>() {
     };
 
-    static ParameterizedTypeReference<Map<String, Object>> mapResponseType = new ParameterizedTypeReference<Map<String, Object>>() {
+    static ParameterizedTypeReference<LinkedHashMap<String, Object>> mapResponseType = new ParameterizedTypeReference<LinkedHashMap<String, Object>>() {
     };
 
     @Value("${oidc.discovery_endpoint}")
@@ -213,8 +215,9 @@ public class Oidc implements URLSupport {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
-        if (authMethod.equals("client_secret_post")) {
-            builder.header(AUTHORIZATION, new String(Base64.getEncoder().encode(String.format("%s:%s", clientIdToUse, secretToUse).getBytes())));
+        if (authMethod.equals("client_secret_basic")) {
+            builder.header(AUTHORIZATION, "Basic " +
+                    new String(getEncoder().encode(String.format("%s:%s", clientIdToUse, secretToUse).getBytes())));
         } else {
             requestBody.put("client_id", clientIdToUse);
             requestBody.put("client_secret", secretToUse);

@@ -38,7 +38,7 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
     }
 
     @RequestMapping("/error")
-    public ResponseEntity error(HttpServletRequest request) throws UnsupportedEncodingException, URISyntaxException {
+    public ResponseEntity error(HttpServletRequest request) {
         ServletWebRequest webRequest = new ServletWebRequest(request);
         Map<String, Object> result = this.errorAttributes.getErrorAttributes(webRequest, false);
 

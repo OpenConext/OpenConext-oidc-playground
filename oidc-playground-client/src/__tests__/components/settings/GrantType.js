@@ -3,6 +3,7 @@ import { shallow, mount } from "enzyme";
 import { GrantType } from "components/settings";
 
 const props = {
+  moderators: {},
   options: []
 };
 
