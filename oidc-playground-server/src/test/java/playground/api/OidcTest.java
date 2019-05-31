@@ -118,13 +118,18 @@ public class OidcTest extends AbstractIntegrationTest {
                         .withHeader("Content-Type", "application/json")
                         .withBody(readFile("oidc_response.json"))));
 
-        Map<String, Object> result = given()
+        Map<String, Object> map = given()
                 .accept(ContentType.JSON)
                 .header("Content-type", "application/json")
                 .body(body)
                 .post("/oidc/api/" + path)
                 .as(mapTypeRef);
 
+        assertTrue(map.containsKey("request_body"));
+        assertTrue(map.containsKey("request_headers"));
+        assertTrue(map.containsKey("request_url"));
+
+        Map<String, Object> result = (Map<String, Object>) map.get("result");
         assertTrue(result.containsKey("access_token"));
     }
 

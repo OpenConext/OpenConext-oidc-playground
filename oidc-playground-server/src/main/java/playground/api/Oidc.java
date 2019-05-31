@@ -17,7 +17,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -31,18 +30,19 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController()
 @RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -214,7 +214,7 @@ public class Oidc implements URLSupport {
 
         String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
         if (authMethod.equals("client_secret_post")) {
-            builder.header(HttpHeaders.AUTHORIZATION, new String(Base64.getEncoder().encode(String.format("%s:%s", clientIdToUse, secretToUse).getBytes())));
+            builder.header(AUTHORIZATION, new String(Base64.getEncoder().encode(String.format("%s:%s", clientIdToUse, secretToUse).getBytes())));
         } else {
             requestBody.put("client_id", clientIdToUse);
             requestBody.put("client_secret", secretToUse);
@@ -222,7 +222,28 @@ public class Oidc implements URLSupport {
 
         LinkedMultiValueMap form = new LinkedMultiValueMap();
         requestBody.forEach((k,v)-> form.set(k,v));
-        return restTemplate.exchange(builder.body(form), mapResponseType).getBody();
+        RequestEntity<LinkedMultiValueMap> requestEntity = builder.body(form);
+
+        Map<String, Object> result = new HashMap();
+        result.put("result", restTemplate.exchange(requestEntity, mapResponseType).getBody());
+        result.put("request_body", sanitizeRequestBody(requestBody));
+        result.put("request_url", endpoint);
+        result.put("request_headers", sanitizeHeaders(requestEntity.getHeaders().toSingleValueMap()));
+        return result;
+    }
+
+    private Map<String, String> sanitizeRequestBody(Map<String, String> requestBody) {
+        List<String> sensitiveParams = Arrays.asList("client_id", "client_secret");
+        sensitiveParams.forEach(param -> requestBody.replace(param, "XXX"));
+        return requestBody;
+    }
+
+    private Map<String, String> sanitizeHeaders(Map<String, String> headers) {
+        //headers are unmodifiable
+        Map<String, String> result = new HashMap<>(headers);
+        List<String> sensitiveHeaders = Arrays.asList(AUTHORIZATION);
+        sensitiveHeaders.forEach(header -> result.replace(header, "XXX"));
+        return result;
     }
 
     private String claims(List<String> requestedClaims) {
