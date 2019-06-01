@@ -12,11 +12,11 @@ server:
 
 oidc:
   discovery_endpoint: "https://oidcng.test2.surfconext.nl/oidc/.well-known/openid-configuration"
-  client_id: playground_client
-  secret: secret
-  redirect_uri: http://localhost:3000/redirect
-  redirect_uri_form_post: http://localhost:3000/oidc/api/redirect
-  client_redirect_uri: http://localhost:3000/redirect
+  client_id: "playground_client"
+  secret: "secret"
+  redirect_uri: "http://localhost:3000/redirect"
+  redirect_uri_form_post: "http://localhost:3000/oidc/api/redirect"
+  client_redirect_uri: "http://localhost:3000/redirect"
 
 gui:
   disclaimer:
