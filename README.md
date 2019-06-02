@@ -36,7 +36,7 @@ yarn install
 yarn start
 ```
 
-Browse to the [application homepage](http://localhost:8081/).
+Browse to the [application homepage](http://localhost:3000).
 
 To add new dependencies:
 
