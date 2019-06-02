@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.util.CollectionUtils;
@@ -175,8 +178,11 @@ public class Oidc implements URLSupport {
     }
 
     @GetMapping("/proxy")
-    public Map proxy(@RequestParam("uri") String uri) {
-        return restTemplate.getForEntity(uri, Map.class).getBody();
+    public Map proxy(@RequestParam("uri") String uri, @RequestParam("access_token") String access_token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "bearer " + access_token);
+        HttpEntity<Map> requestEntity = new HttpEntity<>(headers);
+        return restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Map.class).getBody();
     }
 
     @GetMapping("/decode_jwt")

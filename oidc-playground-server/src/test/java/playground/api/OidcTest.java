@@ -127,6 +127,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .accept(ContentType.JSON)
                 .header("Content-type", "application/json")
                 .queryParam("uri", "http://localhost:8080/proxy")
+                .queryParam("access_token", "access_token")
                 .get("/oidc/api/proxy")
                 .then()
                 .statusCode(200);
