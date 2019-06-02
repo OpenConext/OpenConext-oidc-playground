@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -45,8 +43,8 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
         LOG.error("Error has occurred: " + result);
 
         Throwable error = this.errorAttributes.getError(webRequest);
-        boolean status = result.containsKey("status") && !result.get("status").equals(999);
-        HttpStatus statusCode = status ? HttpStatus.resolve((Integer) result.get("status")) : BAD_REQUEST;
+        boolean hasValidStatus = result.containsKey("status") && !result.get("status").equals(999);
+        HttpStatus statusCode = hasValidStatus ? HttpStatus.resolve((Integer) result.get("status")) : BAD_REQUEST;
         if (error != null) {
             LOG.error("Exception in /error: ", error);
 

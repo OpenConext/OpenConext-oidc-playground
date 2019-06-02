@@ -234,8 +234,9 @@ public class Oidc implements URLSupport {
 
     private Map<String, String> sanitizeRequestBody(Map<String, String> requestBody) {
         List<String> sensitiveParams = Arrays.asList("client_id", "client_secret");
-        sensitiveParams.forEach(param -> requestBody.replace(param, "XXX"));
-        return requestBody;
+        Map<String, String> res = new HashMap<>(requestBody);
+        sensitiveParams.forEach(param -> res.replace(param, "XXX"));
+        return res;
     }
 
     private Map<String, String> sanitizeHeaders(Map<String, String> headers) {

@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
@@ -102,9 +103,53 @@ public class OidcTest extends AbstractIntegrationTest {
 
     @Test
     public void refreshToken() throws IOException {
-        doToken("refresh_token", "token");
+        doToken("refresh_token", "refresh_token");
     }
 
+    @Test
+    public void introspect() {
+        doForwardPost("/introspect", "introspect_endpoint");
+    }
+
+    @Test
+    public void userinfo() {
+        doForwardPost("/userinfo", "userinfo_endpoint");
+    }
+
+    @Test
+    public void proxy() {
+        stubFor(get(urlPathMatching("/proxy"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{}")));
+
+        given()
+                .accept(ContentType.JSON)
+                .header("Content-type", "application/json")
+                .queryParam("uri", "http://localhost:8080/proxy")
+                .get("/oidc/api/proxy")
+                .then()
+                .statusCode(200);
+    }
+
+    private void doForwardPost(String path, String endpoint) {
+        stubFor(post(urlPathMatching(path))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{}")));
+
+        Map<String, Object> body = new HashMap<>();
+        body.put(endpoint, "http://localhost:8080"+path);
+        given()
+                .accept(ContentType.JSON)
+                .header("Content-type", "application/json")
+                .body(body)
+                .post("/oidc/api"+path)
+                .then()
+                .statusCode(200);
+    }
+
+    @SuppressWarnings("unchecked")
     private void doToken(String grantType, String path) throws IOException {
         Map<String, Object> body = new FluentMap()
                 .p("token_endpoint", "http://localhost:8080/token")
