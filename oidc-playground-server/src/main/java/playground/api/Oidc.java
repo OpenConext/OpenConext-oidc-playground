@@ -38,6 +38,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -226,7 +227,8 @@ public class Oidc implements URLSupport {
         if (!codeVerifier) {
             String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
             if (authMethod.equals("client_secret_basic")) {
-                builder.header(AUTHORIZATION, "Basic " + encode(clientIdToUse + ":" + secretToUse));
+                builder.header(AUTHORIZATION, "Basic " +
+                        new String(Base64.getEncoder().encode((clientIdToUse + ":" + secretToUse).getBytes())));
             } else {
                 requestBody.put("client_id", clientIdToUse);
                 requestBody.put("client_secret", secretToUse);
