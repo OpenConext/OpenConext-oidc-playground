@@ -1,5 +1,5 @@
 import React from "react";
-import { DecodeJWT } from "components";
+import { DecodeJWT, Request } from "components";
 import { getTokens } from "api";
 import { getParams } from "utils/Url";
 
@@ -7,6 +7,7 @@ export class Display extends React.Component {
   state = {
     normalFlow: null,
     hybridFlow: null,
+    request: null,
     tabs: ["JWT", "Request"],
     activeTab: "JWT"
   };
@@ -34,14 +35,22 @@ export class Display extends React.Component {
           code: params.get("code")
         };
 
-        getTokens(body).then(data =>
+        getTokens(body).then(data => {
+          const { access_token, id_token } = data.result;
+          const { request_url, request_headers, request_body } = data;
+
           this.setState({
             hybridFlow: {
-              access_token: data.result.access_token,
-              id_token: data.result.id_token
+              access_token,
+              id_token
+            },
+            request: {
+              request_url,
+              request_headers,
+              request_body
             }
-          })
-        );
+          });
+        });
       }
     }
   }
@@ -63,10 +72,10 @@ export class Display extends React.Component {
   }
 
   renderView() {
-    const { normalFlow, hybridFlow, activeTab } = this.state;
+    const { normalFlow, hybridFlow, request, activeTab } = this.state;
 
     if (activeTab === "Request") {
-      return <label>Request</label>;
+      return <Request {...{ request }} />;
     }
 
     return <DecodeJWT {...{ normalFlow, hybridFlow }} />;
