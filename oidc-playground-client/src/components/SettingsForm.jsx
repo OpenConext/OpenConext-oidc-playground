@@ -48,12 +48,13 @@ export class SettingsForm extends React.Component {
     const params = getParams();
 
     if (params && params.has("state")) {
-      const decodedState = window.atob(params.get("state"));
+      const decodedStateString = window.atob(params.get("state"));
+      const { state } = JSON.parse(decodedStateString);
 
       this.setState({
         ...this.state,
-        ...JSON.parse(decodedState),
-        state: decodedState
+        ...state,
+        state: JSON.stringify(state)
       });
     }
 
@@ -73,7 +74,7 @@ export class SettingsForm extends React.Component {
       ...this.props.config,
       ...this.state,
       acr_values: this.state.acr_values.join(" "),
-      state: window.btoa(JSON.stringify(this.state))
+      state: window.btoa(JSON.stringify({ config: this.props.config, state: this.state }))
     };
   }
 
