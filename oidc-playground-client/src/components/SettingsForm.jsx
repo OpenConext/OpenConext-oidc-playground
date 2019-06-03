@@ -181,24 +181,9 @@ export class SettingsForm extends React.Component {
         </fieldset>
 
         <div className="field-block">
-          <CodeChallenge
-            codeChallenge={code_challenge}
-            codeVerifier={code_verifier}
-            pkce={pkce}
-            togglePkce={() => this.setValue("pkce", !pkce)}
-            codeChallengeMethod={{
-              value: code_challenge_method,
-              options: this.props.config.code_challenge_methods_supported,
-              onChange: val => this.setValue("code_challenge_method", val, this.componentDidMount)
-            }}
-            moderators={{ grant_type }}
-          />
-        </div>
-
-        <div className="field-block">
           <fieldset>
             <label>State</label>
-            <input value={state} onChange={e => this.setValue("state", e.target.value)} />
+            <input value={state} readOnly={true} onChange={e => this.setValue("state", e.target.value)} />
           </fieldset>
 
           <fieldset>
@@ -215,6 +200,21 @@ export class SettingsForm extends React.Component {
             isMulti
           />
         </fieldset>
+
+        <div className="field-block">
+          <CodeChallenge
+            codeChallenge={code_challenge}
+            codeVerifier={code_verifier}
+            pkce={pkce}
+            togglePkce={() => this.setValue("pkce", !pkce)}
+            codeChallengeMethod={{
+              value: code_challenge_method,
+              options: this.props.config.code_challenge_methods_supported,
+              onChange: val => this.setValue("code_challenge_method", val, this.componentDidMount)
+            }}
+            moderators={{ grant_type }}
+          />
+        </div>
 
         <fieldset>
           <button type="submit" className="button blue">

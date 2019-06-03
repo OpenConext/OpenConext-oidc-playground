@@ -260,23 +260,15 @@ public class Oidc implements URLSupport {
 
         Map<String, Object> result = new HashMap();
         result.put("result", restTemplate.exchange(requestEntity, mapResponseType).getBody());
-        result.put("request_body", sanitizeRequestBody(requestBody));
+        result.put("request_body", sanitizeInformation(requestBody));
         result.put("request_url", endpoint);
-        result.put("request_headers", sanitizeHeaders(requestEntity.getHeaders().toSingleValueMap()));
+        result.put("request_headers", sanitizeInformation(requestEntity.getHeaders().toSingleValueMap()));
         return result;
     }
 
-    private Map<String, String> sanitizeRequestBody(Map<String, String> requestBody) {
-        List<String> sensitiveParams = Arrays.asList("client_id", "client_secret");
-        Map<String, String> res = new HashMap<>(requestBody);
-        sensitiveParams.forEach(param -> res.replace(param, "XXX"));
-        return res;
-    }
-
-    private Map<String, String> sanitizeHeaders(Map<String, String> headers) {
-        //headers are unmodifiable
+    private Map<String, String> sanitizeInformation(Map<String, String> headers) {
         Map<String, String> result = new HashMap<>(headers);
-        List<String> sensitiveHeaders = Arrays.asList(AUTHORIZATION);
+        List<String> sensitiveHeaders = Arrays.asList("client_id", "client_secret", AUTHORIZATION);
         sensitiveHeaders.forEach(header -> result.replace(header, "XXX"));
         return result;
     }

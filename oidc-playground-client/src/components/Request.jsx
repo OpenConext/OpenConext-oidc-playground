@@ -13,7 +13,9 @@ export class Request extends React.Component {
     return (
       <div>
         <input readOnly={true} value={request_url} />
+        <label>Headers</label>
         <JSONPretty id="json-pretty" data={request_headers} />
+        <label>Form parameters</label>
         <JSONPretty id="json-pretty" data={request_body} />
       </div>
     );
