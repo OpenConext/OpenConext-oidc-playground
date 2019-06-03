@@ -8,9 +8,26 @@ import {
   Scopes
 } from "components/settings";
 import { formPost } from "api";
-import {authorizationProtocol, tokenEndpointAuthentication} from "./settings/Tooltips";
+import {
+  authorizationProtocol,
+  tokenEndpointAuthentication
+} from "./settings/Tooltips";
 
-const excludedClaims = ["aud", "nbf", "iss", "exp", "iat", "jti", "nonce", "at_hash", "c_hash", "s_hash", "at_hash", "sub", "uids"];
+const excludedClaims = [
+  "aud",
+  "nbf",
+  "iss",
+  "exp",
+  "iat",
+  "jti",
+  "nonce",
+  "at_hash",
+  "c_hash",
+  "s_hash",
+  "at_hash",
+  "sub",
+  "uids"
+];
 
 export class SettingsForm extends React.Component {
   constructor(props) {
@@ -49,7 +66,6 @@ export class SettingsForm extends React.Component {
       } else {
         //TODO update data
       }
-
     });
   }
 
@@ -82,7 +98,10 @@ export class SettingsForm extends React.Component {
         </fieldset>
 
         <fieldset>
-          <InfoLabel label="Authorization protocol" toolTip={authorizationProtocol()}/>
+          <InfoLabel
+            label="Authorization protocol"
+            toolTip={authorizationProtocol()}
+          />
           <ReactSelect
             value={auth_protocol}
             options={["OpenID", "Oauth2"]}
@@ -121,7 +140,10 @@ export class SettingsForm extends React.Component {
         />
 
         <fieldset>
-          <InfoLabel label="Token endpoint authentication" toolTip={tokenEndpointAuthentication()}/>
+          <InfoLabel
+            label="Token endpoint authentication"
+            toolTip={tokenEndpointAuthentication()}
+          />
           <ReactSelect
             value={token_endpoint_auth_method}
             options={this.props.config.token_endpoint_auth_methods_supported}
@@ -133,7 +155,9 @@ export class SettingsForm extends React.Component {
           <label>Requested claims</label>
           <ReactSelect
             value={claims}
-            options={this.props.config.claims_supported.filter(claim => excludedClaims.includes(claim))}
+            options={this.props.config.claims_supported.filter(
+              claim => !excludedClaims.includes(claim)
+            )}
             onChange={val => this.setValue("claims", val)}
             isMulti
           />
