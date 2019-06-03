@@ -1,6 +1,6 @@
 import React from "react";
 import {InfoLabel, ReactSelect} from "components";
-import {grantTypes} from "./Tooltips";
+import {grantTypesT} from "./Tooltips";
 
 const isOpenIdUsed = props => props.moderators.auth_protocol === "OpenID";
 
@@ -11,7 +11,7 @@ const sanitizeOptions = (isOpenId, options) =>
 export function GrantType(props) {
   return (
     <fieldset>
-      <InfoLabel label="Grant type" toolTip={grantTypes()}/>
+      <InfoLabel label="Grant type" toolTip={grantTypesT()}/>
       <ReactSelect
         {...props}
         className="select-grant-type"

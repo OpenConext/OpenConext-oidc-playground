@@ -1,0 +1,19 @@
+@import "../../stylesheets/vars.scss";
+
+div.code-challenge {
+  width: 100%;
+  padding: 10px 20px 0;
+
+  div.toggle-title {
+    font-size: 14px;
+  }
+
+  label.toggle-title {
+    cursor: pointer;
+  }
+
+  fieldset {
+    padding: 10px 0 10px 20px;
+  }
+
+}

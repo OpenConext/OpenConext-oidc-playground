@@ -93,6 +93,9 @@ form {
       &:hover {
         border-color: $hoverBorderColor;
       }
+      &[readonly] {
+        background-color: $lightest-grey;
+      }
     }
   }
 

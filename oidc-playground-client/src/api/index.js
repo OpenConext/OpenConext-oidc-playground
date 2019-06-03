@@ -1,4 +1,5 @@
 import spinner from "utils/Spin";
+import {isEmpty} from "../utils/Utils";
 
 //Internal API
 function validateResponse(showErrorDialog) {
@@ -81,6 +82,11 @@ export function decodeJWT(jwt) {
   return fetchJson(`/oidc/api/decode_jwt?jwt=${jwt}`);
 }
 
+export function generateCodeChallenge(codeChallengeMethod) {
+  return postPutJson("/oidc/api/code_challenge",
+    {codeChallengeMethod: isEmpty(codeChallengeMethod) ? undefined : codeChallengeMethod}, "POST");
+}
+
 export function reportError(error) {
-  return postPutJson("/oidc/api/error", error, "post");
+  return postPutJson("/oidc/api/error", error, "POST");
 }

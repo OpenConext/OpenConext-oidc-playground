@@ -93,7 +93,7 @@ public class Oidc implements URLSupport {
         CodeChallenge codeChallenge = CodeChallenge.compute(method,
                 new CodeVerifier(body.getOrDefault("codeVerifier", codeVerifier.getValue())));
         body.put("codeChallenge", codeChallenge.getValue());
-        body.put("codeVerifier", codeChallenge.getValue());
+        body.put("codeVerifier", codeVerifier.getValue());
         body.put("codeChallengeMethod", method.getValue());
         return body;
     }
@@ -151,7 +151,7 @@ public class Oidc implements URLSupport {
         return Collections.singletonMap("url", builder.build().toUriString());
     }
 
-    @PostMapping(value = {"/token"})
+    @PostMapping("/token")
     public Map<String, Object> token(@RequestBody Map<String, Object> body) throws URISyntaxException {
         body.put("redirect_uri", redirectUri);
         return doToken(body, "authorization_code");

@@ -1,37 +1,48 @@
-import React, { useEffect } from "react";
-import { ReactSelect } from "components";
+import React, {useEffect} from "react";
+import {ReactSelect} from "components";
+import {codeChallengeMethodT, codeChallengeT, codeVerifierT, pkceT} from "./Tooltips";
+import {InfoLabel} from "../InfoLabel";
+import "./CodeChallenge.scss";
 
 export function CodeChallenge(props) {
-  const { moderators, codeChallenge, codeChallengeMethod } = props;
+  const {moderators, codeVerifier, codeChallenge, codeChallengeMethod, pkce, togglePkce} = props;
 
   useEffect(
     () => {
       if (moderators.grant_type !== "authorization_code") {
-        codeChallenge.onChange("");
         codeChallengeMethod.onChange("");
       }
     },
-    [moderators.grant_type, codeChallenge, codeChallengeMethod]
+    [moderators.grant_type, codeChallengeMethod]
   );
 
   if (moderators.grant_type !== "authorization_code") {
     return null;
   }
-
+  const direction = pkce ? "<<" : ">>";
   return (
-    <>
-      <fieldset>
-        <label>Code challenge</label>
-        <input
-          {...props.codeChallenge}
-          onChange={e => props.codeChallenge.onChange(e.target.value)}
-        />
-      </fieldset>
+    <div className="code-challenge">
+      <InfoLabel label={`Proof Key for Code Exchange (PKCE) ${direction}`}
+                 toolTip={pkceT()}
+                 className="toggle-title"
+                 onClick={togglePkce}/>
+      {pkce && <>
+        <fieldset>
+          <InfoLabel label="Code verifier" toolTip={codeVerifierT()}/>
+          <input readOnly={true} value={codeVerifier}/>
+        </fieldset>
 
-      <fieldset>
-        <label>Code challenge method</label>
-        <ReactSelect {...props.codeChallengeMethod} />
-      </fieldset>
-    </>
+        <fieldset>
+          <InfoLabel label="Code challenge method" toolTip={codeChallengeMethodT()}/>
+          <ReactSelect {...props.codeChallengeMethod} />
+        </fieldset>
+
+        <fieldset>
+          <InfoLabel label="Code challenge" toolTip={codeChallengeT()}/>
+          <input readOnly={true} value={codeChallenge}/>
+        </fieldset>
+      </>}
+
+    </div>
   );
 }

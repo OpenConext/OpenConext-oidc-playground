@@ -8,11 +8,9 @@ import {
   Scopes
 } from "components/settings";
 import { formPost } from "api";
-import {
-  authorizationProtocol,
-  tokenEndpointAuthentication
-} from "./settings/Tooltips";
 import { isEmpty } from "utils/Utils";
+import {authorizationProtocolT, tokenEndpointAuthenticationT} from "./settings/Tooltips";
+import {generateCodeChallenge} from "../api";
 
 const excludedClaims = [
   "aud",
@@ -30,7 +28,9 @@ const excludedClaims = [
   "uids"
 ];
 
+
 export class SettingsForm extends React.Component {
+
   constructor(props) {
     super(props);
 
@@ -39,7 +39,9 @@ export class SettingsForm extends React.Component {
       acr_values: [],
       claims: [],
       code_challenge_method: "",
+      code_verifier: "",
       code_challenge: "",
+      pkce: false,
       grant_type: "authorization_code",
       response_mode: "",
       response_type: "code",
@@ -71,9 +73,16 @@ export class SettingsForm extends React.Component {
           state: decodedState
         });
       }
+    } else {
+      generateCodeChallenge(this.state.code_challenge_method).then(json =>
+        this.setState({
+          code_challenge_method: json.codeChallengeMethod,
+          code_verifier: json.codeVerifier,
+          code_challenge: json.codeChallenge})
+      );
     }
-  }
 
+  }
   getSanitizedBody() {
     return {
       ...this.props.config,
@@ -95,10 +104,8 @@ export class SettingsForm extends React.Component {
     });
   }
 
-  setValue(attr, value) {
-    this.setState({
-      [attr]: value
-    });
+  setValue(attr, value, callback = () => this) {
+    this.setState({[attr]: value}, callback);
   }
 
   render() {
@@ -108,6 +115,8 @@ export class SettingsForm extends React.Component {
       claims,
       code_challenge_method,
       code_challenge,
+      code_verifier,
+      pkce,
       grant_type,
       nonce,
       response_mode,
@@ -126,7 +135,7 @@ export class SettingsForm extends React.Component {
         <fieldset>
           <InfoLabel
             label="Authorization protocol"
-            toolTip={authorizationProtocol()}
+            toolTip={authorizationProtocolT()}
           />
           <ReactSelect
             value={auth_protocol}
@@ -168,7 +177,7 @@ export class SettingsForm extends React.Component {
         <fieldset>
           <InfoLabel
             label="Token endpoint authentication"
-            toolTip={tokenEndpointAuthentication()}
+            toolTip={tokenEndpointAuthenticationT()}
           />
           <ReactSelect
             value={token_endpoint_auth_method}
@@ -191,14 +200,14 @@ export class SettingsForm extends React.Component {
 
         <div className="field-block">
           <CodeChallenge
-            codeChallenge={{
-              value: code_challenge,
-              onChange: val => this.setValue("code_challenge", val)
-            }}
+            codeChallenge={code_challenge}
+            codeVerifier={code_verifier}
+            pkce={pkce}
+            togglePkce={() => this.setValue("pkce", !pkce)}
             codeChallengeMethod={{
               value: code_challenge_method,
               options: this.props.config.code_challenge_methods_supported,
-              onChange: val => this.setValue("code_challenge_method", val)
+              onChange: val => this.setValue("code_challenge_method", val, this.componentDidMount)
             }}
             moderators={{ grant_type }}
           />
