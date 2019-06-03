@@ -74,7 +74,7 @@ export class SettingsForm extends React.Component {
     };
   }
 
-  handleSubmit(e) {
+  handleSubmit = e => {
     e.preventDefault();
 
     formPost(this.getSanitizedBody()).then(json => {
@@ -84,7 +84,7 @@ export class SettingsForm extends React.Component {
         //TODO update data
       }
     });
-  }
+  };
 
   setValue(attr, value, callback = () => this) {
     this.setState({ [attr]: value }, callback);
@@ -109,7 +109,7 @@ export class SettingsForm extends React.Component {
     } = this.state;
 
     return (
-      <form onSubmit={e => this.handleSubmit(e)}>
+      <form onSubmit={this.handleSubmit}>
         <fieldset className="form-header">
           <h2>Settings</h2>
         </fieldset>

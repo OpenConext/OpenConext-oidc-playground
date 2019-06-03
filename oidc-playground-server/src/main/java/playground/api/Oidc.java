@@ -137,10 +137,12 @@ public class Oidc implements URLSupport {
 
         parameters.put("nonce", (String) body.get("nonce"));
         parameters.put("state", (String) body.get("state"));
-        parameters.put("code_challenge", (String) body.get("code_challenge"));
-        parameters.put("code_challenge_method", (String) body.get("code_challenge_method"));
-        parameters.put("acr_values", (String) body.get("acr_values"));
 
+        if ((boolean)body.getOrDefault("pkce", false)) {
+            parameters.put("code_challenge", (String) body.get("code_challenge"));
+            parameters.put("code_challenge_method", (String) body.get("code_challenge_method"));
+        }
+        parameters.put("acr_values", (String) body.get("acr_values"));
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString((String) body.get("authorization_endpoint"));
         parameters.forEach((key, value) -> {
@@ -206,6 +208,9 @@ public class Oidc implements URLSupport {
                 requestBody.put("scope", String.join(" ", (List<String>) body.get("scope")));
             }
         }
+        if (body.containsKey("code_verifier")) {
+            requestBody.put("code_verifier", (String) body.get("code_verifier"));
+        }
         return doPost(body, requestBody, (String) body.get("token_endpoint"));
     }
 
@@ -217,13 +222,16 @@ public class Oidc implements URLSupport {
                 .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
-        if (authMethod.equals("client_secret_basic")) {
-            builder.header(AUTHORIZATION, "Basic " +
-                    new String(encode(String.format("%s:%s", clientIdToUse, secretToUse))));
-        } else {
-            requestBody.put("client_id", clientIdToUse);
-            requestBody.put("client_secret", secretToUse);
+        boolean codeVerifier = requestBody.containsKey("code_verifier");
+        if (!codeVerifier) {
+            String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
+            if (authMethod.equals("client_secret_basic")) {
+                builder.header(AUTHORIZATION, "Basic " +
+                        encode(String.format("%s:%s", clientIdToUse, secretToUse)));
+            } else {
+                requestBody.put("client_id", clientIdToUse);
+                requestBody.put("client_secret", secretToUse);
+            }
         }
 
         LinkedMultiValueMap form = new LinkedMultiValueMap();
