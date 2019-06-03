@@ -208,7 +208,7 @@ public class Oidc implements URLSupport {
                 requestBody.put("scope", String.join(" ", (List<String>) body.get("scope")));
             }
         }
-        if (body.containsKey("code_verifier")) {
+        if ((boolean)body.getOrDefault("pkce", false)) {
             requestBody.put("code_verifier", (String) body.get("code_verifier"));
         }
         return doPost(body, requestBody, (String) body.get("token_endpoint"));
