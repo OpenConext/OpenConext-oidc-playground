@@ -84,6 +84,10 @@ export function getTokens(body) {
   return postPutJson(`/oidc/api/token`, body, "POST");
 }
 
+export function fetchRemoteUrl(uri, accessToken) {
+  return fetchJson(`/oidc/api/proxy?uri=${encodeURIComponent(uri)}&access_token=${encodeURIComponent(accessToken)}`);
+}
+
 export function generateCodeChallenge(codeChallengeMethod) {
   return postPutJson(
     "/oidc/api/code_challenge",
