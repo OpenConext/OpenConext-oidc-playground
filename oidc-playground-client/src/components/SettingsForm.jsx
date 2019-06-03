@@ -12,6 +12,7 @@ import {
   authorizationProtocol,
   tokenEndpointAuthentication
 } from "./settings/Tooltips";
+import { isEmpty } from "utils/Utils";
 
 const excludedClaims = [
   "aud",
@@ -49,11 +50,36 @@ export class SettingsForm extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const url = new URL(window.location);
+
+    if (url.pathname === "/redirect") {
+      let params;
+
+      if (!isEmpty(url.hash)) {
+        params = new URLSearchParams(url.hash.replace("#", "?"));
+      } else {
+        params = url.searchParams;
+      }
+
+      if (params.has("state")) {
+        const decodedState = window.atob(params.get("state"));
+
+        this.setState({
+          ...this.state,
+          ...JSON.parse(decodedState),
+          state: decodedState
+        });
+      }
+    }
+  }
+
   getSanitizedBody() {
     return {
       ...this.props.config,
       ...this.state,
-      acr_values: this.state.acr_values.join(" ")
+      acr_values: this.state.acr_values.join(" "),
+      state: window.btoa(JSON.stringify(this.state))
     };
   }
 

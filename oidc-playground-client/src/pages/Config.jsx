@@ -1,7 +1,6 @@
 import React from "react";
 import { SettingsForm, RetrieveContent } from "components";
 import { discovery } from "api";
-import queryString from "query-string";
 
 export class Config extends React.Component {
   constructor(props) {
@@ -33,9 +32,6 @@ export class Config extends React.Component {
   componentDidMount() {
     discovery().then(config => {
       this.setState({ config });
-      const params = queryString.parse(window.location.search);
-      //TODO fetch token and restore state in in redirect - we need router to go to another url otherwise we'll retrieve the code again on refresh.
-      console.log(params.code);
     });
   }
 
