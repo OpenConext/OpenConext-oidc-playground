@@ -1,24 +1,16 @@
-import React, {useEffect} from "react";
-import {ReactSelect} from "components";
-import {codeChallengeMethodT, codeChallengeT, codeVerifierT, pkceT} from "./Tooltips";
-import {InfoLabel} from "../InfoLabel";
+import React from "react";
+import { ReactSelect } from "components";
+import { codeChallengeMethodT, codeChallengeT, codeVerifierT, pkceT } from "./Tooltips";
+import { InfoLabel } from "../InfoLabel";
 import "./CodeChallenge.scss";
 
 export function CodeChallenge(props) {
-  const {moderators, codeVerifier, codeChallenge, codeChallengeMethod, pkce, togglePkce} = props;
-
-  useEffect(
-    () => {
-      if (moderators.grant_type !== "authorization_code") {
-        codeChallengeMethod.onChange("");
-      }
-    },
-    [moderators.grant_type, codeChallengeMethod]
-  );
+  const { moderators, codeVerifier, codeChallenge, pkce, togglePkce } = props;
 
   if (moderators.grant_type !== "authorization_code") {
     return null;
   }
+
   const direction = pkce ? "<<" : ">>";
   return (
     <div className="code-challenge">

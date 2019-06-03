@@ -35,7 +35,7 @@ export class SettingsForm extends React.Component {
       code_challenge: "",
       pkce: false,
       grant_type: "authorization_code",
-      response_mode: "",
+      response_mode: "fragment",
       response_type: "code",
       scope: [],
       token_endpoint_auth_method: "client_secret_basic",
@@ -45,14 +45,6 @@ export class SettingsForm extends React.Component {
   }
 
   componentDidMount() {
-    generateCodeChallenge(this.state.code_challenge_method).then(json =>
-      this.setState({
-        code_challenge_method: json.codeChallengeMethod,
-        code_verifier: json.codeVerifier,
-        code_challenge: json.codeChallenge
-      })
-    );
-
     const params = getParams();
 
     if (params && params.has("state")) {
@@ -64,7 +56,18 @@ export class SettingsForm extends React.Component {
         state: decodedState
       });
     }
+
+    if (window.location.pathname === "/") {
+      generateCodeChallenge(this.state.code_challenge_method).then(json =>
+        this.setState({
+          code_challenge_method: json.codeChallengeMethod,
+          code_verifier: json.codeVerifier,
+          code_challenge: json.codeChallenge
+        })
+      );
+    }
   }
+
   getSanitizedBody() {
     return {
       ...this.props.config,
