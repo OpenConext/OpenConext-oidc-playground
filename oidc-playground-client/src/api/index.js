@@ -72,10 +72,6 @@ export function postUserinfo() {
   console.log("postUserinfo");
 }
 
-export function getJwksCertificates() {
-  console.log("getJwksCertificates");
-}
-
 export function decodeJWT(jwt) {
   return fetchJson(`/oidc/api/decode_jwt?jwt=${jwt}`);
 }

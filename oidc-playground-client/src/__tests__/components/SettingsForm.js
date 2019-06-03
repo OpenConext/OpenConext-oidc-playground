@@ -13,7 +13,6 @@ const props = {
     id_token_signing_alg_values_supported: [],
     introspect_endpoint: "",
     issuer: "",
-    jwks_uri: "",
     response_modes_supported: [],
     response_types_supported: [],
     scopes_supported: [],

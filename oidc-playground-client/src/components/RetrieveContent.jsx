@@ -1,5 +1,5 @@
 import React from "react";
-import { postIntrospect, postUserinfo, getJwksCertificates } from "../api";
+import { postIntrospect, postUserinfo } from "../api";
 
 export function RetrieveContent(props) {
   const handleIntrospect = () => {
@@ -8,10 +8,6 @@ export function RetrieveContent(props) {
 
   const handleUserInfo = () => {
     postUserinfo();
-  };
-
-  const handleJwks = () => {
-    getJwksCertificates();
   };
 
   return (
@@ -29,22 +25,8 @@ export function RetrieveContent(props) {
           Introspect
         </button>
 
-        <button
-          type="button"
-          className="button userinfo"
-          disabled={!props.userinfo_endpoint}
-          onClick={handleUserInfo}
-        >
+        <button type="button" className="button userinfo" disabled={!props.userinfo_endpoint} onClick={handleUserInfo}>
           Userinfo
-        </button>
-
-        <button
-          type="button"
-          className="button jwks"
-          disabled={!props.jwks_uri}
-          onClick={handleJwks}
-        >
-          JWKS certificates
         </button>
       </fieldset>
     </form>

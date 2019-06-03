@@ -17,7 +17,6 @@ export class Config extends React.Component {
         id_token_signing_alg_values_supported: [],
         introspect_endpoint: "",
         issuer: "",
-        jwks_uri: "",
         response_modes_supported: [],
         response_types_supported: [],
         scopes_supported: [],
@@ -43,7 +42,6 @@ export class Config extends React.Component {
           token="access_token_value"
           introspect_endpoint={this.state.config.introspect_endpoint}
           userinfo_endpoint={this.state.config.userinfo_endpoint}
-          jwks_uri={this.state.config.jwks_uri}
         />
       </div>
     );
