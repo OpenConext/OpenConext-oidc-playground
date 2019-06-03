@@ -223,9 +223,9 @@ public class Oidc implements URLSupport {
                 .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+        String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
         boolean codeVerifier = requestBody.containsKey("code_verifier");
         if (!codeVerifier) {
-            String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
             if (authMethod.equals("client_secret_basic")) {
                 builder.header(AUTHORIZATION, "Basic " +
                         new String(Base64.getEncoder().encode((clientIdToUse + ":" + secretToUse).getBytes())));
@@ -233,6 +233,8 @@ public class Oidc implements URLSupport {
                 requestBody.put("client_id", clientIdToUse);
                 requestBody.put("client_secret", secretToUse);
             }
+        } else {
+            requestBody.put("client_id", clientIdToUse);
         }
 
         LinkedMultiValueMap form = new LinkedMultiValueMap();

@@ -11,8 +11,9 @@ server:
     context-path: /oidc/api
 
 oidc:
-#  discovery_endpoint: "https://oidcng.test2.surfconext.nl/oidc/.well-known/openid-configuration"
-  discovery_endpoint: "http://localhost:8080/oidc/.well-known/openid-configuration"
+  discovery_endpoint: "https://oidcng.test2.surfconext.nl/oidc/.well-known/openid-configuration"
+  # Use this when you want to test against a local instance of OIDC-NG
+  # discovery_endpoint: "http://localhost:8080/oidc/.well-known/openid-configuration"
   client_id: "playground_client"
   secret: "secret"
   redirect_uri: "http://localhost:3000/redirect"

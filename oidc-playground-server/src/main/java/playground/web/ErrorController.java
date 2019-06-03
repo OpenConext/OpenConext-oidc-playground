@@ -1,5 +1,6 @@
 package playground.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -24,10 +27,11 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
     private static final Log LOG = LogFactory.getLog(ErrorController.class);
 
     private ErrorAttributes errorAttributes;
+    private ObjectMapper objectMapper;
 
-    @Autowired
-    public ErrorController(ErrorAttributes errorAttributes) {
+    public ErrorController(ErrorAttributes errorAttributes, ObjectMapper objectMapper) {
         this.errorAttributes = errorAttributes;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -36,7 +40,7 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
     }
 
     @RequestMapping("/error")
-    public ResponseEntity error(HttpServletRequest request) {
+    public ResponseEntity error(HttpServletRequest request) throws IOException {
         ServletWebRequest webRequest = new ServletWebRequest(request);
         Map<String, Object> result = this.errorAttributes.getErrorAttributes(webRequest, false);
 
@@ -49,11 +53,16 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
             LOG.error("Exception in /error: ", error);
 
             result.put("details", error.getMessage());
+
+            if (error instanceof HttpServerErrorException.InternalServerError) {
+                Map map = objectMapper.readValue(((HttpServerErrorException.InternalServerError) error).getResponseBodyAsByteArray(), Map.class);
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
+
             ResponseStatus annotation = AnnotationUtils.getAnnotation(error.getClass(), ResponseStatus.class);
             statusCode = annotation != null ? annotation.value() : statusCode;
         }
-        HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<>(result, headers, statusCode);
+        return new ResponseEntity<>(result, statusCode);
     }
 
 }
