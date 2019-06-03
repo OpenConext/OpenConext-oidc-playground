@@ -119,10 +119,7 @@ export function ReactSelect(props) {
   );
   const options = formatOptions(props.options);
   const onChange = option => props.onChange(formatReturnValue(option));
-
-  if (freeFormat) {
-    return <Creatable {...{ ...rest, value, options, onChange, styles }} />;
-  }
-
-  return <Select {...{ ...rest, value, options, onChange, styles }} />;
+  return freeFormat ?
+    <Creatable {...{ ...rest, value, options, onChange, styles }} /> :
+    <Select {...{ ...rest, value, options, onChange, styles }} />;
 }

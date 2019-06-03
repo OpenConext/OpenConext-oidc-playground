@@ -138,7 +138,7 @@ public class Oidc implements URLSupport {
         parameters.put("nonce", (String) body.get("nonce"));
         parameters.put("state", (String) body.get("state"));
 
-        if ((boolean)body.getOrDefault("pkce", false)) {
+        if ((boolean) body.getOrDefault("pkce", false)) {
             parameters.put("code_challenge", (String) body.get("code_challenge"));
             parameters.put("code_challenge_method", (String) body.get("code_challenge_method"));
         }
@@ -208,7 +208,7 @@ public class Oidc implements URLSupport {
                 requestBody.put("scope", String.join(" ", (List<String>) body.get("scope")));
             }
         }
-        if ((boolean)body.getOrDefault("pkce", false)) {
+        if ((boolean) body.getOrDefault("pkce", false)) {
             requestBody.put("code_verifier", (String) body.get("code_verifier"));
         }
         return doPost(body, requestBody, (String) body.get("token_endpoint"));
@@ -226,8 +226,7 @@ public class Oidc implements URLSupport {
         if (!codeVerifier) {
             String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
             if (authMethod.equals("client_secret_basic")) {
-                builder.header(AUTHORIZATION, "Basic " +
-                        encode(String.format("%s:%s", clientIdToUse, secretToUse)));
+                builder.header(AUTHORIZATION, "Basic " + encode(clientIdToUse + ":" + secretToUse));
             } else {
                 requestBody.put("client_id", clientIdToUse);
                 requestBody.put("client_secret", secretToUse);
