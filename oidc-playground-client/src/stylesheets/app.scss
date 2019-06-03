@@ -49,12 +49,14 @@
         flex: 1;
         padding: 20px;
         font-size: 16px;
-        background: white;
-        color: $blue;
+        background: $light-grey;
+        border-top: 2px solid $light-grey;
+        color: $dark-grey;
 
         &.active {
-          background: $blue;
-          color: white;
+          background: white;
+          color: $blue;
+          border-color: $blue;
 
           h2 {
             font-weight: bold;
