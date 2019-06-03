@@ -14,27 +14,30 @@ export function CodeChallenge(props) {
   const direction = pkce ? "<<" : ">>";
   return (
     <div className="code-challenge">
-      <InfoLabel label={`Proof Key for Code Exchange (PKCE) ${direction}`}
-                 toolTip={pkceT()}
-                 className="toggle-title"
-                 onClick={togglePkce}/>
-      {pkce && <>
-        <fieldset>
-          <InfoLabel label="Code verifier" toolTip={codeVerifierT()}/>
-          <input readOnly={true} value={codeVerifier}/>
-        </fieldset>
+      <InfoLabel
+        label={`Proof Key for Code Exchange (PKCE) ${direction}`}
+        toolTip={pkceT()}
+        className="toggle-title"
+        onClick={togglePkce}
+      />
+      {pkce && (
+        <>
+          <fieldset>
+            <InfoLabel label="Code verifier" toolTip={codeVerifierT()} />
+            <input readOnly={true} value={codeVerifier} />
+          </fieldset>
 
-        <fieldset>
-          <InfoLabel label="Code challenge method" toolTip={codeChallengeMethodT()}/>
-          <ReactSelect {...props.codeChallengeMethod} />
-        </fieldset>
+          <fieldset>
+            <InfoLabel label="Code challenge method" toolTip={codeChallengeMethodT()} />
+            <ReactSelect {...props.codeChallengeMethod} />
+          </fieldset>
 
-        <fieldset>
-          <InfoLabel label="Code challenge" toolTip={codeChallengeT()}/>
-          <input readOnly={true} value={codeChallenge}/>
-        </fieldset>
-      </>}
-
+          <fieldset>
+            <InfoLabel label="Code challenge" toolTip={codeChallengeT()} />
+            <input readOnly={true} value={codeChallenge} />
+          </fieldset>
+        </>
+      )}
     </div>
   );
 }

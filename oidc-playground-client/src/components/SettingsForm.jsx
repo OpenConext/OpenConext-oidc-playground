@@ -83,8 +83,6 @@ export class SettingsForm extends React.Component {
     formPost(this.getSanitizedBody()).then(json => {
       if (json.url) {
         window.location.replace(json.url);
-      } else {
-        //TODO update data
       }
     });
   };
