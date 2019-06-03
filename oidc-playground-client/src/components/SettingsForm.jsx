@@ -128,9 +128,12 @@ export class SettingsForm extends React.Component {
         <GrantType
           value={grant_type}
           options={this.props.config.grant_types_supported}
-          onChange={val => this.setState({
-            grant_type: val,
-            response_type: val === "implicit" ? "token id_token" : "code" })}
+          onChange={val =>
+            this.setState({
+              grant_type: val,
+              response_type: val === "implicit" ? "token id_token" : "code"
+            })
+          }
           moderators={{ auth_protocol }}
         />
 
@@ -156,7 +159,7 @@ export class SettingsForm extends React.Component {
           onChange={val => this.setValue("scope", val)}
           moderators={{ auth_protocol }}
         />
-        {grant_type !== "implicit" &&
+        {grant_type !== "implicit" && (
           <fieldset>
             <InfoLabel label="Token endpoint authentication" toolTip={tokenEndpointAuthenticationT()} />
             <ReactSelect
@@ -165,7 +168,7 @@ export class SettingsForm extends React.Component {
               onChange={val => this.setValue("token_endpoint_auth_method", val)}
             />
           </fieldset>
-        }
+        )}
 
         <fieldset>
           <label>Requested claims</label>

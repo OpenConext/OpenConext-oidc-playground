@@ -25,15 +25,19 @@
     flex: 2;
     max-width: 700px;
 
-    background: white;
-    padding: 20px;
     height: fit-content;
 
-    > * {
-      margin-bottom: 20px;
+    .result-block {
+      background: white;
+      padding: 10px 20px;
 
-      &:last-child {
-        margin-bottom: 0px;
+      input,
+      #json-pretty {
+        margin-bottom: 10px;
+
+        &:last-child {
+          margin-bottom: 0px;
+        }
       }
     }
   }

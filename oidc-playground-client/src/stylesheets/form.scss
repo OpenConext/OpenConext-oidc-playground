@@ -63,53 +63,53 @@ form {
       }
     }
 
-    label {
-      display: block;
-      margin-left: 1px;
-      margin-bottom: 5px;
+    .field-block {
+      display: flex;
+      flex-wrap: wrap;
 
-      font-size: $fontSize;
-      color: black;
-    }
-
-    input {
-      width: 100%;
-      min-height: 40px;
-      padding: $inputPadding;
-
-      border-style: solid;
-      border-radius: $borderRadius;
-      border-color: $borderColor;
-      border-width: $borderWidth;
-
-      font-size: $fontSize;
-      font-family: $fontFamily;
-      font-style: $fontStyle;
-      font-weight: $fontWeight;
-      color: $color;
-
-      transition: $transition;
-
-      &:hover {
-        border-color: $hoverBorderColor;
-      }
-      &[readonly] {
-        background-color: $lightest-grey;
+      fieldset {
+        flex: 1;
+        min-width: 230px;
       }
     }
-  }
 
-  .field-block {
-    display: flex;
-    flex-wrap: wrap;
-
-    fieldset {
-      flex: 1;
-      min-width: 230px;
+    h2 {
+      background: $blue;
     }
   }
+}
 
-  h2 {
-    background: $blue;
+label {
+  display: block;
+  margin-left: 1px;
+  margin-bottom: 5px;
+
+  font-size: $fontSize;
+  color: black;
+}
+
+input {
+  width: 100%;
+  min-height: 40px;
+  padding: $inputPadding;
+
+  border-style: solid;
+  border-radius: $borderRadius;
+  border-color: $borderColor;
+  border-width: $borderWidth;
+
+  font-size: $fontSize;
+  font-family: $fontFamily;
+  font-style: $fontStyle;
+  font-weight: $fontWeight;
+  color: $color;
+
+  transition: $transition;
+
+  &:hover {
+    border-color: $hoverBorderColor;
+  }
+  &[readonly] {
+    background-color: $lightest-grey;
   }
 }

@@ -5,18 +5,22 @@ import { getParams } from "utils/Url";
 
 export class Display extends React.Component {
   state = {
-    access_token: null,
-    id_token: null
+    normalFlow: null,
+    hybridFlow: null
   };
 
   componentDidMount() {
     const params = getParams();
 
     if (params) {
-      this.setState({
-        access_token: params.get("access_token"),
-        id_token: params.get("id_token")
-      });
+      if (params.has("access_token") || params.has("id_token")) {
+        this.setState({
+          normalFlow: {
+            access_token: params.get("access_token"),
+            id_token: params.get("id_token")
+          }
+        });
+      }
 
       if (params.has("code")) {
         const decodedStateString = window.atob(params.get("state"));
@@ -28,17 +32,24 @@ export class Display extends React.Component {
           code: params.get("code")
         };
 
-        getTokens(body)
-          .then(res => console.log("res", res))
-          .catch(err => console.log("err", err));
+        getTokens(body).then(data =>
+          this.setState({
+            hybridFlow: {
+              access_token: data.result.access_token,
+              id_token: data.result.id_token
+            }
+          })
+        );
       }
     }
   }
 
   render() {
+    const { normalFlow, hybridFlow } = this.state;
+
     return (
       <div className="display">
-        <DecodeJWT access_token={this.state.access_token} id_token={this.state.id_token} />
+        <DecodeJWT {...{ normalFlow, hybridFlow }} />
       </div>
     );
   }
