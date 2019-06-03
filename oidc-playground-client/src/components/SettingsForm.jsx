@@ -131,7 +131,7 @@ export class SettingsForm extends React.Component {
           onChange={val =>
             this.setState({
               grant_type: val,
-              response_type: val === "implicit" ? "token id_token" : "code"
+              response_type: val === "implicit" ? "token id_token" : val === "client_credentials" ? "token" : "code"
             })
           }
           moderators={{ auth_protocol }}
