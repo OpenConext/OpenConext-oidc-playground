@@ -1,16 +1,10 @@
 import React from "react";
 import { ReactSelect, InfoLabel } from "components";
-import {
-  CodeChallenge,
-  GrantType,
-  ResponseMode,
-  ResponseType,
-  Scopes
-} from "components/settings";
+import { CodeChallenge, GrantType, ResponseMode, ResponseType, Scopes } from "components/settings";
 import { formPost } from "api";
-import { isEmpty } from "utils/Utils";
-import {authorizationProtocolT, tokenEndpointAuthenticationT} from "./settings/Tooltips";
-import {generateCodeChallenge} from "../api";
+import { authorizationProtocolT, tokenEndpointAuthenticationT } from "./settings/Tooltips";
+import { getParams } from "utils/Url";
+import { generateCodeChallenge } from "../api";
 
 const excludedClaims = [
   "aud",
@@ -28,9 +22,7 @@ const excludedClaims = [
   "uids"
 ];
 
-
 export class SettingsForm extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -53,35 +45,25 @@ export class SettingsForm extends React.Component {
   }
 
   componentDidMount() {
-    const url = new URL(window.location);
+    generateCodeChallenge(this.state.code_challenge_method).then(json =>
+      this.setState({
+        code_challenge_method: json.codeChallengeMethod,
+        code_verifier: json.codeVerifier,
+        code_challenge: json.codeChallenge
+      })
+    );
 
-    if (url.pathname === "/redirect") {
-      let params;
+    const params = getParams();
 
-      if (!isEmpty(url.hash)) {
-        params = new URLSearchParams(url.hash.replace("#", "?"));
-      } else {
-        params = url.searchParams;
-      }
+    if (params && params.has("state")) {
+      const decodedState = window.atob(params.get("state"));
 
-      if (params.has("state")) {
-        const decodedState = window.atob(params.get("state"));
-
-        this.setState({
-          ...this.state,
-          ...JSON.parse(decodedState),
-          state: decodedState
-        });
-      }
-    } else {
-      generateCodeChallenge(this.state.code_challenge_method).then(json =>
-        this.setState({
-          code_challenge_method: json.codeChallengeMethod,
-          code_verifier: json.codeVerifier,
-          code_challenge: json.codeChallenge})
-      );
+      this.setState({
+        ...this.state,
+        ...JSON.parse(decodedState),
+        state: decodedState
+      });
     }
-
   }
   getSanitizedBody() {
     return {
@@ -105,7 +87,7 @@ export class SettingsForm extends React.Component {
   }
 
   setValue(attr, value, callback = () => this) {
-    this.setState({[attr]: value}, callback);
+    this.setState({ [attr]: value }, callback);
   }
 
   render() {
@@ -133,10 +115,7 @@ export class SettingsForm extends React.Component {
         </fieldset>
 
         <fieldset>
-          <InfoLabel
-            label="Authorization protocol"
-            toolTip={authorizationProtocolT()}
-          />
+          <InfoLabel label="Authorization protocol" toolTip={authorizationProtocolT()} />
           <ReactSelect
             value={auth_protocol}
             options={["OpenID", "Oauth2"]}
@@ -175,10 +154,7 @@ export class SettingsForm extends React.Component {
         />
 
         <fieldset>
-          <InfoLabel
-            label="Token endpoint authentication"
-            toolTip={tokenEndpointAuthenticationT()}
-          />
+          <InfoLabel label="Token endpoint authentication" toolTip={tokenEndpointAuthenticationT()} />
           <ReactSelect
             value={token_endpoint_auth_method}
             options={this.props.config.token_endpoint_auth_methods_supported}
@@ -190,9 +166,7 @@ export class SettingsForm extends React.Component {
           <label>Requested claims</label>
           <ReactSelect
             value={claims}
-            options={this.props.config.claims_supported.filter(
-              claim => !excludedClaims.includes(claim)
-            )}
+            options={this.props.config.claims_supported.filter(claim => !excludedClaims.includes(claim))}
             onChange={val => this.setValue("claims", val)}
             isMulti
           />
@@ -216,18 +190,12 @@ export class SettingsForm extends React.Component {
         <div className="field-block">
           <fieldset>
             <label>State</label>
-            <input
-              value={state}
-              onChange={e => this.setValue("state", e.target.value)}
-            />
+            <input value={state} onChange={e => this.setValue("state", e.target.value)} />
           </fieldset>
 
           <fieldset>
             <label>Nonce</label>
-            <input
-              value={nonce}
-              onChange={e => this.setValue("nonce", e.target.value)}
-            />
+            <input value={nonce} onChange={e => this.setValue("nonce", e.target.value)} />
           </fieldset>
         </div>
         <fieldset>
