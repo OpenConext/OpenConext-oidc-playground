@@ -2,6 +2,13 @@ package playground.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.JOSEObjectType;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.crypto.RSASSASigner;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.pkce.CodeChallenge;
@@ -36,14 +43,24 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -269,5 +286,40 @@ public class Oidc implements URLSupport {
         requestedClaims.forEach(claimsRequest::addIDTokenClaim);
         return claimsRequest.toString();
     }
+
+    private RSAKey generateRsaKey(String keyID) throws NoSuchAlgorithmException, NoSuchProviderException {
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "BC");
+        kpg.initialize(2048);
+        KeyPair keyPair = kpg.generateKeyPair();
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+        //new RSASSASigner()
+        return new RSAKey.Builder(publicKey)
+                .privateKey(privateKey)
+                .algorithm(JWSAlgorithm.RS256)
+                .keyID(keyID)
+                .build();
+    }
+
+//    private SignedJWT signedJWT(Map<String, Object> form) {
+//        JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder()
+//                .audience("audience")
+//                .expirationTime(Date.from(Instant.now().plus(3600, ChronoUnit.SECONDS)))
+//                .jwtID(UUID.randomUUID().toString())
+//                .issuer(this.clientId)
+//                .issueTime(Date.from(Instant.now()))
+//                .subject(this.clientId)
+//                .notBeforeTime(new Date(System.currentTimeMillis()))
+//                .claim("redirect_uri", "http://localhost:8080/redirect")
+//                .claim("scope", "openid groups")
+//                .claim("nonce", "123456")
+//                .claim("claims", claimsRequest.toString());
+//        JWTClaimsSet claimsSet = builder.build();
+//        JWSHeader header = new JWSHeader.Builder(TokenGenerator.signingAlg).type(JOSEObjectType.JWT).keyID(keyID).build();
+//        SignedJWT signedJWT = new SignedJWT(header, claimsSet);
+//        JWSSigner jswsSigner = new RSASSASigner(privateKey());
+//        signedJWT.sign(jswsSigner);
+//
+//    }
 
 }
