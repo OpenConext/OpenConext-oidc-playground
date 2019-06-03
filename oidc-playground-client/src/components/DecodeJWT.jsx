@@ -64,29 +64,18 @@ class DecodedFlow extends React.Component {
 }
 
 export class DecodeJWT extends React.Component {
-  renderDecodedFlows() {
+  render() {
     const { normalFlow, hybridFlow } = this.props;
 
     if (!normalFlow && !hybridFlow) {
-      return "No results yet.";
+      return <label>No results yet.</label>;
     }
 
     return (
-      <>
+      <div>
         {normalFlow && <DecodedFlow {...normalFlow} />}
         {hybridFlow && <DecodedFlow {...hybridFlow} />}
-      </>
-    );
-  }
-
-  render() {
-    return (
-      <form>
-        <fieldset className="form-header">
-          <h2>JWT</h2>
-        </fieldset>
-        <div className="result-block">{this.renderDecodedFlows()}</div>
-      </form>
+      </div>
     );
   }
 }

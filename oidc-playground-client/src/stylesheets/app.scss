@@ -27,16 +27,38 @@
 
     height: fit-content;
 
-    .result-block {
+    > * {
       background: white;
       padding: 10px 20px;
+    }
 
-      input,
-      #json-pretty {
-        margin-bottom: 10px;
+    input,
+    #json-pretty {
+      margin-bottom: 10px;
 
-        &:last-child {
-          margin-bottom: 0px;
+      &:last-child {
+        margin-bottom: 0px;
+      }
+    }
+
+    .tabs {
+      padding: 0 0 10px 0;
+      display: flex;
+
+      .tab {
+        flex: 1;
+        padding: 20px;
+        font-size: 16px;
+        background: white;
+        color: $blue;
+
+        &.active {
+          background: $blue;
+          color: white;
+
+          h2 {
+            font-weight: bold;
+          }
         }
       }
     }

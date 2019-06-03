@@ -6,7 +6,9 @@ import { getParams } from "utils/Url";
 export class Display extends React.Component {
   state = {
     normalFlow: null,
-    hybridFlow: null
+    hybridFlow: null,
+    tabs: ["JWT", "Request"],
+    activeTab: "JWT"
   };
 
   componentDidMount() {
@@ -44,12 +46,37 @@ export class Display extends React.Component {
     }
   }
 
-  render() {
-    const { normalFlow, hybridFlow } = this.state;
-
+  renderTabs() {
     return (
-      <div className="display">
-        <DecodeJWT {...{ normalFlow, hybridFlow }} />
+      <div className="tabs">
+        {this.state.tabs.map(tab => {
+          const className = tab === this.state.activeTab ? "tab active" : "tab";
+
+          return (
+            <div className={className} key={tab} onClick={() => this.setState({ activeTab: tab })}>
+              <h2>{tab}</h2>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  renderView() {
+    const { normalFlow, hybridFlow, activeTab } = this.state;
+
+    if (activeTab === "Request") {
+      return <label>Request</label>;
+    }
+
+    return <DecodeJWT {...{ normalFlow, hybridFlow }} />;
+  }
+
+  render() {
+    return (
+      <div className="display container">
+        {this.renderTabs()}
+        {this.renderView()}
       </div>
     );
   }

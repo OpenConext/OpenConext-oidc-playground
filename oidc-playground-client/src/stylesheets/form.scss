@@ -33,7 +33,8 @@ $transition: all 100ms;
   grey: $medium-grey;
 }
 
-form {
+form,
+.container {
   $form-space: 20px;
   padding-bottom: ($form-space / 2);
   margin-bottom: $form-space;
