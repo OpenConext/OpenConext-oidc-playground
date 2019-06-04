@@ -2,13 +2,9 @@ package playground.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.crypto.RSASSASigner;
+import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.pkce.CodeChallenge;
@@ -17,6 +13,7 @@ import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import com.nimbusds.oauth2.sdk.util.OrderedJSONObject;
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
 import net.minidev.json.JSONObject;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -47,20 +44,17 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -97,6 +91,15 @@ public class Oidc implements URLSupport {
     private ObjectMapper objectMapper;
 
     private RestTemplate restTemplate = new RestTemplate();
+
+    private String rsaKeyId = "play_key_id";
+
+    private RSAKey rsaKey;
+
+    public Oidc() throws NoSuchProviderException, NoSuchAlgorithmException {
+        Security.addProvider(new BouncyCastleProvider());
+        this.rsaKey = generateRsaKey();
+    }
 
     @GetMapping("/discovery")
     public Map<String, Object> discovery() throws IOException {
@@ -215,6 +218,11 @@ public class Oidc implements URLSupport {
         return result.toJSONString();
     }
 
+    @GetMapping(value = {"/certs"}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public String publishClientJwk() throws NoSuchProviderException, NoSuchAlgorithmException {
+        return new JWKSet(this.rsaKey.toPublicJWK()).toJSONObject().toString();
+    }
+
 
     private Map<String, Object> doToken(Map<String, Object> body, String grantType) throws URISyntaxException {
         HashMap<String, String> requestBody = new HashMap<>();
@@ -279,7 +287,7 @@ public class Oidc implements URLSupport {
         return claimsRequest.toString();
     }
 
-    private RSAKey generateRsaKey(String keyID) throws NoSuchAlgorithmException, NoSuchProviderException {
+    private RSAKey generateRsaKey() throws NoSuchAlgorithmException, NoSuchProviderException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "BC");
         kpg.initialize(2048);
         KeyPair keyPair = kpg.generateKeyPair();
@@ -289,7 +297,7 @@ public class Oidc implements URLSupport {
         return new RSAKey.Builder(publicKey)
                 .privateKey(privateKey)
                 .algorithm(JWSAlgorithm.RS256)
-                .keyID(keyID)
+                .keyID(rsaKeyId)
                 .build();
     }
 
