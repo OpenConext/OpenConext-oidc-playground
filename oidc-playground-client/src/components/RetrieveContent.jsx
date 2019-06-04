@@ -8,11 +8,7 @@ export function RetrieveContent(props) {
       introspect_endpoint: props.introspect_endpoint
     };
 
-    console.log(body);
-
-    postIntrospect(body)
-      .then(res => console.log("res", res))
-      .catch(err => console.log("catch", err));
+    postIntrospect(body).then(res => props.resultForDisplay(res));
   };
 
   const handleUserInfo = () => {
@@ -21,11 +17,7 @@ export function RetrieveContent(props) {
       userinfo_endpoint: props.userinfo_endpoint
     };
 
-    console.log(body);
-
-    postUserinfo(body)
-      .then(res => console.log("res", res))
-      .catch(err => console.log("catch", err));
+    postUserinfo(body).then(res => props.resultForDisplay(res));
   };
 
   return (

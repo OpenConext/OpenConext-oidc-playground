@@ -87,7 +87,7 @@ export class SettingsForm extends React.Component {
       }
 
       if (json.result) {
-        this.props.handleClientCredentialsResult(json);
+        this.props.resultForDisplay(json);
       }
     });
   };

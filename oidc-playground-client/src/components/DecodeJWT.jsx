@@ -23,14 +23,12 @@ class DecodedFlow extends React.Component {
 
   componentDidMount() {
     if (this.props.access_token) {
-      decodeJWT(this.props.access_token)
-        .then(token =>
-          this.setState({
-            accessTokenJWT: token,
-            decodedAccessToken: true
-          })
-        )
-        .catch(err => console.log(err));
+      decodeJWT(this.props.access_token).then(token =>
+        this.setState({
+          accessTokenJWT: token,
+          decodedAccessToken: true
+        })
+      );
     }
 
     if (this.props.id_token) {

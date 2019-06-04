@@ -20,7 +20,7 @@ export default class App extends React.Component {
 
     this.resetFlash = this.resetFlash.bind(this);
     this.setFlash = this.setFlash.bind(this);
-    this.handleClientCredentialsResult = this.handleClientCredentialsResult.bind(this);
+    this.resultForDisplay = this.resultForDisplay.bind(this);
   }
 
   componentDidMount() {
@@ -85,7 +85,7 @@ export default class App extends React.Component {
     );
   }
 
-  handleClientCredentialsResult(result) {
+  resultForDisplay(result) {
     this.setState({
       request: {
         request_url: result.request_url,
@@ -106,7 +106,7 @@ export default class App extends React.Component {
     return (
       <div className="app-container">
         <Flash message={this.state.flashMessage} onClose={this.resetFlash} />
-        <Config accessToken={accessToken} handleClientCredentialsResult={this.handleClientCredentialsResult} />
+        <Config accessToken={accessToken} resultForDisplay={this.resultForDisplay} />
         <Display {...{ normalFlow, hybridFlow, request }} />
       </div>
     );
