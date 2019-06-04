@@ -37,13 +37,18 @@ export function RetrieveContent(props) {
         <button
           type="button"
           className="button introspect"
-          disabled={!props.introspect_endpoint}
+          disabled={!(props.introspect_endpoint && props.accessToken)}
           onClick={handleIntrospect}
         >
           Introspect
         </button>
 
-        <button type="button" className="button userinfo" disabled={!props.userinfo_endpoint} onClick={handleUserInfo}>
+        <button
+          type="button"
+          className="button userinfo"
+          disabled={!(props.userinfo_endpoint && props.accessToken)}
+          onClick={handleUserInfo}
+        >
           Userinfo
         </button>
       </fieldset>
