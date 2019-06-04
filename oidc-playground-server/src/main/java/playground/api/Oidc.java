@@ -78,6 +78,12 @@ public class Oidc implements URLSupport {
     @Value("${oidc.secret}")
     private String secret;
 
+    @Value("${oidc.resource_server_id}")
+    private String resourceServerId;
+
+    @Value("${oidc.resource_server_secret}")
+    private String resourceServerSecret;
+
     @Value("${oidc.redirect_uri}")
     private String redirectUri;
 
@@ -192,12 +198,24 @@ public class Oidc implements URLSupport {
 
     @PostMapping("/introspect")
     public Map<String, Object> introspect(@RequestBody Map<String, Object> body) throws URISyntaxException {
+        body.put("client_id", "resource-server-playground-client");
+        body.put("client_secret", secret);
+
         return doPost(body, Collections.singletonMap("token", (String) body.get("token")), (String) body.get("introspect_endpoint"));
     }
 
     @PostMapping("/userinfo")
     public Map<String, Object> userinfo(@RequestBody Map<String, Object> body) throws URISyntaxException {
-        return doPost(body, Collections.singletonMap("token", (String) body.get("token")), (String) body.get("userinfo_endpoint"));
+        String endpoint = (String) body.get("userinfo_endpoint");
+        String token = (String) body.get("token");
+        RequestEntity.BodyBuilder builder = RequestEntity
+                .post(new URI(endpoint))
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .header("Authorization", "Bearer " + token);
+
+        Map<String, String> requestBody = Collections.singletonMap("access_token", token);
+        return callPostEndpoint(requestBody, (String) body.get("userinfo_endpoint"), builder);
     }
 
     @GetMapping("/proxy")
@@ -262,6 +280,10 @@ public class Oidc implements URLSupport {
             requestBody.put("client_id", clientIdToUse);
         }
 
+        return callPostEndpoint(requestBody, endpoint, builder);
+    }
+
+    private Map<String, Object> callPostEndpoint(Map<String, String> requestBody, String endpoint, RequestEntity.BodyBuilder builder) {
         LinkedMultiValueMap form = new LinkedMultiValueMap();
         requestBody.forEach((k, v) -> form.set(k, v));
         RequestEntity<LinkedMultiValueMap> requestEntity = builder.body(form);
