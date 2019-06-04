@@ -27,14 +27,14 @@ export class SettingsForm extends React.Component {
     super(props);
 
     this.state = {
-      auth_protocol: "OpenID",
+      auth_protocol: "Oauth2",
       acr_values: [],
       claims: [],
       code_challenge_method: "",
       code_verifier: "",
       code_challenge: "",
       pkce: false,
-      grant_type: "authorization_code",
+      grant_type: "client_credentials",
       response_mode: "fragment",
       response_type: "code",
       scope: [],
@@ -84,6 +84,10 @@ export class SettingsForm extends React.Component {
     formPost(this.getSanitizedBody()).then(json => {
       if (json.url) {
         window.location.replace(json.url);
+      }
+
+      if (json.result) {
+        this.props.handleClientCredentialsResult(json);
       }
     });
   };
