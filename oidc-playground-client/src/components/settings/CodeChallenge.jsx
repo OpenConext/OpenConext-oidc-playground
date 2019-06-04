@@ -24,7 +24,7 @@ export function CodeChallenge(props) {
         <>
           <fieldset>
             <InfoLabel label="Code verifier" toolTip={codeVerifierT()} />
-            <input readOnly={true} value={codeVerifier} />
+            <input disabled value={codeVerifier} />
           </fieldset>
 
           <fieldset>
@@ -34,7 +34,7 @@ export function CodeChallenge(props) {
 
           <fieldset>
             <InfoLabel label="Code challenge" toolTip={codeChallengeT()} />
-            <input readOnly={true} value={codeChallenge} />
+            <input disabled value={codeChallenge} />
           </fieldset>
         </>
       )}

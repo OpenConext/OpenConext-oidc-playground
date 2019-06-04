@@ -44,7 +44,7 @@ class DecodedFlow extends React.Component {
     return (
       <>
         <label>{name}</label>
-        <input readOnly={true} value={value} />
+        <input disabled value={value} />
         <JSONPretty id="json-pretty" data={decoded} />
       </>
     );

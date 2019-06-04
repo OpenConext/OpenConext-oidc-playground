@@ -183,7 +183,7 @@ export class SettingsForm extends React.Component {
         <div className="field-block">
           <fieldset>
             <label>State</label>
-            <input value={state} readOnly={true} onChange={e => this.setValue("state", e.target.value)} />
+            <input value={state} disabled />
           </fieldset>
 
           <fieldset>

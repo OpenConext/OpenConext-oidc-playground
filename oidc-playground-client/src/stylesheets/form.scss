@@ -110,7 +110,8 @@ input {
   &:hover {
     border-color: $hoverBorderColor;
   }
-  &[readonly] {
+  &[disabled] {
     background-color: $lightest-grey;
+    cursor: not-allowed;
   }
 }
