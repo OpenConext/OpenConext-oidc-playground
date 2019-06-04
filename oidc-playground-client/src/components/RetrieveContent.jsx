@@ -3,11 +3,29 @@ import { postIntrospect, postUserinfo } from "../api";
 
 export function RetrieveContent(props) {
   const handleIntrospect = () => {
-    postIntrospect();
+    const body = {
+      token: props.accessTokens.hybrid,
+      introspect_endpoint: props.introspect_endpoint
+    };
+
+    console.log(body);
+
+    postIntrospect(body)
+      .then(res => console.log("res", res))
+      .catch(err => console.log("catch", err));
   };
 
   const handleUserInfo = () => {
-    postUserinfo();
+    const body = {
+      token: props.accessTokens.hybrid,
+      userinfo_endpoint: props.userinfo_endpoint
+    };
+
+    console.log(body);
+
+    postUserinfo(body)
+      .then(res => console.log("res", res))
+      .catch(err => console.log("catch", err));
   };
 
   return (

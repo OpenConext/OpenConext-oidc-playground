@@ -45,12 +45,14 @@ export function formPost(body) {
   return postPutJson(`/oidc/api/${body.grant_type}`, body, "POST");
 }
 
-export function postIntrospect() {
+export function postIntrospect(body) {
   console.log("postIntrospect");
+  return postPutJson(`/oidc/api/introspect`, body, "POST");
 }
 
-export function postUserinfo() {
+export function postUserinfo(body) {
   console.log("postUserinfo");
+  return postPutJson(`/oidc/api/userinfo`, body, "POST");
 }
 
 export function decodeJWT(jwt) {
