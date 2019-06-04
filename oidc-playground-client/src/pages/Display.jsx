@@ -35,22 +35,28 @@ export class Display extends React.Component {
           code: params.get("code")
         };
 
-        getTokens(body).then(data => {
-          const { access_token, id_token } = data.result;
-          const { request_url, request_headers, request_body } = data;
+        getTokens(body)
+          .then(data => {
+            const { access_token, id_token } = data.result;
+            const { request_url, request_headers, request_body } = data;
 
-          this.setState({
-            hybridFlow: {
-              access_token,
-              id_token
-            },
-            request: {
-              request_url,
-              request_headers,
-              request_body
-            }
-          });
-        });
+            this.setState({
+              hybridFlow: {
+                access_token,
+                id_token
+              },
+              request: {
+                request_url,
+                request_headers,
+                request_body
+              }
+            });
+          })
+          .catch(err =>
+            this.props.setFlash(
+              `Tokens could not be retrieved with this code. Error: ${err.statusText} (${err.status})`
+            )
+          );
       }
     }
   }

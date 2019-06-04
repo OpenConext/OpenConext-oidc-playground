@@ -1,57 +1,39 @@
-import spinner from "utils/Spin";
 import { isEmpty } from "../utils/Utils";
 
 //Internal API
-function validateResponse(showErrorDialog) {
-  return res => {
-    spinner.stop();
-
-    if (!res.ok) {
-      if (res.type === "opaqueredirect") {
-        setTimeout(() => window.location.reload(), 100);
-        return res;
-      }
-      const error = new Error(res.statusText);
-      error.response = res;
-
-      if (showErrorDialog) {
-        setTimeout(() => {
-          throw error;
-        }, 250);
-      }
-      throw error;
+function validateResponse(res) {
+  if (!res.ok) {
+    if (res.type === "opaqueredirect") {
+      setTimeout(() => window.location.reload(), 100);
+      return res;
     }
 
-    return res;
-  };
+    throw res;
+  }
+
+  return res.json();
 }
 
-function validFetch(path, options, headers = {}, showErrorDialog = true) {
-  const contentHeaders = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    ...headers
-  };
-  const fetchOptions = Object.assign({}, { headers: contentHeaders }, options, {
+function validFetch(path, options) {
+  const fetchOptions = {
+    ...options,
     credentials: "same-origin",
-    redirect: "manual"
-  });
-  spinner.start();
+    redirect: "manual",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }
+  };
 
-  return fetch(path, fetchOptions)
-    .then(validateResponse(showErrorDialog))
-    .catch(err => {
-      spinner.stop();
-      throw err;
-    });
+  return fetch(path, fetchOptions).then(validateResponse);
 }
 
-function fetchJson(path, options = {}, headers = {}, showErrorDialog = true) {
-  return validFetch(path, options, headers, showErrorDialog).then(res => res.json());
+function fetchJson(path, options = {}) {
+  return validFetch(path, options);
 }
 
 function postPutJson(path, body, method) {
-  return fetchJson(path, { method: method, body: JSON.stringify(body) });
+  return fetchJson(path, { method, body: JSON.stringify(body) });
 }
 
 //Base
@@ -59,8 +41,7 @@ export function discovery() {
   return fetchJson("/oidc/api/discovery");
 }
 
-export function formPost() {
-  const body = arguments[0];
+export function formPost(body) {
   return postPutJson(`/oidc/api/${body.grant_type}`, body, "POST");
 }
 

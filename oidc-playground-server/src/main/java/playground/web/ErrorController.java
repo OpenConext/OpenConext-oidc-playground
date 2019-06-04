@@ -56,7 +56,7 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
 
             if (error instanceof HttpServerErrorException.InternalServerError) {
                 Map map = objectMapper.readValue(((HttpServerErrorException.InternalServerError) error).getResponseBodyAsByteArray(), Map.class);
-                return new ResponseEntity<>(map, HttpStatus.OK);
+                return new ResponseEntity<>(map, statusCode);
             }
 
             ResponseStatus annotation = AnnotationUtils.getAnnotation(error.getClass(), ResponseStatus.class);

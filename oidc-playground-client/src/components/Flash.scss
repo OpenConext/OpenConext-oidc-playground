@@ -1,0 +1,36 @@
+@import "../stylesheets/vars.scss";
+
+div.flash {
+  position: fixed;
+  top: 0;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+
+  background: #de1313d9;
+  width: 100%;
+  padding: 10px 40px;
+
+  text-align: center;
+  color: white;
+  font-weight: bold;
+
+  top: -100px;
+  transition: top 0.8s linear;
+
+  &.active {
+    top: 0;
+  }
+
+  p {
+    flex: 1;
+  }
+
+  button.close {
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 18px;
+  }
+}
