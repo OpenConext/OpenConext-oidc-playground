@@ -27,14 +27,14 @@ export class SettingsForm extends React.Component {
     super(props);
 
     this.state = {
-      auth_protocol: "Oauth2",
+      auth_protocol: "OpenID",
       acr_values: [],
       claims: [],
       code_challenge_method: "",
       code_verifier: "",
       code_challenge: "",
       pkce: false,
-      grant_type: "client_credentials",
+      grant_type: "authorization_code",
       response_mode: "fragment",
       response_type: "code",
       scope: [],
