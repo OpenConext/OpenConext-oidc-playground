@@ -199,6 +199,18 @@ public class OidcTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void decodeNonJwtToken() throws IOException {
+        String uuid = "53f9a596-12fd-4a0e-92b8-04cfd60de58d";
+        String result = given()
+                .accept(ContentType.JSON)
+                .queryParam("jwt", uuid)
+                .get("oidc/api/decode_jwt")
+                .body().asString();
+
+        assertEquals(uuid, result);
+    }
+
+    @Test
     public void codeChallenge() {
         Map<String, Object> result = doPost(new HashMap<>(), "code_challenge").as(mapTypeRef);
 

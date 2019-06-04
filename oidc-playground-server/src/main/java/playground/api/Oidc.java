@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -68,6 +69,8 @@ public class Oidc implements URLSupport {
 
     static ParameterizedTypeReference<LinkedHashMap<String, Object>> mapResponseType = new ParameterizedTypeReference<LinkedHashMap<String, Object>>() {
     };
+
+    private Pattern uuidPattern = Pattern.compile("([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}");
 
     @Value("${oidc.discovery_endpoint}")
     private Resource discoveryEndpoint;
@@ -228,6 +231,9 @@ public class Oidc implements URLSupport {
 
     @GetMapping("/decode_jwt")
     public String decodeJwtToken(@RequestParam("jwt") String jwt) throws ParseException {
+        if (uuidPattern.matcher(jwt).matches()) {
+            return jwt;
+        }
         SignedJWT signedJWT = SignedJWT.parse(jwt);
         JSONObject result = new OrderedJSONObject();
         result.put("header", signedJWT.getHeader().toJSONObject());
