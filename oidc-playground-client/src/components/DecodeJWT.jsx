@@ -1,6 +1,7 @@
 import React from "react";
 import JSONPretty from "react-json-pretty";
 import { decodeJWT } from "../api";
+import { isEmpty } from "utils/Utils";
 
 class DecodedFlow extends React.Component {
   constructor(props) {
@@ -67,7 +68,7 @@ export class DecodeJWT extends React.Component {
   render() {
     const { normalFlow, hybridFlow } = this.props;
 
-    if (!normalFlow && !hybridFlow) {
+    if (isEmpty(normalFlow) && isEmpty(hybridFlow)) {
       return <label>No results yet.</label>;
     }
 
