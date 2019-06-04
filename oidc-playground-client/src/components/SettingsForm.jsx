@@ -2,7 +2,14 @@ import React from "react";
 import { ReactSelect, InfoLabel } from "components";
 import { CodeChallenge, GrantType, ResponseMode, ResponseType, Scopes } from "components/settings";
 import { formPost } from "api";
-import { authorizationProtocolT, tokenEndpointAuthenticationT } from "./settings/Tooltips";
+import {
+  acrValuesT,
+  authorizationProtocolT,
+  nonceT,
+  requestedClaimsT,
+  stateT,
+  tokenEndpointAuthenticationT
+} from "./settings/Tooltips";
 import { getParams } from "utils/Url";
 import { generateCodeChallenge } from "../api";
 
@@ -175,7 +182,7 @@ export class SettingsForm extends React.Component {
         )}
 
         <fieldset>
-          <label>Requested claims</label>
+          <InfoLabel label="Requested claims" toolTip={requestedClaimsT()}/>
           <ReactSelect
             value={claims}
             options={this.props.config.claims_supported.filter(claim => !excludedClaims.includes(claim))}
@@ -186,17 +193,17 @@ export class SettingsForm extends React.Component {
 
         <div className="field-block">
           <fieldset>
-            <label>State</label>
+            <InfoLabel label="State" toolTip={stateT()}/>
             <input value={state} disabled />
           </fieldset>
 
           <fieldset>
-            <label>Nonce</label>
+            <InfoLabel label="Nonce" toolTip={nonceT()}/>
             <input value={nonce} onChange={e => this.setValue("nonce", e.target.value)} />
           </fieldset>
         </div>
         <fieldset>
-          <label>ACR values</label>
+          <InfoLabel label="ACR values" toolTip={acrValuesT()}/>
           <ReactSelect
             value={acr_values}
             options={this.props.config.acr_values_supported}
