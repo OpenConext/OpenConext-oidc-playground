@@ -86,15 +86,13 @@ export default class App extends React.Component {
 
   render() {
     const { normalFlow, hybridFlow, request } = this.state;
-    const accessTokens = {
-      normal: normalFlow.access_token,
-      hybrid: hybridFlow.access_token
-    };
+
+    const accessToken = [normalFlow.access_token, hybridFlow.access_token].filter(Boolean)[0];
 
     return (
       <div className="app-container">
         <Flash message={this.state.flashMessage} onClose={this.resetFlash} />
-        <Config accessTokens={accessTokens} />
+        <Config accessToken={accessToken} />
         <Display {...{ normalFlow, hybridFlow, request }} />
       </div>
     );

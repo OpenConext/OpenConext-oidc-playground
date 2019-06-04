@@ -4,7 +4,7 @@ import { postIntrospect, postUserinfo } from "../api";
 export function RetrieveContent(props) {
   const handleIntrospect = () => {
     const body = {
-      token: props.accessTokens.hybrid,
+      token: props.accessToken,
       introspect_endpoint: props.introspect_endpoint
     };
 
@@ -17,7 +17,7 @@ export function RetrieveContent(props) {
 
   const handleUserInfo = () => {
     const body = {
-      token: props.accessTokens.hybrid,
+      token: props.accessToken,
       userinfo_endpoint: props.userinfo_endpoint
     };
 

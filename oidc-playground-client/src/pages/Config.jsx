@@ -39,7 +39,7 @@ export class Config extends React.Component {
       <div className="config">
         <SettingsForm config={this.state.config} />
         <RetrieveContent
-          accessTokens={this.props.accessTokens}
+          accessToken={this.props.accessToken}
           introspect_endpoint={this.state.config.introspect_endpoint}
           userinfo_endpoint={this.state.config.userinfo_endpoint}
         />
