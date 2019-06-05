@@ -29,7 +29,7 @@ export const RetrieveContent = observer(props => {
       <fieldset className="button-group">
         <button
           type="button"
-          className="button"
+          className="button introspect"
           disabled={!(store.config.introspect_endpoint && accessToken)}
           onClick={handleIntrospect}
         >
@@ -38,7 +38,7 @@ export const RetrieveContent = observer(props => {
 
         <button
           type="button"
-          className="button"
+          className="button userinfo"
           disabled={!(store.config.userinfo_endpoint && accessToken)}
           onClick={handleUserInfo}
         >
