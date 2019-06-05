@@ -1,10 +1,10 @@
 import React from "react";
-import { DecodeJWT, Request } from "components";
+import { JWT, Request } from "components";
 
 export class Display extends React.Component {
   state = {
     tabs: ["JWT", "Request"],
-    activeTab: "JWT"
+    activeTab: "Request"
   };
 
   renderTabs() {
@@ -23,22 +23,11 @@ export class Display extends React.Component {
     );
   }
 
-  renderView() {
-    const { activeTab } = this.state;
-    const { normalFlow, hybridFlow, request } = this.props;
-
-    if (activeTab === "Request") {
-      return <Request {...{ request }} />;
-    }
-
-    return <DecodeJWT {...{ normalFlow, hybridFlow }} />;
-  }
-
   render() {
     return (
       <div className="display container">
         {this.renderTabs()}
-        {this.renderView()}
+        {this.state.activeTab === "Request" ? <Request /> : <JWT />}
       </div>
     );
   }
