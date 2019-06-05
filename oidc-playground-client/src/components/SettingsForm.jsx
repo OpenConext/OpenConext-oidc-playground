@@ -3,9 +3,16 @@ import { observer } from "mobx-react";
 import store from "store";
 import { ReactSelect, InfoLabel } from "components";
 import { CodeChallenge, GrantType, ResponseMode, ResponseType, Scopes } from "components/settings";
-import { authorizationProtocolT, tokenEndpointAuthenticationT } from "components/settings/Tooltips";
 import { generateCodeChallenge, formPost } from "api";
 import { getRedirectParams } from "utils/Url";
+import {
+  acrValuesT,
+  authorizationProtocolT,
+  nonceT,
+  requestedClaimsT,
+  stateT,
+  tokenEndpointAuthenticationT
+} from "./settings/Tooltips";
 
 const excludedClaims = [
   "aud",
@@ -164,6 +171,7 @@ export const SettingsForm = observer(
             onChange={val => this.setValue("scope", val)}
             moderators={{ auth_protocol }}
           />
+
           {grant_type !== "implicit" && (
             <fieldset>
               <InfoLabel label="Token endpoint authentication" toolTip={tokenEndpointAuthenticationT()} />
@@ -174,9 +182,8 @@ export const SettingsForm = observer(
               />
             </fieldset>
           )}
-
           <fieldset>
-            <label>Requested claims</label>
+            <InfoLabel label="Requested claims" toolTip={requestedClaimsT()} />
             <ReactSelect
               value={claims}
               options={store.config.claims_supported.filter(claim => !excludedClaims.includes(claim))}
@@ -187,17 +194,18 @@ export const SettingsForm = observer(
 
           <div className="field-block">
             <fieldset>
-              <label>State</label>
+              <InfoLabel label="State" toolTip={stateT()} />
               <input value={state} disabled />
             </fieldset>
 
             <fieldset>
-              <label>Nonce</label>
+              <InfoLabel label="Nonce" toolTip={nonceT()} />
               <input value={nonce} onChange={e => this.setValue("nonce", e.target.value)} />
             </fieldset>
           </div>
+
           <fieldset>
-            <label>ACR values</label>
+            <InfoLabel label="ACR values" toolTip={acrValuesT()} />
             <ReactSelect
               value={acr_values}
               options={store.config.acr_values_supported}
