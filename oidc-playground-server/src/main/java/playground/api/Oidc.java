@@ -2,9 +2,15 @@ package playground.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.pkce.CodeChallenge;
@@ -48,13 +54,17 @@ import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -140,7 +150,7 @@ public class Oidc implements URLSupport {
     }
 
     @PostMapping(value = {"/authorization_code", "/implicit"})
-    public Map<String, String> authorize(@RequestBody Map<String, Object> body) throws URISyntaxException {
+    public Map<String, String> authorize(@RequestBody Map<String, Object> body) throws URISyntaxException, JOSEException {
         Map<String, String> parameters = new HashMap<>();
 
         ResponseType responseType = new ResponseType(((String) body.get("response_type")).split(" "));
@@ -165,6 +175,10 @@ public class Oidc implements URLSupport {
             parameters.put("redirect_uri", redirectUri);
         }
 
+        if ((boolean) body.getOrDefault("forceAuthentication", false)) {
+            parameters.put("prompt", "login");
+        }
+
         parameters.put("nonce", (String) body.get("nonce"));
         parameters.put("state", (String) body.get("state"));
 
@@ -173,6 +187,12 @@ public class Oidc implements URLSupport {
             parameters.put("code_challenge_method", (String) body.get("code_challenge_method"));
         }
         parameters.put("acr_values", (String) body.get("acr_values"));
+
+        if (true || (boolean)body.getOrDefault("signedJWT", false)) {
+            parameters.put("request", signedJWT(parameters).serialize());
+            List<String> toRemove = Arrays.asList("response_mode", "claims", "nonce", "state", "code_challenge", "code_challenge_method", "acr_values");
+            parameters.keySet().removeIf(key -> toRemove.contains(key));
+        }
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString((String) body.get("authorization_endpoint"));
         parameters.forEach((key, value) -> {
@@ -321,7 +341,6 @@ public class Oidc implements URLSupport {
         KeyPair keyPair = kpg.generateKeyPair();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        //new RSASSASigner()
         return new RSAKey.Builder(publicKey)
                 .privateKey(privateKey)
                 .algorithm(JWSAlgorithm.RS256)
@@ -329,25 +348,25 @@ public class Oidc implements URLSupport {
                 .build();
     }
 
-//    private SignedJWT signedJWT(Map<String, Object> form) {
-//        JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder()
-//                .audience("audience")
-//                .expirationTime(Date.from(Instant.now().plus(3600, ChronoUnit.SECONDS)))
-//                .jwtID(UUID.randomUUID().toString())
-//                .issuer(this.clientId)
-//                .issueTime(Date.from(Instant.now()))
-//                .subject(this.clientId)
-//                .notBeforeTime(new Date(System.currentTimeMillis()))
-//                .claim("redirect_uri", "http://localhost:8080/redirect")
-//                .claim("scope", "openid groups")
-//                .claim("nonce", "123456")
-//                .claim("claims", claimsRequest.toString());
-//        JWTClaimsSet claimsSet = builder.build();
-//        JWSHeader header = new JWSHeader.Builder(TokenGenerator.signingAlg).type(JOSEObjectType.JWT).keyID(keyID).build();
-//        SignedJWT signedJWT = new SignedJWT(header, claimsSet);
-//        JWSSigner jswsSigner = new RSASSASigner(privateKey());
-//        signedJWT.sign(jswsSigner);
-//
-//    }
+    private SignedJWT signedJWT(Map<String, String> form) throws JOSEException {
+        Instant now = Instant.now();
+        JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder()
+                .audience("audience")
+                .expirationTime(Date.from(now.plus(3600, ChronoUnit.SECONDS)))
+                .jwtID(UUID.randomUUID().toString())
+                .issuer(this.clientId)
+                .issueTime(Date.from(now))
+                .subject(this.clientId)
+                .notBeforeTime(new Date(System.currentTimeMillis()));
+
+        form.forEach((key, value) -> builder.claim(key, value));
+
+        JWTClaimsSet claimsSet = builder.build();
+        JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.RS256).type(JOSEObjectType.JWT).keyID(rsaKeyId).build();
+        SignedJWT signedJWT = new SignedJWT(header, claimsSet);
+        JWSSigner jswsSigner = new RSASSASigner(this.rsaKey.toPrivateKey());
+        signedJWT.sign(jswsSigner);
+        return signedJWT;
+    }
 
 }

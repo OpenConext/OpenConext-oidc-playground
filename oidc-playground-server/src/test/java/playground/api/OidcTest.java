@@ -36,7 +36,7 @@ public class OidcTest extends AbstractIntegrationTest {
     };
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
+    public WireMockRule wireMockRule = new WireMockRule(8093);
 
     @Test
     public void discovery() throws IOException {
@@ -51,7 +51,7 @@ public class OidcTest extends AbstractIntegrationTest {
     @Test
     public void authorize() {
         Map<String, Object> body = new FluentMap()
-                .p("authorization_endpoint", "http://localhost:8080/authorize")
+                .p("authorization_endpoint", "http://localhost:8093/authorize")
                 .p("response_type", "code")
                 .p("scope", Arrays.asList("openid", "groups"))
                 .p("claims", Arrays.asList("email", "edumember_is_member_of"))
@@ -73,7 +73,7 @@ public class OidcTest extends AbstractIntegrationTest {
     @Test
     public void implicit() {
         Map<String, Object> body = new FluentMap()
-                .p("authorization_endpoint", "http://localhost:8080/authorize")
+                .p("authorization_endpoint", "http://localhost:8093/authorize")
                 .p("response_type", "implicit")
                 .p("scope", Arrays.asList("openid", "groups"))
                 .p("state", "example");
@@ -126,7 +126,7 @@ public class OidcTest extends AbstractIntegrationTest {
         given()
                 .accept(ContentType.JSON)
                 .header("Content-type", "application/json")
-                .queryParam("uri", "http://localhost:8080/proxy")
+                .queryParam("uri", "http://localhost:8093/proxy")
                 .queryParam("access_token", "access_token")
                 .get("/oidc/api/proxy")
                 .then()
@@ -140,7 +140,7 @@ public class OidcTest extends AbstractIntegrationTest {
                         .withBody("{}")));
 
         Map<String, Object> body = new HashMap<>();
-        body.put(endpoint, "http://localhost:8080"+path);
+        body.put(endpoint, "http://localhost:8093"+path);
         given()
                 .accept(ContentType.JSON)
                 .header("Content-type", "application/json")
@@ -153,7 +153,7 @@ public class OidcTest extends AbstractIntegrationTest {
     @SuppressWarnings("unchecked")
     private void doToken(String grantType, String path) throws IOException {
         Map<String, Object> body = new FluentMap()
-                .p("token_endpoint", "http://localhost:8080/token")
+                .p("token_endpoint", "http://localhost:8093/token")
                 .p("grant_type", grantType)
                 .p("scope", Arrays.asList("openid", "groups"))
                 .p("state", "example");
