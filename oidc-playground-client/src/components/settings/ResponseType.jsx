@@ -36,12 +36,13 @@ export class ResponseType extends React.Component {
 
   sanitizeValue() {
     const options = this.sanitizeOptions();
+    const { value } = this.props;
 
-    if (!this.props.value || !options.includes(this.props.value)) {
+    if (!value || !options.includes(value)) {
       return options[0];
     }
 
-    return this.props.value;
+    return value;
   }
 
   componentDidUpdate() {
