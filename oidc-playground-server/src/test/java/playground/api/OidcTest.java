@@ -1,6 +1,7 @@
 package playground.api;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import io.restassured.http.ContentType;
 import io.restassured.mapper.TypeRef;
@@ -14,7 +15,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import playground.AbstractIntegrationTest;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -66,6 +69,33 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("redirect_uri", "http://localhost:3000/redirect")
                 .p("client_id", "playground_client")
                 .p("nonce", "some_nonce");
+
+        assertEquals(expected, queryParams);
+    }
+
+    @Test
+    public void authorizeWithSignedJWT() throws ParseException {
+        Map<String, Object> body = new FluentMap()
+                .p("authorization_endpoint", "http://localhost:8093/authorize")
+                .p("response_type", "code")
+                .p("scope", Collections.singletonList("openid"))
+                .p("claims", Arrays.asList("email", "edumember_is_member_of"))
+                .p("nonce", "some_nonce")
+                .p("forceAuthentication", true)
+                .p("signedJWT", true);
+
+        Map<String, String> queryParams = doPostForAuthorize(body, "authorization_code");
+
+        SignedJWT signedJWT = SignedJWT.parse(queryParams.get("request"));
+        String serialize = signedJWT.serialize();
+
+        Map<String, Object> expected = new FluentMap()
+                .p("scope", "openid")
+                .p("response_type", "code")
+                .p("redirect_uri", "http://localhost:3000/redirect")
+                .p("client_id", "playground_client")
+                .p("request", serialize)
+                .p("prompt", "login");
 
         assertEquals(expected, queryParams);
     }
