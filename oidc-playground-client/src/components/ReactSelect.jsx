@@ -74,11 +74,15 @@ function formatOptions(options) {
   return options.map(opt => ({ value: opt, label: opt }));
 }
 
-function formatArrayValue(value, options, freeFormat, fixedValues) {
+function formatArrayValue(value, options, freeFormat, fixedValues, notAllowedValues) {
   let values = value;
 
   if (!freeFormat) {
-    values = value.filter(val => !options.includes(value));
+    values = value.filter(val => !options.includes(val));
+  }
+
+  if (freeFormat) {
+    values = value.filter(val => !notAllowedValues.includes(val));
   }
 
   return values.map(val => ({
@@ -88,12 +92,16 @@ function formatArrayValue(value, options, freeFormat, fixedValues) {
   }));
 }
 
-function formatValue(value, options, freeFormat, fixedValues) {
+function formatValue(value, options, freeFormat, fixedValues, notAllowedValues) {
   if (Array.isArray(value)) {
-    return formatArrayValue(value, options, freeFormat, fixedValues);
+    return formatArrayValue(value, options, freeFormat, fixedValues, notAllowedValues);
   }
 
   if (!freeFormat && !options.includes(value)) {
+    return null;
+  }
+
+  if (notAllowedValues.includes(value)) {
     return null;
   }
 
@@ -109,17 +117,14 @@ function formatReturnValue(option) {
 }
 
 export function ReactSelect(props) {
-  const { freeFormat, fixedValues = [], ...rest } = props;
+  const { freeFormat, fixedValues = [], notAllowedValues = [], ...rest } = props;
 
-  const value = formatValue(
-    props.value,
-    props.options,
-    freeFormat,
-    fixedValues
-  );
+  const value = formatValue(props.value, props.options, freeFormat, fixedValues, notAllowedValues);
   const options = formatOptions(props.options);
   const onChange = option => props.onChange(formatReturnValue(option));
-  return freeFormat ?
-    <Creatable {...{ ...rest, value, options, onChange, styles }} /> :
-    <Select {...{ ...rest, value, options, onChange, styles }} />;
+  return freeFormat ? (
+    <Creatable {...{ ...rest, value, options, onChange, styles }} />
+  ) : (
+    <Select {...{ ...rest, value, options, onChange, styles }} />
+  );
 }

@@ -9,12 +9,16 @@ const sanitizeOptions = (isOpenId, options) => (isOpenId ? options : options.fil
 
 export function Scopes(props) {
   let fixedValues = [];
+  let notAllowedValues = [];
 
   if (isOpenIdUsed(props)) {
     fixedValues = ["openid"];
+
     if (!props.value.includes("openid")) {
       props.value.unshift("openid");
     }
+  } else {
+    notAllowedValues = ["openid"];
   }
 
   return (
@@ -25,6 +29,7 @@ export function Scopes(props) {
         options={sanitizeOptions(isOpenIdUsed(props), props.options)}
         className="select-scopes"
         fixedValues={fixedValues}
+        notAllowedValues={notAllowedValues}
         isMulti
         freeFormat
       />
