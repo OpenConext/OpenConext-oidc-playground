@@ -1,114 +1,73 @@
 import React from "react";
+import { when } from "mobx";
+import { observer } from "mobx-react";
 import { Config, Display } from "pages";
 import { Flash } from "components";
+import { discovery, getTokens } from "api";
+import store from "store";
+import { getRedirectParams } from "utils/Url";
 import { addIcons } from "utils/IconLibrary";
-import { getTokens } from "api";
-import { getParams } from "utils/Url";
 
 addIcons();
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
+const App = observer(
+  class App extends React.Component {
+    componentDidMount() {
+      discovery().then(config => {
+        store.config = config;
+        store.configLoaded = true;
+      });
 
-    this.state = {
-      flashMessage: undefined,
-      normalFlow: {},
-      hybridFlow: {},
-      request: null
-    };
+      const params = getRedirectParams();
 
-    this.resetFlash = this.resetFlash.bind(this);
-    this.setFlash = this.setFlash.bind(this);
-    this.resultForDisplay = this.resultForDisplay.bind(this);
-  }
+      when(
+        () => store.configLoaded && params,
+        () => {
+          store.normalFlowAccessToken = params.access_token;
+          store.normalFlowIdToken = params.id_token;
 
-  componentDidMount() {
-    const params = getParams();
+          this.swapCode(params.code, params.state);
+        }
+      );
+    }
 
-    if (params) {
-      if (params.has("access_token") || params.has("id_token")) {
-        this.setState({
-          normalFlow: {
-            access_token: params.get("access_token"),
-            id_token: params.get("id_token")
-          }
-        });
+    swapCode(code, state) {
+      if (!code) {
+        return;
       }
 
-      if (params.has("code")) {
-        const decodedStateString = window.atob(params.get("state"));
-        const { config, state } = JSON.parse(decodedStateString);
+      const body = {
+        ...store.config,
+        ...JSON.parse(window.atob(state)),
+        code
+      };
 
-        const body = {
-          ...config,
-          ...state,
-          code: params.get("code")
-        };
+      getTokens(body)
+        .then(data => {
+          store.hybridFlowAccessToken = data.result.access_token;
+          store.hybridFlowIdToken = data.result.id_token;
 
-        getTokens(body)
-          .then(data => {
-            const { access_token, id_token } = data.result;
-            const { request_url, request_headers, request_body } = data;
+          store.request = {
+            request_url: data.request_url,
+            request_headers: data.request_headers,
+            request_body: data.request_body
+          };
+        })
+        .catch(
+          err =>
+            (store.message = `Tokens could not be retrieved with this code. Error: ${err.statusText} (${err.status})`)
+        );
+    }
 
-            this.setState({
-              hybridFlow: {
-                access_token,
-                id_token
-              },
-              request: {
-                request_url,
-                request_headers,
-                request_body
-              }
-            });
-          })
-          .catch(err =>
-            this.setFlash(`Tokens could not be retrieved with this code. Error: ${err.statusText} (${err.status})`)
-          );
-      }
+    render() {
+      return (
+        <div className="app-container">
+          <Flash />
+          <Config />
+          <Display />
+        </div>
+      );
     }
   }
-
-  resetFlash() {
-    this.setState({
-      flashMessage: undefined
-    });
-  }
-
-  setFlash(message) {
-    this.setState(
-      {
-        flashMessage: message
-      },
-      () => setTimeout(this.resetFlash, 8000)
-    );
-  }
-
-  resultForDisplay(result) {
-    this.setState({
-      request: {
-        request_url: result.request_url,
-        request_headers: result.request_headers,
-        request_body: result.request_body
-      },
-      normalFlow: {
-        access_token: result.result.access_token
-      }
-    });
-  }
-
-  render() {
-    const { normalFlow, hybridFlow, request } = this.state;
-
-    const accessToken = [normalFlow.access_token, hybridFlow.access_token].filter(Boolean)[0];
-
-    return (
-      <div className="app-container">
-        <Flash message={this.state.flashMessage} onClose={this.resetFlash} />
-        <Config accessToken={accessToken} resultForDisplay={this.resultForDisplay} />
-        <Display {...{ normalFlow, hybridFlow, request }} />
-      </div>
-    );
-  }
-}
+);
+export default App;

@@ -1,23 +1,23 @@
 import React from "react";
-import { postIntrospect, postUserinfo } from "../api";
+import { observer } from "mobx-react";
+import store from "store";
+import { postIntrospect, postUserinfo } from "api";
 
-export function RetrieveContent(props) {
+export const RetrieveContent = observer(props => {
+  const accessToken = store.normalFlowAccessToken || store.hybridFlowAccessToken;
+
+  const body = {
+    token: accessToken,
+    introspect_endpoint: store.config.introspect_endpoint,
+    userinfo_endpoint: store.config.userinfo_endpoint
+  };
+
   const handleIntrospect = () => {
-    const body = {
-      token: props.accessToken,
-      introspect_endpoint: props.introspect_endpoint
-    };
-
-    postIntrospect(body).then(res => props.resultForDisplay(res));
+    postIntrospect(body).then(res => (store.request = { ...res }));
   };
 
   const handleUserInfo = () => {
-    const body = {
-      token: props.accessToken,
-      userinfo_endpoint: props.userinfo_endpoint
-    };
-
-    postUserinfo(body).then(res => props.resultForDisplay(res));
+    postUserinfo(body).then(res => (store.request = { ...res }));
   };
 
   return (
@@ -25,11 +25,12 @@ export function RetrieveContent(props) {
       <fieldset className="form-header">
         <h2>Retrieve content</h2>
       </fieldset>
+
       <fieldset className="button-group">
         <button
           type="button"
           className="button introspect"
-          disabled={!(props.introspect_endpoint && props.accessToken)}
+          disabled={!(store.config.introspect_endpoint && accessToken)}
           onClick={handleIntrospect}
         >
           Introspect
@@ -38,7 +39,7 @@ export function RetrieveContent(props) {
         <button
           type="button"
           className="button userinfo"
-          disabled={!(props.userinfo_endpoint && props.accessToken)}
+          disabled={!(store.config.userinfo_endpoint && accessToken)}
           onClick={handleUserInfo}
         >
           Userinfo
@@ -46,4 +47,4 @@ export function RetrieveContent(props) {
       </fieldset>
     </form>
   );
-}
+});
