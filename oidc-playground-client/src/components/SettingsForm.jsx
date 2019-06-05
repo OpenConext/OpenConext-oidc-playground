@@ -140,12 +140,7 @@ export const SettingsForm = observer(
           <GrantType
             value={grant_type}
             options={store.config.grant_types_supported}
-            onChange={val =>
-              this.setState({
-                grant_type: val,
-                response_type: val === "implicit" ? "token id_token" : val === "client_credentials" ? "token" : "code"
-              })
-            }
+            onChange={val => this.setValue("grant_type", val)}
             moderators={{ auth_protocol }}
           />
 
