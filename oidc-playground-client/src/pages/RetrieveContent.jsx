@@ -21,30 +21,31 @@ export const RetrieveContent = observer(props => {
   };
 
   return (
-    <form>
-      <fieldset className="form-header">
+    <>
+      <div className="block-header">
         <h2>Retrieve content</h2>
-      </fieldset>
+      </div>
+      <div className="block retrieve-content">
+        <div className="button-group">
+          <button
+            type="button"
+            className="button introspect"
+            disabled={!(store.config.introspect_endpoint && accessToken)}
+            onClick={handleIntrospect}
+          >
+            Introspect
+          </button>
 
-      <fieldset className="button-group">
-        <button
-          type="button"
-          className="button introspect"
-          disabled={!(store.config.introspect_endpoint && accessToken)}
-          onClick={handleIntrospect}
-        >
-          Introspect
-        </button>
-
-        <button
-          type="button"
-          className="button userinfo"
-          disabled={!(store.config.userinfo_endpoint && accessToken)}
-          onClick={handleUserInfo}
-        >
-          Userinfo
-        </button>
-      </fieldset>
-    </form>
+          <button
+            type="button"
+            className="button userinfo"
+            disabled={!(store.config.userinfo_endpoint && accessToken)}
+            onClick={handleUserInfo}
+          >
+            Userinfo
+          </button>
+        </div>
+      </div>
+    </>
   );
 });

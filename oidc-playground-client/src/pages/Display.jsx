@@ -25,7 +25,7 @@ export class Display extends React.Component {
 
   render() {
     return (
-      <div className="display container">
+      <div className="right-screen">
         {this.renderTabs()}
         {this.state.activeTab === "Request" ? <Request /> : <JWT />}
       </div>

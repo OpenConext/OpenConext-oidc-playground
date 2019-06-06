@@ -1,7 +1,7 @@
 import React from "react";
 import { when } from "mobx";
 import { observer } from "mobx-react";
-import { Config, Display } from "pages";
+import { Config, RetrieveContent, Display } from "pages";
 import { Flash } from "components";
 import { discovery, getTokens } from "api";
 import store from "store";
@@ -71,7 +71,10 @@ const App = observer(
       return (
         <div className="app-container">
           <Flash />
-          {store.configLoaded && <Config />}
+          <div className="screen-left">
+            {store.configLoaded && <Config />}
+            <RetrieveContent />
+          </div>
           <Display />
         </div>
       );

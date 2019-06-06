@@ -33,49 +33,27 @@ $transition: all 100ms;
   grey: $medium-grey;
 }
 
-form,
-.container {
-  $form-space: 20px;
-  padding-bottom: ($form-space / 2);
-  margin-bottom: $form-space;
+fieldset,
+.fieldset {
+  margin-bottom: 20px;
+  border: none;
 
-  background-color: white;
+  &:last-child {
+    margin-bottom: 0px;
+  }
+}
+
+.field-block {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 
   fieldset {
-    padding: ($form-space / 2) $form-space;
-    border: none;
+    flex: 1;
+    margin-bottom: 0px;
 
-    &.form-header {
-      padding: 0 0 ($form-space / 2) 0;
-
-      h2 {
-        padding: $form-space;
-        color: white;
-        font-weight: bold;
-        font-size: 16px;
-      }
-    }
-
-    &.button-group {
-      padding-bottom: 0;
-
-      > * {
-        margin-bottom: 10px;
-      }
-    }
-
-    .field-block {
-      display: flex;
-      flex-wrap: wrap;
-
-      fieldset {
-        flex: 1;
-        min-width: 230px;
-      }
-    }
-
-    h2 {
-      background: $blue;
+    &:nth-child(2) {
+      margin-left: 20px;
     }
   }
 }

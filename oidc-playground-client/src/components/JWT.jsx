@@ -39,11 +39,15 @@ export const JWT = observer(() => {
   const hybridFlowData = store.hybridFlowIdToken || store.hybridFlowAccessToken;
 
   if (!normalFlowData && !hybridFlowData) {
-    return <label>No results yet.</label>;
+    return (
+      <div className="block no-data">
+        <label>No results yet.</label>
+      </div>
+    );
   }
 
   return (
-    <div>
+    <div className="block">
       <Flow access_token={store.normalFlowAccessToken} id_token={store.normalFlowIdToken} />
       <Flow access_token={store.hybridFlowAccessToken} id_token={store.hybridFlowIdToken} />
     </div>

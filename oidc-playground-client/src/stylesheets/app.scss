@@ -9,28 +9,21 @@
 
   background-color: $background;
 
-  .config,
-  .display {
+  .screen-left,
+  .right-screen {
     margin: 10px;
     overflow: auto;
     min-width: 300px;
+    flex: 1;
+    height: fit-content;
   }
 
-  .config {
-    flex: 1;
+  .screen-left {
     max-width: 500px;
   }
 
-  .display {
-    flex: 2;
+  .right-screen {
     max-width: 700px;
-
-    height: fit-content;
-
-    > * {
-      background: white;
-      padding: 10px 20px;
-    }
 
     input,
     #json-pretty {
@@ -40,30 +33,60 @@
         margin-bottom: 0px;
       }
     }
+  }
 
-    .tabs {
-      padding: 0 0 10px 0;
-      display: flex;
+  .tab,
+  .block-header {
+    padding: 20px;
+  }
 
-      .tab {
-        flex: 1;
-        padding: 20px;
-        font-size: 16px;
+  .block-header {
+    background: $blue;
+
+    h2 {
+      font-weight: bold;
+      color: white;
+    }
+  }
+
+  .tabs {
+    display: flex;
+
+    .tab {
+      flex: 1;
+      border-top-width: 2px;
+      border-top-style: solid;
+      cursor: pointer;
+
+      &:not(.active) {
         background: $light-grey;
-        border-top: 2px solid $light-grey;
-        color: $dark-grey;
-        cursor: pointer;
+        border-color: $light-grey;
 
-        &.active {
-          background: white;
-          color: $blue;
-          border-color: $blue;
-
-          h2 {
-            font-weight: bold;
-          }
+        h2 {
+          color: $dark-grey;
         }
       }
+
+      &.active {
+        background: white;
+        border-color: $blue;
+
+        h2 {
+          color: $blue;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .block {
+    background-color: white;
+    margin-bottom: 20px;
+    padding: 20px;
+
+    &.retrieve-content,
+    &.no-data {
+      padding-bottom: 10px;
     }
   }
 }
