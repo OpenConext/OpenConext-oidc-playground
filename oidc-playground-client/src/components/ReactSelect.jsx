@@ -78,7 +78,7 @@ function formatArrayValue(value, options, freeFormat, fixedValues) {
   let values = value;
 
   if (!freeFormat) {
-    values = value.filter(val => !options.includes(val));
+    values = value.filter(val => options.includes(val));
   }
 
   return values.map(val => ({
@@ -114,9 +114,14 @@ export function ReactSelect(props) {
   const value = formatValue(props.value, props.options, freeFormat, fixedValues);
   const options = formatOptions(props.options);
   const onChange = option => props.onChange(formatReturnValue(option));
-  return freeFormat ? (
-    <Creatable {...{ ...rest, value, options, onChange, styles }} />
-  ) : (
-    <Select {...{ ...rest, value, options, onChange, styles }} />
-  );
+
+  const formattedProps = {
+    ...rest,
+    value,
+    options,
+    onChange,
+    styles
+  };
+
+  return freeFormat ? <Creatable {...{ ...formattedProps }} /> : <Select {...{ ...formattedProps }} />;
 }

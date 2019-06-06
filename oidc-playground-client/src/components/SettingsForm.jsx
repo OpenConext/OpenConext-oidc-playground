@@ -2,33 +2,19 @@ import React from "react";
 import { observer } from "mobx-react";
 import store from "store";
 import { ReactSelect, InfoLabel } from "components";
-import { CodeChallenge, GrantType, ResponseMode, ResponseType, Scopes } from "components/settings";
+import {
+  AcrValues,
+  Claims,
+  CodeChallenge,
+  GrantType,
+  ResponseMode,
+  ResponseType,
+  Scopes,
+  TokenEndpointAuthMethod
+} from "components/settings";
 import { generateCodeChallenge, formPost } from "api";
 import { getRedirectParams } from "utils/Url";
-import {
-  acrValuesT,
-  authorizationProtocolT,
-  nonceT,
-  requestedClaimsT,
-  stateT,
-  tokenEndpointAuthenticationT
-} from "./settings/Tooltips";
-
-const excludedClaims = [
-  "aud",
-  "nbf",
-  "iss",
-  "exp",
-  "iat",
-  "jti",
-  "nonce",
-  "at_hash",
-  "c_hash",
-  "s_hash",
-  "at_hash",
-  "sub",
-  "uids"
-];
+import { authorizationProtocolT, nonceT, stateT } from "./settings/Tooltips";
 
 export const SettingsForm = observer(
   class SettingsForm extends React.Component {
@@ -167,25 +153,18 @@ export const SettingsForm = observer(
             moderators={{ auth_protocol }}
           />
 
-          {grant_type !== "implicit" && (
-            <fieldset>
-              <InfoLabel label="Token endpoint authentication" toolTip={tokenEndpointAuthenticationT()} />
-              <ReactSelect
-                value={token_endpoint_auth_method}
-                options={store.config.token_endpoint_auth_methods_supported}
-                onChange={val => this.setValue("token_endpoint_auth_method", val)}
-              />
-            </fieldset>
-          )}
-          <fieldset>
-            <InfoLabel label="Requested claims" toolTip={requestedClaimsT()} />
-            <ReactSelect
-              value={claims}
-              options={store.config.claims_supported.filter(claim => !excludedClaims.includes(claim))}
-              onChange={val => this.setValue("claims", val)}
-              isMulti
-            />
-          </fieldset>
+          <TokenEndpointAuthMethod
+            value={token_endpoint_auth_method}
+            options={store.config.token_endpoint_auth_methods_supported}
+            onChange={val => this.setValue("token_endpoint_auth_method", val)}
+            moderators={{ grant_type }}
+          />
+
+          <Claims
+            value={claims}
+            options={store.config.claims_supported}
+            onChange={val => this.setValue("claims", val)}
+          />
 
           <div className="field-block">
             <fieldset>
@@ -199,15 +178,11 @@ export const SettingsForm = observer(
             </fieldset>
           </div>
 
-          <fieldset>
-            <InfoLabel label="ACR values" toolTip={acrValuesT()} />
-            <ReactSelect
-              value={acr_values}
-              options={store.config.acr_values_supported}
-              onChange={val => this.setValue("acr_values", val)}
-              isMulti
-            />
-          </fieldset>
+          <AcrValues
+            value={acr_values}
+            options={store.config.acr_values_supported}
+            onChange={val => this.setValue("acr_values", val)}
+          />
 
           <div className="field-block">
             <CodeChallenge
