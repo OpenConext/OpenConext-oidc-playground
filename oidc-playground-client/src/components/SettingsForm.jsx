@@ -165,6 +165,7 @@ export const SettingsForm = observer(
             value={claims}
             options={store.config.claims_supported}
             onChange={val => this.setValue("claims", val)}
+            moderators={{ auth_protocol }}
           />
 
           <div className="field-block">

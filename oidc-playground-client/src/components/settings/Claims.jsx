@@ -20,6 +20,10 @@ export function Claims(props) {
   ];
   const options = props.options.filter(claim => !excludedClaims.includes(claim));
 
+  if (props.moderators.auth_protocol === "Oauth2") {
+    return null;
+  }
+
   return (
     <fieldset>
       <InfoLabel label="Requested claims" toolTip={requestedClaimsT()} />
