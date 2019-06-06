@@ -188,7 +188,7 @@ public class Oidc implements URLSupport {
         }
         parameters.put("acr_values", (String) body.get("acr_values"));
 
-        if ((boolean)body.getOrDefault("signedJWT", false)) {
+        if ((boolean) body.getOrDefault("signedJWT", false)) {
             parameters.put("request", signedJWT(parameters).serialize());
             List<String> toRemove = Arrays.asList("response_mode", "claims", "nonce", "state", "code_challenge", "code_challenge_method", "acr_values");
             parameters.keySet().removeIf(key -> toRemove.contains(key));
@@ -288,10 +288,10 @@ public class Oidc implements URLSupport {
 
     private Map<String, Object> doPost(Map<String, Object> body, Map<String, String> requestBody, String endpoint) throws URISyntaxException {
         String clientIdToUse = (String) body.getOrDefault("client_id", clientId);
-        clientIdToUse = StringUtils.hasText(clientIdToUse) ? clientIdToUse :clientId;
+        clientIdToUse = StringUtils.hasText(clientIdToUse) ? clientIdToUse : clientId;
 
         String secretToUse = (String) body.getOrDefault("client_secret", secret);
-        secretToUse = StringUtils.hasText(secretToUse) ? secretToUse :clientId;
+        secretToUse = StringUtils.hasText(secretToUse) ? secretToUse : secret;
 
         RequestEntity.BodyBuilder builder = RequestEntity
                 .post(new URI(endpoint))
