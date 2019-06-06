@@ -184,6 +184,7 @@ export const SettingsForm = observer(
             value={acr_values}
             options={store.config.acr_values_supported}
             onChange={val => this.setValue("acr_values", val)}
+            moderators={{ auth_protocol }}
           />
 
           <div className="field-block">
