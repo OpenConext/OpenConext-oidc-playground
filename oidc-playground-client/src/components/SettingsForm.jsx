@@ -170,7 +170,7 @@ export const SettingsForm = observer(
           <div className="field-block">
             <fieldset>
               <InfoLabel label="State" toolTip={stateT()} />
-              <input value={state} disabled />
+              <input value={state} onChange={e => this.setValue("state", e.target.value)} />
             </fieldset>
 
             <fieldset>

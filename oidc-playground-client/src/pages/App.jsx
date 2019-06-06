@@ -30,12 +30,12 @@ const App = observer(
           store.normalFlowAccessToken = params.access_token;
           store.normalFlowIdToken = params.id_token;
 
-          this.swapCode(params.code, params.state);
+          this.swapCode(params.code);
         }
       );
     }
 
-    swapCode(code, state) {
+    swapCode(code) {
       if (!code) {
         return;
       }
