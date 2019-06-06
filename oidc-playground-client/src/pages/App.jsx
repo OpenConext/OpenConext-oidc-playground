@@ -38,7 +38,7 @@ const App = observer(
 
       const body = {
         ...store.config,
-        ...JSON.parse(window.atob(state)),
+        ...JSON.parse(localStorage.getItem("state")),
         code
       };
 
@@ -63,7 +63,7 @@ const App = observer(
       return (
         <div className="app-container">
           <Flash />
-          <Config />
+          {store.configLoaded && <Config />}
           <Display />
         </div>
       );

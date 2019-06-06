@@ -42,13 +42,10 @@ export const SettingsForm = observer(
     componentDidMount() {
       const params = getRedirectParams();
 
-      if (params && params.state) {
-        const decodedStateString = window.atob(params.state);
-
+      if (params) {
         this.setState({
           ...this.state,
-          ...JSON.parse(decodedStateString),
-          state: JSON.stringify(decodedStateString)
+          ...JSON.parse(localStorage.getItem("state"))
         });
       }
 
@@ -63,19 +60,22 @@ export const SettingsForm = observer(
       }
     }
 
-    getSanitizedBody() {
-      return {
-        ...store.config,
-        ...this.state,
-        acr_values: this.state.acr_values.join(" "),
-        state: window.btoa(JSON.stringify(this.state))
-      };
+    saveState() {
+      localStorage.setItem("state", JSON.stringify(this.state));
     }
 
     handleSubmit = e => {
       e.preventDefault();
 
-      formPost(this.getSanitizedBody()).then(json => {
+      this.saveState();
+
+      const body = {
+        ...store.config,
+        ...this.state,
+        acr_values: this.state.acr_values.join(" ")
+      };
+
+      formPost(body).then(json => {
         if (json.url) {
           window.location.replace(json.url);
         }
