@@ -1,8 +1,9 @@
 import React from "react";
-import { mount } from "enzyme";
+import { shallow } from "enzyme";
 import { SettingsForm } from "components";
 
 const props = {
+  onChange: () => {},
   config: {
     authorization_endpoint: "",
     acr_values_supported: [],
@@ -20,9 +21,25 @@ const props = {
     token_endpoint_auth_methods_supported: [],
     token_endpoint_auth_method: "",
     userinfo_endpoint: ""
+  },
+  form: {
+    auth_protocol: "OpenID",
+    acr_values: [],
+    claims: [],
+    code_challenge_method: "",
+    code_verifier: "",
+    code_challenge: "",
+    pkce: false,
+    grant_type: "authorization_code",
+    response_mode: "fragment",
+    response_type: "code",
+    scope: [],
+    token_endpoint_auth_method: "client_secret_basic",
+    state: "example",
+    nonce: "example"
   }
 };
 
 it("renders without crashing", () => {
-  mount(<SettingsForm {...props} />);
+  shallow(<SettingsForm {...props} />);
 });
