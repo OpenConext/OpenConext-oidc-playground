@@ -74,15 +74,11 @@ function formatOptions(options) {
   return options.map(opt => ({ value: opt, label: opt }));
 }
 
-function formatArrayValue(value, options, freeFormat, fixedValues, notAllowedValues) {
+function formatArrayValue(value, options, freeFormat, fixedValues) {
   let values = value;
 
   if (!freeFormat) {
     values = value.filter(val => !options.includes(val));
-  }
-
-  if (freeFormat) {
-    values = value.filter(val => !notAllowedValues.includes(val));
   }
 
   return values.map(val => ({
@@ -92,16 +88,12 @@ function formatArrayValue(value, options, freeFormat, fixedValues, notAllowedVal
   }));
 }
 
-function formatValue(value, options, freeFormat, fixedValues, notAllowedValues) {
+function formatValue(value, options, freeFormat, fixedValues) {
   if (Array.isArray(value)) {
-    return formatArrayValue(value, options, freeFormat, fixedValues, notAllowedValues);
+    return formatArrayValue(value, options, freeFormat, fixedValues);
   }
 
   if (!freeFormat && !options.includes(value)) {
-    return null;
-  }
-
-  if (notAllowedValues.includes(value)) {
     return null;
   }
 
@@ -117,9 +109,9 @@ function formatReturnValue(option) {
 }
 
 export function ReactSelect(props) {
-  const { freeFormat, fixedValues = [], notAllowedValues = [], ...rest } = props;
+  const { freeFormat, fixedValues = [], ...rest } = props;
 
-  const value = formatValue(props.value, props.options, freeFormat, fixedValues, notAllowedValues);
+  const value = formatValue(props.value, props.options, freeFormat, fixedValues);
   const options = formatOptions(props.options);
   const onChange = option => props.onChange(formatReturnValue(option));
   return freeFormat ? (

@@ -5,7 +5,8 @@ import { Scopes } from "components/settings";
 const props = {
   moderators: {},
   options: [],
-  value: []
+  value: [],
+  onChange: () => {}
 };
 
 it("renders without crashing", () => {
@@ -39,10 +40,6 @@ describe("auth_protocol", () => {
   describe("OpenID", () => {
     beforeAll(() => {
       setSelectProps("OpenID");
-    });
-
-    it("adds openid scope to value", () => {
-      expect(selectProps.value.includes("openid")).toEqual(true);
     });
 
     it("adds openid scope to fixedValues", () => {
