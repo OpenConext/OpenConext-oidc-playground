@@ -271,7 +271,9 @@ public class Oidc implements URLSupport {
     private Map<String, Object> doToken(Map<String, Object> body, String grantType) throws URISyntaxException {
         HashMap<String, String> requestBody = new HashMap<>();
         requestBody.put("grant_type", grantType);
-        requestBody.put("code", (String) body.get("code"));
+        if (body.containsKey("code")) {
+            requestBody.put("code", (String) body.get("code"));
+        }
         if (body.containsKey("scope")) {
             List<String> scopes = (List<String>) body.get("scope");
             if (!CollectionUtils.isEmpty(scopes)) {
