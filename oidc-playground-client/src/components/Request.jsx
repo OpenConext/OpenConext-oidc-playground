@@ -17,7 +17,7 @@ export const Request = observer(() => {
   const { request_url, request_headers, request_body, result } = store.request || {};
 
   return (
-    <div>
+    <div className="block">
       {authorization_url && (
         <div className="fieldset">
           <label>Authorization URL</label>
