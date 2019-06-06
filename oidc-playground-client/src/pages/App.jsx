@@ -1,12 +1,12 @@
 import React from "react";
-import { when } from "mobx";
-import { observer } from "mobx-react";
-import { Config, RetrieveContent, Display } from "pages";
-import { Flash } from "components";
-import { discovery, getTokens } from "api";
+import {when} from "mobx";
+import {observer} from "mobx-react";
+import {Config, Display, RetrieveContent} from "pages";
+import {Flash} from "components";
+import {discovery, getTokens} from "api";
 import store from "store";
-import { getRedirectParams } from "utils/Url";
-import { addIcons } from "utils/IconLibrary";
+import {getRedirectParams} from "utils/Url";
+import {addIcons} from "utils/IconLibrary";
 
 addIcons();
 
@@ -46,7 +46,7 @@ const App = observer(
 
       const body = {
         ...store.config,
-        ...JSON.parse(localStorage.getItem("state")),
+        ...JSON.parse(localStorage.getItem("state")).form,
         code
       };
 
@@ -61,21 +61,22 @@ const App = observer(
             request_body: data.request_body
           };
         })
-        .catch(
-          err =>
-            (store.message = `Tokens could not be retrieved with this code. Error: ${err.statusText} (${err.status})`)
+        .catch(err => err.json()
+          .then(res =>
+              store.message = `Tokens could not be retrieved with this code. 
+                              Error: ${res.error} (${res.status}). Cause ${res.message}`)
         );
     }
 
     render() {
       return (
         <div className="app-container">
-          <Flash />
+          <Flash/>
           <div className="screen-left">
-            {store.configLoaded && <Config />}
-            <RetrieveContent />
+            {store.configLoaded && <Config/>}
+            <RetrieveContent/>
           </div>
-          <Display />
+          <Display/>
         </div>
       );
     }

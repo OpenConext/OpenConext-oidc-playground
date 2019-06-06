@@ -1,10 +1,10 @@
 import React from "react";
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import store from "store";
-import { SettingsForm, Authorization } from "components";
-import { getRedirectParams } from "utils/Url";
-import { generateCodeChallenge, formPost } from "api";
-import { isEmpty } from "utils/Utils";
+import {Authorization, SettingsForm} from "components";
+import {getRedirectParams} from "utils/Url";
+import {formPost, generateCodeChallenge} from "api";
+import {isEmpty} from "utils/Utils";
 
 export const Config = observer(
   class Config extends React.Component {
@@ -44,9 +44,12 @@ export const Config = observer(
       if (window.location.pathname === "/") {
         generateCodeChallenge(this.state.form.code_challenge_method).then(json =>
           this.setState({
-            code_challenge_method: json.codeChallengeMethod,
-            code_verifier: json.codeVerifier,
-            code_challenge: json.codeChallenge
+            form: {
+              ...this.state.form,
+              code_challenge_method: json.codeChallengeMethod,
+              code_verifier: json.codeVerifier,
+              code_challenge: json.codeChallenge
+            }
           })
         );
       }
@@ -57,7 +60,7 @@ export const Config = observer(
     }
 
     sanitizeBody() {
-      const { acr_values, client_id } = this.state.form;
+      const {acr_values, client_id} = this.state.form;
 
       return {
         ...store.config,
@@ -88,7 +91,7 @@ export const Config = observer(
     setValue(attr, value, callback = () => this) {
       this.setState(
         {
-          form: { ...this.state.form, [attr]: value }
+          form: {...this.state.form, [attr]: value}
         },
         callback
       );
@@ -102,7 +105,7 @@ export const Config = observer(
               const className = tab === this.state.activeTab ? "tab active" : "tab";
 
               return (
-                <div className={className} key={tab} onClick={() => this.setState({ activeTab: tab })}>
+                <div className={className} key={tab} onClick={() => this.setState({activeTab: tab})}>
                   <h2>{tab}</h2>
                 </div>
               );

@@ -288,7 +288,11 @@ public class Oidc implements URLSupport {
 
     private Map<String, Object> doPost(Map<String, Object> body, Map<String, String> requestBody, String endpoint) throws URISyntaxException {
         String clientIdToUse = (String) body.getOrDefault("client_id", clientId);
+        clientIdToUse = StringUtils.hasText(clientIdToUse) ? clientIdToUse :clientId;
+
         String secretToUse = (String) body.getOrDefault("client_secret", secret);
+        secretToUse = StringUtils.hasText(secretToUse) ? secretToUse :clientId;
+
         RequestEntity.BodyBuilder builder = RequestEntity
                 .post(new URI(endpoint))
                 .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_UTF8)

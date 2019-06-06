@@ -2,12 +2,12 @@ import { isEmpty } from "../utils/Utils";
 
 //Internal API
 function validateResponse(res) {
+
   if (!res.ok) {
     if (res.type === "opaqueredirect") {
       setTimeout(() => window.location.reload(), 100);
       return res;
     }
-
     throw res;
   }
 
