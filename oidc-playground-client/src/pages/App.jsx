@@ -23,6 +23,10 @@ const App = observer(
       when(
         () => store.configLoaded && params,
         () => {
+          if (params.error) {
+            return (store.message = `Invalid request. ${params.error_description}`);
+          }
+
           store.normalFlowAccessToken = params.access_token;
           store.normalFlowIdToken = params.id_token;
 

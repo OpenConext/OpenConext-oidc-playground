@@ -10,7 +10,9 @@ export function getRedirectParams() {
       access_token: searchParams.get("access_token"),
       id_token: searchParams.get("id_token"),
       code: searchParams.get("code"),
-      state: searchParams.get("state")
+      state: searchParams.get("state"),
+      error: searchParams.get("error"),
+      error_description: searchParams.get("error_description")
     };
   }
 
