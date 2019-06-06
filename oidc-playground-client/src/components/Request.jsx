@@ -10,8 +10,19 @@ export const Request = observer(() => {
 
   const { request_url, request_headers, request_body, result } = store.request;
 
+  const codeFlow = request_body.grant_type === "authorization_code";
+  const authorization_url = localStorage.getItem("authorization_url");
+
   return (
     <div>
+      {codeFlow && (
+        <>
+          <label>Authorization URL</label>
+          <input disabled value={authorization_url} />
+        </>
+      )}
+
+      <label>Request URL</label>
       <input disabled value={request_url} />
 
       <label>Headers</label>

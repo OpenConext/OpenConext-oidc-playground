@@ -77,6 +77,7 @@ export const SettingsForm = observer(
 
       formPost(body).then(json => {
         if (json.url) {
+          localStorage.setItem("authorization_url", json.url);
           window.location.replace(json.url);
         }
 
