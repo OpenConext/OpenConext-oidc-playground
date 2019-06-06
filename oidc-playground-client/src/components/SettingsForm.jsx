@@ -67,6 +67,8 @@ export const SettingsForm = observer(
     handleSubmit = e => {
       e.preventDefault();
 
+      localStorage.clear();
+
       this.saveState();
 
       const body = {

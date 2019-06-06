@@ -18,6 +18,10 @@ const App = observer(
         store.configLoaded = true;
       });
 
+      if (window.location.pathname === "/") {
+        localStorage.clear();
+      }
+
       const params = getRedirectParams();
 
       when(
