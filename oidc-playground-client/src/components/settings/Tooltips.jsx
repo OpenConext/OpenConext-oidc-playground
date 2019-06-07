@@ -215,6 +215,22 @@ export const codeChallengeMethodT = () => (
   <span>The code challenge method is the method used to derive an authorization code challenge.</span>
 );
 
-export const forceAuthenticationT = () => <span>TODO</span>;
+export const forceAuthenticationT = () => (
+  <span>
+    The 'Force authentication' option adds the <code>prompt</code> parameter with the value <code>login</code> to the<br/>
+    authorization request. This will be 'translated' to <code>ForceAuthn="true"</code> as an attribute for the SAML <code>AuthnRequest</code>.
+    <br/><br/>
+    The Identity Provider must support this option.
+  </span>
+);
 
-export const signedJWTT = () => <span>TODO</span>;
+export const signedJWTT = () => (
+  <span>
+    Open ID Connect has support for sealing all authorization parameters in a signed JWT. This ensures that OpenID <br/>
+    authentication requests cannot be modified or tampered with.
+    <br/><br/>
+    Relying Parties that want to use SURF SecureID are encouraged to use this option for requesting the LOA-level in the<br/>
+    <code>acr_values</code> request parameter. Note that the OIDC server will need to verify the JWT and therefore<br/>
+    it reads the <code>coin:certificate</code> information in Manage for the RP.
+  </span>
+);

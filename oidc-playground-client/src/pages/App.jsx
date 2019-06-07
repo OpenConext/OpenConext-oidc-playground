@@ -12,11 +12,16 @@ addIcons();
 
 const App = observer(
   class App extends React.Component {
-    componentDidMount() {
+
+    constructor(props, ctx) {
+      super(props, ctx);
+
       if (window.location.pathname === "/") {
         localStorage.clear();
       }
+    }
 
+    componentDidMount() {
       discovery().then(config => {
         store.config = config;
         store.configLoaded = true;
