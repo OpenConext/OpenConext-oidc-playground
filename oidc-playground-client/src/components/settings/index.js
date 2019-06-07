@@ -6,4 +6,5 @@ export { GrantType } from "./GrantType";
 export { ResponseMode } from "./ResponseMode";
 export { ResponseType } from "./ResponseType";
 export { Scopes } from "./Scopes";
+export { SignedJWT } from "./SignedJWT";
 export { TokenEndpointAuthMethod } from "./TokenEndpointAuthMethod";

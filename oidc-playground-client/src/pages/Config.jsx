@@ -12,23 +12,24 @@ export const Config = observer(
       tabs: ["Settings", "Authorization"],
       activeTab: "Settings",
       form: {
+        acr_values: [],
+        auth_protocol: "OpenID",
+        claims: [],
         client_id: "",
         client_secret: "",
-        auth_protocol: "OpenID",
-        forceAuthentication: false,
-        acr_values: [],
-        claims: [],
         code_challenge_method: "",
-        code_verifier: "",
         code_challenge: "",
-        pkce: false,
+        code_verifier: "",
+        forceAuthentication: false,
         grant_type: "authorization_code",
+        nonce: "example",
+        pkce: false,
         response_mode: "fragment",
         response_type: "code",
         scope: [],
-        token_endpoint_auth_method: "client_secret_basic",
+        signedJWT: false,
         state: "example",
-        nonce: "example"
+        token_endpoint_auth_method: "client_secret_basic"
       }
     };
 

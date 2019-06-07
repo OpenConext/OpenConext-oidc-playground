@@ -11,6 +11,7 @@ import {
   ResponseMode,
   ResponseType,
   Scopes,
+  SignedJWT,
   TokenEndpointAuthMethod
 } from "components/settings";
 import { authorizationProtocolT, nonceT, stateT } from "./settings/Tooltips";
@@ -26,12 +27,13 @@ export const SettingsForm = observer(props => {
     code_challenge,
     code_verifier,
     forceAuthentication,
-    pkce,
     grant_type,
     nonce,
+    pkce,
     response_mode,
     response_type,
     scope,
+    signedJWT,
     state,
     token_endpoint_auth_method
   } = props.form;
@@ -128,6 +130,8 @@ export const SettingsForm = observer(props => {
         onChange={val => onChange("forceAuthentication", val)}
         moderators={{ grant_type }}
       />
+
+      <SignedJWT value={signedJWT} onChange={val => onChange("signedJWT", val)} moderators={{ auth_protocol }} />
 
       <fieldset>
         <button type="submit" className="button blue">
