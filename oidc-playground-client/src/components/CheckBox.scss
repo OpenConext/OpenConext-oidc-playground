@@ -11,19 +11,22 @@ div.checkbox {
     &:focus {
       outline: none;
     }
-
-    &.info {
-      margin-left: 10px;
-    }
   }
 
-  span {
-    border: 2px solid $blue;
-    border-radius: 4px;
-    cursor: pointer;
+  div.info-label {
+    display: inline-block;
+    margin-left: 10px;
+  }
 
-    &:focus {
-      outline: none;
+  .label-as-checkbox {
+    span {
+      border: 2px solid $blue;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+      }
     }
   }
 

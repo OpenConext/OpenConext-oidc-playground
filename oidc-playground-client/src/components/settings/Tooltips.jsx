@@ -214,3 +214,7 @@ export const codeVerifierT = () => (
 export const codeChallengeMethodT = () => (
   <span>The code challenge method is the method used to derive an authorization code challenge.</span>
 );
+
+export const forceAuthenticationT = () => <span>TODO</span>;
+
+export const signedJWTT = () => <span>TODO</span>;

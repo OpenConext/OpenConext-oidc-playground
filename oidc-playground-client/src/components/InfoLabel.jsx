@@ -3,7 +3,7 @@ import ReactTooltip from "react-tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./InfoLabel.scss";
 
-export function InfoLabel({ label, toolTip, className = "", onClick = () => true }) {
+export function InfoLabel({ label, toolTip, htmlFor, className = "", onClick = () => true }) {
   const toolTipHtml = (
     <div className="inner-tooltip">
       <h3>{label.replace(/>/g, "")}</h3>
@@ -13,7 +13,7 @@ export function InfoLabel({ label, toolTip, className = "", onClick = () => true
 
   return (
     <div className={`info-label ${className}`}>
-      <label className={className} onClick={onClick}>
+      <label className={className} onClick={onClick} htmlFor={htmlFor}>
         {label}
       </label>
       <span className="tool-tip-section">
