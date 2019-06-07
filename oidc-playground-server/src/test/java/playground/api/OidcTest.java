@@ -16,9 +16,11 @@ import playground.AbstractIntegrationTest;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -29,6 +31,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod.S256;
 import static io.restassured.RestAssured.given;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static playground.api.Oidc.mapTypeReference;
@@ -56,8 +60,8 @@ public class OidcTest extends AbstractIntegrationTest {
         Map<String, Object> body = new FluentMap()
                 .p("authorization_endpoint", "http://localhost:8093/authorize")
                 .p("response_type", "code")
-                .p("scope", Arrays.asList("openid", "groups"))
-                .p("claims", Arrays.asList("email", "edumember_is_member_of"))
+                .p("scope", asList("openid", "groups"))
+                .p("claims", asList("email", "edumember_is_member_of"))
                 .p("nonce", "some_nonce");
 
         Map<String, String> queryParams = doPostForAuthorize(body, "authorization_code");
@@ -78,8 +82,8 @@ public class OidcTest extends AbstractIntegrationTest {
         Map<String, Object> body = new FluentMap()
                 .p("authorization_endpoint", "http://localhost:8093/authorize")
                 .p("response_type", "code")
-                .p("scope", Collections.singletonList("openid"))
-                .p("claims", Arrays.asList("email", "edumember_is_member_of"))
+                .p("scope", singletonList("openid"))
+                .p("claims", asList("email", "edumember_is_member_of"))
                 .p("nonce", "some_nonce")
                 .p("forceAuthentication", true)
                 .p("signedJWT", true);
@@ -104,7 +108,7 @@ public class OidcTest extends AbstractIntegrationTest {
         Map<String, Object> body = new FluentMap()
                 .p("authorization_endpoint", "http://localhost:8093/authorize")
                 .p("response_type", "implicit")
-                .p("scope", Arrays.asList("openid", "groups"))
+                .p("scope", asList("openid", "groups"))
                 .p("state", "example");
 
         Map<String, String> queryParams = doPostForAuthorize(body, "authorization_code");
@@ -118,6 +122,79 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("state", "example");
 
         assertEquals(expected, queryParams);
+    }
+
+    @Test
+    public void implicitFormPostRequiresDifferentRedirectUri() {
+        Map<String, Object> body = new FluentMap()
+                .p("authorization_endpoint", "http://localhost:8093/authorize")
+                .p("response_type", "implicit")
+                .p("response_mode", "form_post")
+                .p("scope", asList("openid"));
+
+        Map<String, String> queryParams = doPostForAuthorize(body, "authorization_code");
+
+        Map<String, Object> expected = new FluentMap()
+                .p("scope", "openid")
+                .p("response_type", "implicit")
+                .p("response_mode", "form_post")
+                .p("redirect_uri", "http://localhost:3000/oidc/api/redirect")
+                .p("client_id", "playground_client");
+
+        assertEquals(expected, queryParams);
+    }
+
+    @Test
+    public void pkce() {
+        Map<String, Object> body = new FluentMap()
+                .p("authorization_endpoint", "http://localhost:8093/authorize")
+                .p("response_type", "code")
+                .p("scope", singletonList("openid"))
+                .p("pkce", true)
+                .p("code_challenge", "123456")
+                .p("code_challenge_method", "plain")
+                .p("nonce", "some_nonce");
+
+        Map<String, String> queryParams = doPostForAuthorize(body, "authorization_code");
+
+        Map<String, Object> expected = new FluentMap()
+                .p("scope", "openid")
+                .p("response_type", "code")
+                .p("redirect_uri", "http://localhost:3000/redirect")
+                .p("client_id", "playground_client")
+                .p("code_challenge", "123456")
+                .p("code_challenge_method", "plain")
+                .p("nonce", "some_nonce");
+
+        assertEquals(expected, queryParams);
+    }
+
+    @Test
+    public void emptyScope() {
+        Map<String, Object> body = new FluentMap()
+                .p("authorization_endpoint", "http://localhost:8093/authorize")
+                .p("response_type", "code")
+                .p("scope", new ArrayList<String>())
+                .p("nonce", null);
+
+        Map<String, String> queryParams = doPostForAuthorize(body, "authorization_code");
+
+        Map<String, Object> expected = new FluentMap()
+                .p("response_type", "code")
+                .p("redirect_uri", "http://localhost:3000/redirect")
+                .p("client_id", "playground_client");
+
+        assertEquals(expected, queryParams);
+    }
+
+    @Test
+    public void publishClientJwk() {
+        Map certs = given()
+                .header("Content-type", "application/json")
+                .accept(ContentType.JSON)
+                .get("/oidc/api/certs")
+                .as(mapTypeRef);
+        assertEquals(1, certs.size());
     }
 
     @Test
@@ -184,21 +261,11 @@ public class OidcTest extends AbstractIntegrationTest {
         Map<String, Object> body = new FluentMap()
                 .p("token_endpoint", "http://localhost:8093/token")
                 .p("grant_type", grantType)
-                .p("scope", Arrays.asList("openid", "groups"))
+                .p("scope", asList("openid", "groups"))
                 .p("state", "example");
 
 
-        stubFor(post(urlPathMatching("/token"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(readFile("oidc_response.json"))));
-
-        Map<String, Object> map = given()
-                .accept(ContentType.JSON)
-                .header("Content-type", "application/json")
-                .body(body)
-                .post("/oidc/api/" + path)
-                .as(mapTypeRef);
+        Map<String, Object> map = doToken(path, body);
 
         assertTrue(map.containsKey("request_body"));
         assertTrue(map.containsKey("request_headers"));
@@ -206,6 +273,20 @@ public class OidcTest extends AbstractIntegrationTest {
 
         Map<String, Object> result = (Map<String, Object>) map.get("result");
         assertTrue(result.containsKey("access_token"));
+    }
+
+    private Map<String, Object> doToken(String path, Map<String, Object> body) throws IOException {
+        stubFor(post(urlPathMatching("/token"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(readFile("oidc_response.json"))));
+
+        return given()
+                .accept(ContentType.JSON)
+                .header("Content-type", "application/json")
+                .body(body)
+                .post("/oidc/api/" + path)
+                .as(mapTypeRef);
     }
 
     @Test

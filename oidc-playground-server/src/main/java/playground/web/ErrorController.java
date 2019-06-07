@@ -3,14 +3,10 @@ package playground.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -40,7 +36,7 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
     }
 
     @RequestMapping("/error")
-    public ResponseEntity error(HttpServletRequest request) throws IOException {
+    public ResponseEntity<Map> error(HttpServletRequest request) throws IOException {
         ServletWebRequest webRequest = new ServletWebRequest(request);
         Map<String, Object> result = this.errorAttributes.getErrorAttributes(webRequest, false);
 
@@ -55,12 +51,9 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
             result.put("details", error.getMessage());
 
             if (error instanceof HttpServerErrorException.InternalServerError) {
-                Map map = objectMapper.readValue(((HttpServerErrorException.InternalServerError) error).getResponseBodyAsByteArray(), Map.class);
+                Map map = objectMapper.readValue(((HttpServerErrorException) error).getResponseBodyAsByteArray(), Map.class);
                 return new ResponseEntity<>(map, statusCode);
             }
-
-            ResponseStatus annotation = AnnotationUtils.getAnnotation(error.getClass(), ResponseStatus.class);
-            statusCode = annotation != null ? annotation.value() : statusCode;
         }
         return new ResponseEntity<>(result, statusCode);
     }
