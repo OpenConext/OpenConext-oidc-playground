@@ -1,10 +1,10 @@
 import React from "react";
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import store from "store";
-import {Authorization, SettingsForm} from "components";
-import {getRedirectParams} from "utils/Url";
-import {formPost, generateCodeChallenge} from "api";
-import {isEmpty} from "utils/Utils";
+import { Authorization, SettingsForm } from "components";
+import { getRedirectParams } from "utils/Url";
+import { formPost, generateCodeChallenge } from "api";
+import { isEmpty } from "utils/Utils";
 
 export const Config = observer(
   class Config extends React.Component {
@@ -15,6 +15,7 @@ export const Config = observer(
         client_id: "",
         client_secret: "",
         auth_protocol: "OpenID",
+        forceAuthentication: false,
         acr_values: [],
         claims: [],
         code_challenge_method: "",
@@ -60,7 +61,7 @@ export const Config = observer(
     }
 
     sanitizeBody() {
-      const {acr_values, client_id} = this.state.form;
+      const { acr_values, client_id } = this.state.form;
 
       return {
         ...store.config,
@@ -91,7 +92,7 @@ export const Config = observer(
     setValue(attr, value, callback = () => this) {
       this.setState(
         {
-          form: {...this.state.form, [attr]: value}
+          form: { ...this.state.form, [attr]: value }
         },
         callback
       );
@@ -105,7 +106,7 @@ export const Config = observer(
               const className = tab === this.state.activeTab ? "tab active" : "tab";
 
               return (
-                <div className={className} key={tab} onClick={() => this.setState({activeTab: tab})}>
+                <div className={className} key={tab} onClick={() => this.setState({ activeTab: tab })}>
                   <h2>{tab}</h2>
                 </div>
               );

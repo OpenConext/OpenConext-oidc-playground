@@ -1,6 +1,6 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faArrowDown, faQuestion, faChevronRight, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faQuestion, faChevronRight, faTimesCircle, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 export function addIcons() {
-  library.add(faArrowDown, faQuestion, faChevronRight, faTimesCircle);
+  library.add(faArrowDown, faQuestion, faChevronRight, faTimesCircle, faCheck);
 }

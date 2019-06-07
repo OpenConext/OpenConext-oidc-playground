@@ -6,6 +6,7 @@ import {
   AcrValues,
   Claims,
   CodeChallenge,
+  ForceAuthentication,
   GrantType,
   ResponseMode,
   ResponseType,
@@ -24,6 +25,7 @@ export const SettingsForm = observer(props => {
     code_challenge_method,
     code_challenge,
     code_verifier,
+    forceAuthentication,
     pkce,
     grant_type,
     nonce,
@@ -118,6 +120,12 @@ export const SettingsForm = observer(props => {
           options: store.config.code_challenge_methods_supported,
           onChange: val => onChange("code_challenge_method", val, this.componentDidMount)
         }}
+        moderators={{ grant_type }}
+      />
+
+      <ForceAuthentication
+        value={forceAuthentication}
+        onChange={val => onChange("forceAuthentication", val)}
         moderators={{ grant_type }}
       />
 

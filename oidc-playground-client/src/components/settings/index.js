@@ -1,6 +1,7 @@
 export { AcrValues } from "./AcrValues";
 export { Claims } from "./Claims";
 export { CodeChallenge } from "./CodeChallenge";
+export { ForceAuthentication } from "./ForceAuthentication";
 export { GrantType } from "./GrantType";
 export { ResponseMode } from "./ResponseMode";
 export { ResponseType } from "./ResponseType";

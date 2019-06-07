@@ -1,4 +1,5 @@
 export { Authorization } from "./Authorization";
+export { CheckBox } from "./CheckBox";
 export { Flash } from "./Flash";
 export { InfoLabel } from "./InfoLabel";
 export { JWT } from "./JWT";

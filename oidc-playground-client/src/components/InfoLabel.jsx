@@ -10,6 +10,7 @@ export function InfoLabel({ label, toolTip, className = "", onClick = () => true
       <span>{toolTip}</span>
     </div>
   );
+
   return (
     <div className={`info-label ${className}`}>
       <label className={className} onClick={onClick}>

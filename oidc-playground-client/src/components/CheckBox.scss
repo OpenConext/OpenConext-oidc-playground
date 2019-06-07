@@ -1,0 +1,39 @@
+@import "stylesheets/vars.scss";
+
+div.checkbox {
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  label {
+    display: inline-block;
+
+    &.info {
+      margin-left: 10px;
+    }
+  }
+
+  span {
+    border: 2px solid $blue;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"] + label span {
+    background-color: white;
+
+    svg {
+      color: transparent;
+    }
+  }
+
+  input[type="checkbox"]:checked + label span {
+    background: $blue;
+
+    svg {
+      background-color: $blue;
+      color: white;
+      padding: 0 2px;
+    }
+  }
+}
