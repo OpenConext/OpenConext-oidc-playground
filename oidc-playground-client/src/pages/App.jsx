@@ -13,14 +13,14 @@ addIcons();
 const App = observer(
   class App extends React.Component {
     componentDidMount() {
+      if (window.location.pathname === "/") {
+        localStorage.clear();
+      }
+
       discovery().then(config => {
         store.config = config;
         store.configLoaded = true;
       });
-
-      if (window.location.pathname === "/") {
-        localStorage.clear();
-      }
 
       const params = getRedirectParams();
 
