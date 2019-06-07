@@ -1,7 +1,6 @@
 import React from "react";
-import { ReactSelect } from "components";
+import { ReactSelect, CheckBox, InfoLabel } from "components";
 import { codeChallengeMethodT, codeChallengeT, codeVerifierT, pkceT } from "./Tooltips";
-import { InfoLabel } from "../InfoLabel";
 import "./CodeChallenge.scss";
 
 export function CodeChallenge(props) {
@@ -11,17 +10,18 @@ export function CodeChallenge(props) {
     return null;
   }
 
-  const direction = pkce ? "<<" : ">>";
   return (
-    <div className="code-challenge">
-      <InfoLabel
-        label={`Proof Key for Code Exchange (PKCE) ${direction}`}
+    <fieldset>
+      <CheckBox
+        value={pkce}
+        name="code-challenge"
+        label="Proof key for Code Exchange (PKCE)"
         toolTip={pkceT()}
-        className="toggle-title"
-        onClick={togglePkce}
+        onChange={togglePkce}
       />
+
       {pkce && (
-        <>
+        <div className="code-challenge">
           <fieldset>
             <InfoLabel label="Code verifier" toolTip={codeVerifierT()} />
             <input disabled value={codeVerifier} />
@@ -36,8 +36,8 @@ export function CodeChallenge(props) {
             <InfoLabel label="Code challenge" toolTip={codeChallengeT()} />
             <input disabled value={codeChallenge} />
           </fieldset>
-        </>
+        </div>
       )}
-    </div>
+    </fieldset>
   );
 }
