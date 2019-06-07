@@ -1,13 +1,13 @@
 import React from "react";
-import {when} from "mobx";
-import {observer} from "mobx-react";
-import {Config, Display, RetrieveContent} from "pages";
-import {Flash} from "components";
-import {discovery, getTokens} from "api";
+import { when } from "mobx";
+import { observer } from "mobx-react";
+import { Config, Display, RetrieveContent } from "pages";
+import { Flash } from "components";
+import { discovery, getTokens } from "api";
 import store from "store";
-import {getRedirectParams} from "utils/Url";
-import {addIcons} from "utils/IconLibrary";
-
+import { getRedirectParams } from "utils/Url";
+import { addIcons } from "utils/IconLibrary";
+import { ReactComponent as Balancer } from "images/Balancer.svg";
 addIcons();
 
 const App = observer(
@@ -61,22 +61,34 @@ const App = observer(
             request_body: data.request_body
           };
         })
-        .catch(err => err.json()
-          .then(res =>
-              store.message = `Tokens could not be retrieved with this code. 
+        .catch(err =>
+          err.json().then(
+            res =>
+              (store.message = `Tokens could not be retrieved with this code.
                               Error: ${res.error} (${res.status}). Cause ${res.message}`)
+          )
         );
     }
 
     render() {
       return (
         <div className="app-container">
-          <Flash/>
-          <div className="screen-left">
-            {store.configLoaded && <Config/>}
-            <RetrieveContent/>
+          <Flash />
+
+          <div className="header-container">
+            <header>
+              <h2>Open ID Connect Playground</h2>
+              <Balancer />
+            </header>
           </div>
-          <Display/>
+
+          <div className="pages-container">
+            <div className="screen-left">
+              {store.configLoaded && <Config />}
+              <RetrieveContent />
+            </div>
+            <Display />
+          </div>
         </div>
       );
     }

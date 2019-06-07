@@ -22,8 +22,10 @@ export const RetrieveContent = observer(props => {
 
   return (
     <>
-      <div className="block-header">
-        <h2>Retrieve content</h2>
+      <div className="tabs">
+        <div className="tab active single-tab">
+          <h2>Retrieve content</h2>
+        </div>
       </div>
       <div className="block retrieve-content">
         <div className="button-group">
