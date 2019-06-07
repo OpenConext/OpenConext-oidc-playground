@@ -126,12 +126,13 @@ public class Oidc implements URLSupport {
     }
 
     @PostMapping(value = "/code_challenge")
-    public Map<String, String> codeChallenge(@RequestBody Map<String, String> body) {
-        CodeChallengeMethod method = CodeChallengeMethod.parse(body.getOrDefault("codeChallengeMethod",
+    public Map<String, Object> codeChallenge(@RequestBody Map<String, Object> body) {
+        sanitizeMap(body);
+        CodeChallengeMethod method = CodeChallengeMethod.parse((String) body.getOrDefault("codeChallengeMethod",
                 CodeChallengeMethod.S256.getValue()));
         CodeVerifier codeVerifier = new CodeVerifier();
         CodeChallenge codeChallenge = CodeChallenge.compute(method,
-                new CodeVerifier(body.getOrDefault("codeVerifier", codeVerifier.getValue())));
+                new CodeVerifier((String) body.getOrDefault("codeVerifier", codeVerifier.getValue())));
         body.put("codeChallenge", codeChallenge.getValue());
         body.put("codeVerifier", codeVerifier.getValue());
         body.put("codeChallengeMethod", method.getValue());
@@ -151,6 +152,7 @@ public class Oidc implements URLSupport {
 
     @PostMapping(value = {"/authorization_code", "/implicit"})
     public Map<String, String> authorize(@RequestBody Map<String, Object> body) throws URISyntaxException, JOSEException {
+        sanitizeMap(body);
         Map<String, String> parameters = new HashMap<>();
 
         ResponseType responseType = new ResponseType(((String) body.get("response_type")).split(" "));
@@ -287,10 +289,11 @@ public class Oidc implements URLSupport {
     }
 
     private Map<String, Object> doPost(Map<String, Object> body, Map<String, String> requestBody, String endpoint) throws URISyntaxException {
-        String clientIdToUse = (String) body.getOrDefault("client_id", clientId);
+        sanitizeMap(body);
+        String clientIdToUse = (String) body.get("client_id");
         clientIdToUse = StringUtils.hasText(clientIdToUse) ? clientIdToUse : clientId;
 
-        String secretToUse = (String) body.getOrDefault("client_secret", secret);
+        String secretToUse = (String) body.get("client_secret");
         secretToUse = StringUtils.hasText(secretToUse) ? secretToUse : secret;
 
         RequestEntity.BodyBuilder builder = RequestEntity
@@ -322,13 +325,28 @@ public class Oidc implements URLSupport {
 
         Map<String, Object> result = new HashMap();
         result.put("result", restTemplate.exchange(requestEntity, mapResponseType).getBody());
-        result.put("request_body", sanitizeInformation(requestBody));
+        result.put("request_body", anonymizeInformation(requestBody));
         result.put("request_url", endpoint);
-        result.put("request_headers", sanitizeInformation(requestEntity.getHeaders().toSingleValueMap()));
+        result.put("request_headers", anonymizeInformation(requestEntity.getHeaders().toSingleValueMap()));
         return result;
     }
 
-    private Map<String, String> sanitizeInformation(Map<String, String> headers) {
+    private void sanitizeMap(Map<String, Object> body) {
+        body.values().removeIf(val -> {
+            if (val == null) {
+                return true;
+            }
+            if (val instanceof List) {
+                return CollectionUtils.isEmpty((List) val);
+            }
+            if (val instanceof String) {
+                return StringUtils.isEmpty((String) val);
+            }
+            return false;
+        } );
+    }
+
+    private Map<String, String> anonymizeInformation(Map<String, String> headers) {
         Map<String, String> result = new HashMap<>(headers);
         List<String> sensitiveHeaders = Arrays.asList("client_id", "client_secret", AUTHORIZATION);
         sensitiveHeaders.forEach(header -> result.replace(header, "XXX"));
