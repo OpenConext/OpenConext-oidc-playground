@@ -234,3 +234,17 @@ export const signedJWTT = () => (
     it reads the <code>coin:certificate</code> information in Manage for the RP.
   </span>
 );
+
+export const clientIdT = () => (
+  <span>
+    Identifier for the OIDC 1.0 Relying Party in Manage. If the Client ID is not known you will be redirected to an<br/>
+    error page during authorization.
+  </span>
+);
+
+export const clientSecretT = () => (
+  <span>
+    Secret for the OIDC 1.0 Relying Party in Manage. If the secret not valid you will be redirected to an<br/>
+    error page during authorization.
+  </span>
+);

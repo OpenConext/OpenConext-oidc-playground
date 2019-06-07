@@ -117,13 +117,13 @@ export const Config = observer(
             <SettingsForm
               onChange={(attr, value, callback) => this.setValue(attr, value, callback)}
               form={this.state.form}
-              onSubmit={e => this.handleSubmit(e)}
+              onSubmit={this.handleSubmit}
             />
           ) : (
             <Authorization
               onChange={(attr, value, callback) => this.setValue(attr, value, callback)}
               form={this.state.form}
-              onSubmit={e => this.handleSubmit(e)}
+              onSubmit={this.handleSubmit}
             />
           )}
         </div>
