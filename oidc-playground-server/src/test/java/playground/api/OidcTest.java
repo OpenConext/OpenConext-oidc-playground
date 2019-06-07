@@ -94,8 +94,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("response_type", "code")
                 .p("redirect_uri", "http://localhost:3000/redirect")
                 .p("client_id", "playground_client")
-                .p("request", serialize)
-                .p("prompt", "login");
+                .p("request", serialize);
 
         assertEquals(expected, queryParams);
     }

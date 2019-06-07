@@ -8,6 +8,10 @@ div.checkbox {
   label {
     display: inline-block;
 
+    &:focus {
+      outline: none;
+    }
+
     &.info {
       margin-left: 10px;
     }
@@ -17,6 +21,10 @@ div.checkbox {
     border: 2px solid $blue;
     border-radius: 4px;
     cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   input[type="checkbox"] + label span {

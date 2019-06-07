@@ -192,7 +192,7 @@ public class Oidc implements URLSupport {
 
         if ((boolean) body.getOrDefault("signedJWT", false)) {
             parameters.put("request", signedJWT(parameters).serialize());
-            List<String> toRemove = Arrays.asList("response_mode", "claims", "nonce", "state", "code_challenge", "code_challenge_method", "acr_values");
+            List<String> toRemove = Arrays.asList("response_mode", "claims", "prompt", "nonce", "state", "code_challenge", "code_challenge_method", "acr_values");
             parameters.keySet().removeIf(key -> toRemove.contains(key));
         }
 
