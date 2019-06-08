@@ -10,6 +10,7 @@ class Store {
   hybridFlowIdToken = undefined;
   hybridFlowAccessToken = undefined;
   configLoaded = false;
+  activeTab= "JWT";
   config = {
     authorization_endpoint: "",
     acr_values_supported: [],
@@ -38,7 +39,8 @@ decorate(Store, {
   hybridFlowIdToken: observable,
   hybridFlowAccessToken: observable,
   config: observable,
-  configLoaded: observable
+  configLoaded: observable,
+  activeTab: observable
 });
 
 const store = new Store();

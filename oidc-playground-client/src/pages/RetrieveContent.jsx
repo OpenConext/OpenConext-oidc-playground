@@ -1,7 +1,7 @@
 import React from "react";
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import store from "store";
-import { postIntrospect, postUserinfo } from "api";
+import {postIntrospect, postUserinfo} from "api";
 
 export const RetrieveContent = observer(props => {
   const accessToken = store.normalFlowAccessToken || store.hybridFlowAccessToken;
@@ -12,12 +12,17 @@ export const RetrieveContent = observer(props => {
     userinfo_endpoint: store.config.userinfo_endpoint
   };
 
+  const handleResult = res => {
+    store.request = {...res};
+    store.activeTab = "Request";
+  };
+
   const handleIntrospect = () => {
-    postIntrospect(body).then(res => (store.request = { ...res }));
+    postIntrospect(body).then(handleResult);
   };
 
   const handleUserInfo = () => {
-    postUserinfo(body).then(res => (store.request = { ...res }));
+    postUserinfo(body).then(handleResult);
   };
 
   return (
