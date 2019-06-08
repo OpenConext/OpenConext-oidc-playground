@@ -1,10 +1,10 @@
 import React from "react";
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import store from "store";
-import { Authorization, SettingsForm } from "components";
-import { getRedirectParams } from "utils/Url";
-import { formPost, generateCodeChallenge } from "api";
-import { isEmpty } from "utils/Utils";
+import {Authorization, SettingsForm} from "components";
+import {getRedirectParams} from "utils/Url";
+import {formPost, generateCodeChallenge} from "api";
+import {isEmpty} from "utils/Utils";
 
 export const Config = observer(
   class Config extends React.Component {
@@ -44,25 +44,27 @@ export const Config = observer(
       }
 
       if (window.location.pathname === "/") {
-        generateCodeChallenge(this.state.form.code_challenge_method).then(json =>
-          this.setState({
-            form: {
-              ...this.state.form,
-              code_challenge_method: json.codeChallengeMethod,
-              code_verifier: json.codeVerifier,
-              code_challenge: json.codeChallenge
-            }
-          })
-        );
+        this.refreshCodeChallenge();
       }
     }
+
+    refreshCodeChallenge = () =>
+      generateCodeChallenge(this.state.form.code_challenge_method).then(json =>
+        this.setState({
+          form: {
+            ...this.state.form,
+            code_challenge_method: json.codeChallengeMethod,
+            code_verifier: json.codeVerifier,
+            code_challenge: json.codeChallenge
+          }
+        }));
 
     saveState() {
       localStorage.setItem("state", JSON.stringify(this.state));
     }
 
     sanitizeBody() {
-      const { acr_values, client_id } = this.state.form;
+      const {acr_values, client_id} = this.state.form;
 
       return {
         ...store.config,
@@ -90,13 +92,11 @@ export const Config = observer(
       });
     };
 
-    setValue(attr, value, callback = () => this) {
+    setValue(attr, value) {
       this.setState(
         {
-          form: { ...this.state.form, [attr]: value }
-        },
-        callback
-      );
+          form: {...this.state.form, [attr]: value}
+        }, attr === "code_challenge_method" ? this.refreshCodeChallenge : () => true);
     }
 
     render() {
@@ -107,7 +107,7 @@ export const Config = observer(
               const className = tab === this.state.activeTab ? "tab active" : "tab";
 
               return (
-                <div className={className} key={tab} onClick={() => this.setState({ activeTab: tab })}>
+                <div className={className} key={tab} onClick={() => this.setState({activeTab: tab})}>
                   <h2>{tab}</h2>
                 </div>
               );
@@ -115,13 +115,13 @@ export const Config = observer(
           </div>
           {this.state.activeTab === "Settings" ? (
             <SettingsForm
-              onChange={(attr, value, callback) => this.setValue(attr, value, callback)}
+              onChange={(attr, value) => this.setValue(attr, value)}
               form={this.state.form}
               onSubmit={this.handleSubmit}
             />
           ) : (
             <Authorization
-              onChange={(attr, value, callback) => this.setValue(attr, value, callback)}
+              onChange={(attr, value) => this.setValue(attr, value)}
               form={this.state.form}
               onSubmit={this.handleSubmit}
             />

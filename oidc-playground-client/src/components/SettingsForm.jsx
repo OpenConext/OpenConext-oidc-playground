@@ -120,7 +120,7 @@ export const SettingsForm = observer(props => {
         codeChallengeMethod={{
           value: code_challenge_method,
           options: store.config.code_challenge_methods_supported,
-          onChange: val => onChange("code_challenge_method", val, this.componentDidMount)
+          onChange: val => onChange("code_challenge_method", val)
         }}
         moderators={{ grant_type }}
       />
