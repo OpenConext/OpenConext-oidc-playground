@@ -13,7 +13,7 @@ export const RetrieveContent = observer(props => {
   };
 
   const handleResult = res => {
-    store.request = {...res};
+    store.request = res;
     store.activeTab = "Request";
   };
 

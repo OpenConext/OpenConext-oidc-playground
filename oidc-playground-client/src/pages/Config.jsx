@@ -89,6 +89,7 @@ export const Config = observer(
 
           if (json.result) {
             store.request = json;
+            store.activeTab = "Request";
           }
         })
         .catch(err =>
