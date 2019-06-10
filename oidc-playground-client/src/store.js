@@ -10,7 +10,7 @@ class Store {
   hybridFlowIdToken = undefined;
   hybridFlowAccessToken = undefined;
   configLoaded = false;
-  activeTab= "JWT";
+  activeTab = "JWT";
   config = {
     authorization_endpoint: "",
     acr_values_supported: [],

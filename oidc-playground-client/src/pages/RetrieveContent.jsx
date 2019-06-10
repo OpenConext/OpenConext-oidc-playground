@@ -4,7 +4,7 @@ import store from "store";
 import {postIntrospect, postUserinfo} from "api";
 
 export const RetrieveContent = observer(props => {
-  const accessToken = store.normalFlowAccessToken || store.hybridFlowAccessToken;
+  const accessToken = store.normalFlowAccessToken || store.hybridFlowAccessToken || ((store.request || {}).result || {}).access_token;
 
   const body = {
     token: accessToken,
