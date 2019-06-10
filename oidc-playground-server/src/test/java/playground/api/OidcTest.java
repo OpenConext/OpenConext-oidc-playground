@@ -96,6 +96,7 @@ public class OidcTest extends AbstractIntegrationTest {
         Map<String, Object> expected = new FluentMap()
                 .p("scope", "openid")
                 .p("response_type", "code")
+                .p("nonce", "some_nonce")
                 .p("redirect_uri", "http://localhost:3000/redirect")
                 .p("client_id", "playground_client")
                 .p("request", serialize);
