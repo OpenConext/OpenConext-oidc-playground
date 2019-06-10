@@ -192,7 +192,7 @@ public class Oidc implements URLSupport {
 
         if ((boolean) body.getOrDefault("signedJWT", false)) {
             parameters.put("request", signedJWT(parameters).serialize());
-            List<String> toRemove = Arrays.asList("response_mode", "claims", "prompt", "nonce", "state", "code_challenge", "code_challenge_method", "acr_values");
+            List<String> toRemove = Arrays.asList("response_mode", "claims", "prompt", "state", "code_challenge", "code_challenge_method", "acr_values");
             parameters.keySet().removeIf(key -> toRemove.contains(key));
         }
 
@@ -383,7 +383,7 @@ public class Oidc implements URLSupport {
                 .subject(this.clientId)
                 .notBeforeTime(new Date(System.currentTimeMillis()));
 
-        form.forEach((key, value) -> builder.claim(key, value));
+        form.forEach(builder::claim);
 
         JWTClaimsSet claimsSet = builder.build();
         JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.RS256).type(JOSEObjectType.JWT).keyID(rsaKeyId).build();
