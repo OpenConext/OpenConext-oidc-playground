@@ -80,16 +80,23 @@ export const Config = observer(
       localStorage.clear();
       this.saveState();
 
-      formPost(this.sanitizeBody()).then(json => {
-        if (json.url) {
-          localStorage.setItem("authorization_url", json.url);
-          window.location.replace(json.url);
-        }
+      formPost(this.sanitizeBody())
+        .then(json => {
+          if (json.url) {
+            localStorage.setItem("authorization_url", json.url);
+            window.location.replace(json.url);
+          }
 
-        if (json.result) {
-          store.request = json;
-        }
-      });
+          if (json.result) {
+            store.request = json;
+          }
+        })
+        .catch(err =>
+          err.json().then(
+            res =>
+              (store.message = `Exception returned from endpoint ${this.state.form.grant_type}.
+                              Error: ${res.error} (${res.status}). Cause ${res.message}`)
+          ));
     };
 
     setValue(attr, value) {

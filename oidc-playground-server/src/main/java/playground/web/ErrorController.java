@@ -50,8 +50,11 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
 
             result.put("details", error.getMessage());
 
-            if (error instanceof HttpServerErrorException.InternalServerError) {
+            if (error instanceof HttpServerErrorException) {
                 Map map = objectMapper.readValue(((HttpServerErrorException) error).getResponseBodyAsByteArray(), Map.class);
+                if (map.containsKey("status")) {
+                    statusCode = HttpStatus.resolve((Integer) map.get("status"));
+                }
                 return new ResponseEntity<>(map, statusCode);
             }
         }

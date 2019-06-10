@@ -27,7 +27,7 @@ public class ErrorControllerTest {
     }
 
     @Test
-    public void errorPath() throws IOException {
+    public void errorPath() {
         assertEquals("/error", errorController.getErrorPath());
     }
 
