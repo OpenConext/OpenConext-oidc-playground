@@ -4,7 +4,8 @@ import store from "store";
 import {postIntrospect, postUserinfo} from "api";
 
 export const RetrieveContent = observer(props => {
-  const accessToken = store.normalFlowAccessToken || store.hybridFlowAccessToken || ((store.request || {}).result || {}).access_token;
+  const accessToken = store.normalFlowAccessToken || store.hybridFlowAccessToken ||
+    ((store.request || {}).result || {}).access_token;
 
   const body = {
     token: accessToken,
@@ -17,13 +18,19 @@ export const RetrieveContent = observer(props => {
     store.activeTab = "Request";
   };
 
-  const handleIntrospect = () => {
-    postIntrospect(body).then(handleResult);
-  };
+  const handleError = (err, endpoint) => err.json && err.json().then(
+    res =>
+      (store.message = `Exception returned from endpoint ${endpoint}.
+                              Error: ${res.error} (${res.status}). Cause ${res.message}`)
+  );
 
-  const handleUserInfo = () => {
-    postUserinfo(body).then(handleResult);
-  };
+  const handleIntrospect = () => postIntrospect(body)
+    .then(handleResult)
+    .catch(err => handleError(err, "introspect"));
+
+  const handleUserInfo = () => postUserinfo(body)
+    .then(handleResult)
+    .catch(err => handleError(err, "userinfo"))
 
   return (
     <>
