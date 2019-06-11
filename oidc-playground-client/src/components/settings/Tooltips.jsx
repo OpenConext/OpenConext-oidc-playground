@@ -93,9 +93,9 @@ export const scopesT = () => (
 
 export const tokenEndpointAuthenticationT = () => (
   <span>
-    The client authentication method used
+    The client authentication method used to obtain the token
     <br />
-    to obtain the token in the Authorization Code flow.
+     in the Authorization Code and Client Credentials flow.
     <br />
   </span>
 );
