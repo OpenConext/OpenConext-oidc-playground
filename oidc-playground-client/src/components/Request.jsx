@@ -20,13 +20,13 @@ export const Request = observer(() => {
     <div className="block">
       {authorization_url && (
         <div className="fieldset">
-          <label>Authorization URL</label>
+          <label>Step 1: Authorization Request - redirect from the user's browser</label>
           <input disabled value={authorization_url} />
         </div>
       )}
       {request_url && (
         <div className="fieldset">
-          <label>Request URL</label>
+          <label>Step 2: Token Request - out-of-band performed by the Relying Party</label>
           <input disabled value={request_url} />
         </div>
       )}

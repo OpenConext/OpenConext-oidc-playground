@@ -27,8 +27,10 @@ class DecodeToken extends React.Component {
 const Flow = ({ access_token, id_token }) => {
   return (
     <>
-      {access_token && <DecodeToken token={access_token} name="Access token" />}
-      {id_token && <DecodeToken token={id_token} name="ID token" />}
+      {access_token && <DecodeToken token={access_token}
+                                    name="Access token" />}
+      {id_token && <DecodeToken token={id_token}
+                                name="ID token" />}
     </>
   );
 };

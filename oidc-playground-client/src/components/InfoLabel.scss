@@ -4,10 +4,10 @@ div.info-label {
   display: flex;
   color: $blue;
   span.tool-tip-section {
-    opacity: .1;
+    opacity: .4;
     display: inline-block;
     padding: 0 5px;
-    font-size: 12px;
+    font-size: 10px;
     cursor: pointer;
     &:hover {
       opacity: 1;
