@@ -2,6 +2,8 @@ import React from "react";
 import JSONPretty from "react-json-pretty";
 import { observer } from "mobx-react";
 import store from "store";
+import {InfoLabel} from "./InfoLabel";
+import {authorizationRequestT, tokenRequestT} from "./settings/Tooltips";
 
 export const Request = observer(() => {
   const authorization_url = localStorage.getItem("authorization_url");
@@ -20,13 +22,13 @@ export const Request = observer(() => {
     <div className="block">
       {authorization_url && (
         <div className="fieldset">
-          <label>Step 1: Authorization Request - redirect from the user's browser</label>
+          <InfoLabel label="Authorization Request" toolTip={authorizationRequestT()}/>
           <input disabled value={authorization_url} />
         </div>
       )}
       {request_url && (
         <div className="fieldset">
-          <label>Step 2: Token Request - out-of-band performed by the Relying Party</label>
+          <InfoLabel label="Token Request" toolTip={tokenRequestT()}/>
           <input disabled value={request_url} />
         </div>
       )}
