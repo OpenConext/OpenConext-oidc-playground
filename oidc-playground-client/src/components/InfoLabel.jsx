@@ -1,9 +1,9 @@
 import React from "react";
 import ReactTooltip from "react-tooltip";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import "./InfoLabel.scss";
 
-export function InfoLabel({ label, toolTip, htmlFor, className = "", onClick = () => true }) {
+export function InfoLabel({label, toolTip, htmlFor, className = "", onClick = () => true}) {
   const toolTipHtml = (
     <div className="inner-tooltip">
       <h3>{label.replace(/>/g, "")}</h3>
@@ -18,7 +18,7 @@ export function InfoLabel({ label, toolTip, htmlFor, className = "", onClick = (
       </label>
       <span className="tool-tip-section">
         <span data-tip data-for={label}>
-          <FontAwesomeIcon icon="question" />
+          <FontAwesomeIcon icon="question"/>
         </span>
         <ReactTooltip id={label} type="light" effect="solid" data-html={true} place="right">
           {toolTipHtml}
