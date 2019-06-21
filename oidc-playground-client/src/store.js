@@ -9,6 +9,7 @@ class Store {
   normalFlowAccessToken = undefined;
   hybridFlowIdToken = undefined;
   hybridFlowAccessToken = undefined;
+  clientCredentialsAccessToken = undefined;
   configLoaded = false;
   activeTab = "JWT";
   config = {
@@ -38,6 +39,7 @@ decorate(Store, {
   normalFlowAccessToken: observable,
   hybridFlowIdToken: observable,
   hybridFlowAccessToken: observable,
+  clientCredentialsAccessToken: observable,
   config: observable,
   configLoaded: observable,
   activeTab: observable

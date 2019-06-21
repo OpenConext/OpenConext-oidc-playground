@@ -18,7 +18,7 @@ class DecodeToken extends React.Component {
   render() {
     return (
       <>
-        <InfoLabel label={this.props.name} toolTip={this.props.toolTip}/>
+        <InfoLabel label={this.props.name} toolTip={this.props.toolTip} copyToClipBoardText={this.props.token}/>
         <input disabled value={this.props.token} />
         <JSONPretty id="json-pretty" data={this.state.jwt} />
       </>

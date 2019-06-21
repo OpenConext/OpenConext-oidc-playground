@@ -91,6 +91,11 @@ export const Config = observer(
             store.request = json;
             store.activeTab = "Request";
           }
+
+          if (json.request_body && json.request_body.grant_type === "client_credentials"
+            && json.result && json.result.access_token) {
+            store.clientCredentialsAccessToken = json.result.access_token;
+          }
         })
         .catch(err =>
           err.json().then(

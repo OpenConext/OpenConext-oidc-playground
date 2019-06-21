@@ -223,8 +223,8 @@ public class Oidc implements URLSupport {
 
     @PostMapping("/introspect")
     public Map<String, Object> introspect(@RequestBody Map<String, Object> body) throws URISyntaxException {
-        body.put("client_id", "resource-server-playground-client");
-        body.put("client_secret", secret);
+        body.put("client_id", resourceServerId);
+        body.put("client_secret", resourceServerSecret);
 
         return doPost(body, Collections.singletonMap("token", (String) body.get("token")), (String) body.get("introspect_endpoint"));
     }

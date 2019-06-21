@@ -1,9 +1,10 @@
 import React from "react";
 import ReactTooltip from "react-tooltip";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 import "./InfoLabel.scss";
 
-export function InfoLabel({label, toolTip, htmlFor, className = "", onClick = () => true}) {
+export function InfoLabel({label, toolTip, htmlFor, className = "", onClick = () => true, copyToClipBoardText = undefined}) {
   const toolTipHtml = (
     <div className="inner-tooltip">
       <h3>{label.replace(/>/g, "")}</h3>
@@ -24,6 +25,16 @@ export function InfoLabel({label, toolTip, htmlFor, className = "", onClick = ()
           {toolTipHtml}
         </ReactTooltip>
       </span>
+      {copyToClipBoardText && <CopyToClipboard text={copyToClipBoardText}>
+        <section className="copy-to-clipboard">
+          <FontAwesomeIcon icon="copy" onClick={e => {
+            const me = e.target.parentElement;
+            me.classList.add("copied");
+            setTimeout(() => me.classList.remove("copied"), 1250);
+          }}/>
+
+        </section>
+      </CopyToClipboard>}
     </div>
   );
 }

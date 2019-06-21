@@ -29,7 +29,7 @@ export const Request = observer(() => {
     <div className="block">
       {authorization_url && (
         <div className="fieldset">
-          <InfoLabel label="Authorization Request - Browser redirect" toolTip={authorizationRequestT()}/>
+          <InfoLabel label="Authorization Request - Browser redirect" toolTip={authorizationRequestT()} copyToClipBoardText={authorization_url}/>
           <input disabled value={authorization_url}/>
         </div>
       )}
@@ -41,7 +41,7 @@ export const Request = observer(() => {
       )}
       {request_url && (
         <div className="fieldset">
-          <InfoLabel label="Token Request - Backchannel request" toolTip={tokenRequestT()}/>
+          <InfoLabel label="Token Request - Backchannel request" toolTip={tokenRequestT()} copyToClipBoardText={request_url}/>
           <input disabled value={request_url}/>
         </div>
       )}

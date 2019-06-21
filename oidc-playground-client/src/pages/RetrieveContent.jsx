@@ -4,7 +4,7 @@ import store from "store";
 import {postIntrospect, postUserinfo} from "api";
 
 export const RetrieveContent = observer(props => {
-  const accessToken = store.normalFlowAccessToken || store.hybridFlowAccessToken ||
+  const accessToken = store.normalFlowAccessToken || store.hybridFlowAccessToken || store.clientCredentialsAccessToken ||
     ((store.request || {}).result || {}).access_token;
 
   const body = {
@@ -30,7 +30,7 @@ export const RetrieveContent = observer(props => {
 
   const handleUserInfo = () => postUserinfo(body)
     .then(handleResult)
-    .catch(err => handleError(err, "userinfo"))
+    .catch(err => handleError(err, "userinfo"));
 
   return (
     <>
@@ -43,20 +43,15 @@ export const RetrieveContent = observer(props => {
         <div className="button-group">
           <button
             type="button"
-            className="button introspect"
-            disabled={!(store.config.introspect_endpoint && accessToken)}
-            onClick={handleIntrospect}
-          >
-            Introspect
+            className="button userinfo"
+            disabled={!(store.config.userinfo_endpoint && accessToken && !store.clientCredentialsAccessToken)}
+            onClick={handleUserInfo}>Userinfo
           </button>
-
           <button
             type="button"
-            className="button userinfo"
-            disabled={!(store.config.userinfo_endpoint && accessToken)}
-            onClick={handleUserInfo}
-          >
-            Userinfo
+            className="button introspect"
+            disabled={!(store.config.introspect_endpoint && accessToken)}
+            onClick={handleIntrospect}>Introspect
           </button>
         </div>
       </div>
