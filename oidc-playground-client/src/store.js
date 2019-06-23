@@ -1,6 +1,6 @@
 // Store.js
 
-import { observable, decorate } from "mobx";
+import {decorate, observable} from "mobx";
 
 class Store {
   message = undefined;
@@ -10,10 +10,12 @@ class Store {
   hybridFlowIdToken = undefined;
   hybridFlowAccessToken = undefined;
   clientCredentialsAccessToken = undefined;
+  refreshToken = undefined;
   configLoaded = false;
   activeTab = "JWT";
   config = {
     authorization_endpoint: "",
+    token_endpoint: "",
     acr_values_supported: [],
     claims_parameter_supported: false,
     claims_supported: [],
@@ -40,6 +42,7 @@ decorate(Store, {
   hybridFlowIdToken: observable,
   hybridFlowAccessToken: observable,
   clientCredentialsAccessToken: observable,
+  refreshToken: observable,
   config: observable,
   configLoaded: observable,
   activeTab: observable

@@ -261,6 +261,17 @@ export const tokenRequestT = () => (
   with every authorization grant except for the implicit grant type (since an access token is issued directly).</span>
 );
 
+export const userInfoT = () => (
+  <span>The UserInfo endpoint is an <code>access_token</code> protected resource of the OpenConext OIDC server<br/>
+  where Relying Parties can retrieve consented claims about the logged in end-user.<br/></span>
+);
+
+export const introspectT = () => (
+  <span>The Token Introspection extension defines a mechanism for resource servers to obtain information about<br/>
+  access tokens. Resource server can check the validity of access tokens with the result and other<br/>
+  information such as which scopes are associated with the token.</span>
+);
+
 export const accessTokenT = () => (
   <span>The Access Token is a credential that can be used by a Relying Party to access an API. The OpenConext<br/>
   OIDC Server is a JSON Web Token (JWT) with the user claims encrypted for caching purposes.</span>

@@ -3,7 +3,7 @@ import JSONPretty from "react-json-pretty";
 import {observer} from "mobx-react";
 import store from "store";
 import {InfoLabel} from "./InfoLabel";
-import {authorizationRequestT, tokenRequestT} from "./settings/Tooltips";
+import {authorizationRequestT, introspectT, tokenRequestT, userInfoT} from "./settings/Tooltips";
 
 export const Request = observer(() => {
   const authorization_url = localStorage.getItem("authorization_url");
@@ -24,12 +24,26 @@ export const Request = observer(() => {
     const urlSearchParams = new URLSearchParams(query);
     Array.from(urlSearchParams.keys()).forEach(key => queryParameters[key] = urlSearchParams.get(key));
   }
+  const {requestLabel, toolTip} =
+    (request_url && request_url.endsWith("userinfo")) ? {
+        requestLabel: "UserInfo endpoint",
+        toolTip: userInfoT()
+      } :
+      (request_url && request_url.endsWith("introspect")) ? {
+          requestLabel: "Introspect endpoint",
+          toolTip: introspectT()
+        } :
+        {
+          requestLabel: "Token Request - Backchannel request",
+          toolTip: tokenRequestT()
+        };
 
   return (
     <div className="block">
       {authorization_url && (
         <div className="fieldset">
-          <InfoLabel label="Authorization Request - Browser redirect" toolTip={authorizationRequestT()} copyToClipBoardText={authorization_url}/>
+          <InfoLabel label="Authorization Request - Browser redirect" toolTip={authorizationRequestT()}
+                     copyToClipBoardText={authorization_url}/>
           <input disabled value={authorization_url}/>
         </div>
       )}
@@ -41,7 +55,7 @@ export const Request = observer(() => {
       )}
       {request_url && (
         <div className="fieldset">
-          <InfoLabel label="Token Request - Backchannel request" toolTip={tokenRequestT()} copyToClipBoardText={request_url}/>
+          <InfoLabel label={requestLabel} toolTip={toolTip} copyToClipBoardText={request_url}/>
           <input disabled value={request_url}/>
         </div>
       )}

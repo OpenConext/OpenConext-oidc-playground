@@ -38,6 +38,7 @@ const App = observer(
 
           store.normalFlowAccessToken = params.access_token;
           store.normalFlowIdToken = params.id_token;
+          store.refreshToken = params.refresh_token;
 
           this.swapCode(params.code);
         }
@@ -63,7 +64,8 @@ const App = observer(
           store.request = {
             request_url: data.request_url,
             request_headers: data.request_headers,
-            request_body: data.request_body
+            request_body: data.request_body,
+            result: data.result
           };
         })
         .catch(err =>

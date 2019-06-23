@@ -1,21 +1,30 @@
 import React from "react";
 import {observer} from "mobx-react";
 import store from "store";
-import {postIntrospect, postUserinfo} from "api";
+import {postIntrospect, postRefreshToken, postUserinfo} from "../api";
 
 export const RetrieveContent = observer(props => {
   const accessToken = store.normalFlowAccessToken || store.hybridFlowAccessToken || store.clientCredentialsAccessToken ||
     ((store.request || {}).result || {}).access_token;
 
+  const refreshToken = store.refreshToken || ((store.request || {}).result || {}).refresh_token;
+
   const body = {
     token: accessToken,
     introspect_endpoint: store.config.introspect_endpoint,
-    userinfo_endpoint: store.config.userinfo_endpoint
+    userinfo_endpoint: store.config.userinfo_endpoint,
+    refresh_token: refreshToken,
+    token_endpoint: store.config.token_endpoint
   };
 
   const handleResult = res => {
     store.request = res;
     store.activeTab = "Request";
+    if (res.result && res.result.refresh_token) {
+      store.normalFlowAccessToken = res.result.access_token;
+      store.normalFlowIdToken = res.result.id_token;
+      store.refreshToken = res.result.refresh_token;
+    }
   };
 
   const handleError = (err, endpoint) => err.json && err.json().then(
@@ -31,6 +40,10 @@ export const RetrieveContent = observer(props => {
   const handleUserInfo = () => postUserinfo(body)
     .then(handleResult)
     .catch(err => handleError(err, "userinfo"));
+
+  const handleRefreshToken = () => postRefreshToken({...store.config, ...body})
+    .then(handleResult)
+    .catch(err => handleError(err, "refresh_token"));
 
   return (
     <>
@@ -52,6 +65,12 @@ export const RetrieveContent = observer(props => {
             className="button introspect"
             disabled={!(store.config.introspect_endpoint && accessToken)}
             onClick={handleIntrospect}>Introspect
+          </button>
+          <button
+            type="button"
+            className="button refresh-token"
+            disabled={!refreshToken}
+            onClick={handleRefreshToken}>Refresh token
           </button>
         </div>
       </div>

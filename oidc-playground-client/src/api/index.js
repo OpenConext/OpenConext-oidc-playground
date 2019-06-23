@@ -53,6 +53,10 @@ export function postUserinfo(body) {
   return postPutJson(`/oidc/api/userinfo`, body, "POST");
 }
 
+export function postRefreshToken(body) {
+  return postPutJson(`/oidc/api/refresh_token`, body, "POST");
+}
+
 export function decodeJWT(jwt) {
   return fetchJson(`/oidc/api/decode_jwt?jwt=${jwt}`);
 }
