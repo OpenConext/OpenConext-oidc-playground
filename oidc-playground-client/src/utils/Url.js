@@ -8,6 +8,7 @@ export function getRedirectParams() {
 
     return {
       access_token: searchParams.get("access_token"),
+      refresh_token: searchParams.get("refresh_token"),
       id_token: searchParams.get("id_token"),
       code: searchParams.get("code"),
       error: searchParams.get("error"),

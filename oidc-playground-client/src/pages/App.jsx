@@ -60,6 +60,7 @@ const App = observer(
         .then(data => {
           store.hybridFlowAccessToken = data.result.access_token;
           store.hybridFlowIdToken = data.result.id_token;
+          store.refreshToken = data.result.refresh_token;
 
           store.request = {
             request_url: data.request_url,

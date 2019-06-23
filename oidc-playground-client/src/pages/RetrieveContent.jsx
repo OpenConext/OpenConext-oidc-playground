@@ -20,6 +20,7 @@ export const RetrieveContent = observer(props => {
   const handleResult = res => {
     store.request = res;
     store.activeTab = "Request";
+
     if (res.result && res.result.refresh_token) {
       store.normalFlowAccessToken = res.result.access_token;
       store.normalFlowIdToken = res.result.id_token;
