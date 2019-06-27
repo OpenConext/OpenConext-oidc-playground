@@ -1,13 +1,14 @@
 import React from "react";
-import { when } from "mobx";
-import { observer } from "mobx-react";
-import { Config, Display, RetrieveContent } from "pages";
-import { Flash } from "components";
-import { discovery, getTokens } from "api";
+import {when} from "mobx";
+import {observer} from "mobx-react";
+import {Config, Display, RetrieveContent} from "pages";
+import {Flash} from "components";
+import {discovery, getTokens} from "api";
 import store from "store";
-import { getRedirectParams } from "utils/Url";
-import { addIcons } from "utils/IconLibrary";
-import { ReactComponent as Balancer } from "images/Balancer.svg";
+import {getRedirectParams} from "utils/Url";
+import {addIcons} from "utils/IconLibrary";
+import {ReactComponent as Balancer} from "images/Balancer.svg";
+
 addIcons();
 
 const App = observer(
@@ -81,21 +82,21 @@ const App = observer(
     render() {
       return (
         <div className="app-container">
-          <Flash />
+          <Flash/>
 
           <div className="header-container">
             <header>
-              <h2>Open ID Connect Playground</h2>
-              <Balancer />
+              <h2 onClick={() => document.location.replace("/")}>Open ID Connect Playground</h2>
+              <Balancer className="balancer" onClick={() => document.location.replace("/")}/>
             </header>
           </div>
 
           <div className="pages-container">
             <div className="screen-left">
-              {store.configLoaded && <Config />}
-              <RetrieveContent />
+              {store.configLoaded && <Config/>}
+              <RetrieveContent/>
             </div>
-            <Display />
+            <Display/>
           </div>
         </div>
       );
