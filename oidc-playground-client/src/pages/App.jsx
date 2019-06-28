@@ -16,7 +16,7 @@ const App = observer(
 
     constructor(props, ctx) {
       super(props, ctx);
-
+      this.state = {balancing: false};
       if (window.location.pathname === "/") {
         localStorage.clear();
       }
@@ -80,6 +80,7 @@ const App = observer(
     }
 
     render() {
+      const className = this.state.balancing ? "balancer balancing" : "balancer";
       return (
         <div className="app-container">
           <Flash/>
@@ -87,7 +88,8 @@ const App = observer(
           <div className="header-container">
             <header>
               <h2 onClick={() => document.location.replace("/")}>Open ID Connect Playground</h2>
-              <Balancer className="balancer" onClick={() => document.location.replace("/")}/>
+              <Balancer id="balancer" className={className}
+                        onClick={() => this.setState({balancing: !this.state.balancing})}/>
             </header>
           </div>
 

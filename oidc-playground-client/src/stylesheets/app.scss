@@ -26,9 +26,37 @@
       font-weight: bold;
       cursor: pointer;
     }
+
     svg.balancer {
       cursor: pointer;
+
+      &.balancing {
+        #rotate-container-left {
+          transform-origin: 38% 66%;
+          animation: goup 3s ease infinite;
+        }
+
+        #rotate-container-right {
+          transform-origin: 46% 34%;
+          animation: goup 3s ease infinite;
+        }
+
+      }
+
+      @keyframes goup {
+        0% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(30deg);
+        }
+        100% {
+          transform: rotate(00deg);
+        }
+      }
     }
+
+
   }
 
   .pages-container {
