@@ -24,14 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,7 +38,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -77,7 +72,7 @@ public class Oidc implements URLSupport {
     static TypeReference<Map<String, Object>> mapTypeReference = new TypeReference<Map<String, Object>>() {
     };
 
-    static ParameterizedTypeReference<LinkedHashMap<String, Object>> mapResponseType = new ParameterizedTypeReference<LinkedHashMap<String, Object>>() {
+    private static ParameterizedTypeReference<LinkedHashMap<String, Object>> mapResponseType = new ParameterizedTypeReference<LinkedHashMap<String, Object>>() {
     };
 
     private Pattern uuidPattern = Pattern.compile("([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}");
@@ -137,17 +132,6 @@ public class Oidc implements URLSupport {
         body.put("codeVerifier", codeVerifier.getValue());
         body.put("codeChallengeMethod", method.getValue());
         return body;
-    }
-
-    @PostMapping(value = "/redirect", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public void redirectFormPost(@RequestParam MultiValueMap<String, String> form, HttpServletResponse response) throws IOException {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(clientRedirectUri);
-        form.forEach((key, value) -> {
-            if (!CollectionUtils.isEmpty(value)) {
-                builder.queryParam(key, encode(value.get(0)));
-            }
-        });
-        response.sendRedirect(builder.build().toUriString());
     }
 
     @PostMapping(value = {"/authorization_code", "/implicit"})
@@ -243,14 +227,6 @@ public class Oidc implements URLSupport {
         return callPostEndpoint(requestBody, (String) body.get("userinfo_endpoint"), builder);
     }
 
-    @GetMapping("/proxy")
-    public Map proxy(@RequestParam("uri") String uri, @RequestParam("access_token") String access_token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "bearer " + access_token);
-        HttpEntity<Map> requestEntity = new HttpEntity<>(headers);
-        return restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Map.class).getBody();
-    }
-
     @GetMapping("/decode_jwt")
     public String decodeJwtToken(@RequestParam("jwt") String jwt) throws ParseException {
         if (uuidPattern.matcher(jwt).matches()) {
@@ -324,7 +300,7 @@ public class Oidc implements URLSupport {
 
     private Map<String, Object> callPostEndpoint(Map<String, String> requestBody, String endpoint, RequestEntity.BodyBuilder builder) {
         LinkedMultiValueMap form = new LinkedMultiValueMap();
-        requestBody.forEach((k, v) -> form.set(k, v));
+        requestBody.forEach(form::set);
         RequestEntity<LinkedMultiValueMap> requestEntity = builder.body(form);
 
         Map<String, Object> result = new HashMap();
@@ -344,10 +320,10 @@ public class Oidc implements URLSupport {
                 return CollectionUtils.isEmpty((List) val);
             }
             if (val instanceof String) {
-                return StringUtils.isEmpty((String) val);
+                return StringUtils.isEmpty(val);
             }
             return false;
-        } );
+        });
     }
 
     private Map<String, String> anonymizeInformation(Map<String, String> headers) {

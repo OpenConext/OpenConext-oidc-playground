@@ -223,23 +223,6 @@ public class OidcTest extends AbstractIntegrationTest {
         doForwardPost("/userinfo", "userinfo_endpoint");
     }
 
-    @Test
-    public void proxy() {
-        stubFor(get(urlPathMatching("/proxy"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("{}")));
-
-        given()
-                .accept(ContentType.JSON)
-                .header("Content-type", "application/json")
-                .queryParam("uri", "http://localhost:8093/proxy")
-                .queryParam("access_token", "access_token")
-                .get("/oidc/api/proxy")
-                .then()
-                .statusCode(200);
-    }
-
     private void doForwardPost(String path, String endpoint) {
         stubFor(post(urlPathMatching(path))
                 .willReturn(aResponse()
@@ -328,17 +311,6 @@ public class OidcTest extends AbstractIntegrationTest {
         assertTrue(Base64.isBase64((String) result.get("codeChallenge")));
         assertEquals(43, ((String) result.get("codeVerifier")).length());
         assertEquals(S256, CodeChallengeMethod.parse((String) result.get("codeChallengeMethod")));
-    }
-
-    @Test
-    public void redirect() {
-        given().redirects().follow(false)
-                .header("Content-type", MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .formParams(new FluentMap().p("state", "value").p("code", "123456"))
-                .post("/oidc/api/redirect")
-                .then()
-                .header("Location", "http://localhost:3000/redirect?code=123456&state=value");
-
     }
 
     private Map<String, String> doPostForAuthorize(Map<String, Object> body, String path) {
