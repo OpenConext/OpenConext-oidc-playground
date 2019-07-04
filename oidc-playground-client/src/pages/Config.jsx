@@ -24,6 +24,7 @@ export const Config = observer(
         grant_type: "authorization_code",
         nonce: "example",
         pkce: false,
+        omitAuthentication: false,
         response_mode: "fragment",
         response_type: "code",
         scope: [],
@@ -105,11 +106,43 @@ export const Config = observer(
           ));
     };
 
+    stateInvariant = attr => () => {
+      switch (attr) {
+        case "code_challenge_method":
+          this.refreshCodeChallenge();
+          break;
+        case "pkce":
+          const {pkce} = this.state.form;
+          this.setState({form: {...this.state.form, omitAuthentication: pkce}});
+          break;
+        case "grant_type":
+          const {grant_type} = this.state.form;
+          if (grant_type === "implicit") {
+            this.setState({form: {...this.state.form, pkce: false, omitAuthentication: false}});
+          } else if (grant_type === "client_credentials") {
+            this.setState({
+              form: {
+                ...this.state.form,
+                pkce: false,
+                omitAuthentication: false,
+                forceAuthentication: false
+              }
+            });
+          }
+          break;
+        case "auth_protocol":
+          this.setState({form: {...this.state.form, signedJWT: false, claims: [], acr_values: []}});
+          break;
+        default:
+          break;
+      }
+    };
+
     setValue(attr, value) {
       this.setState(
         {
           form: {...this.state.form, [attr]: value}
-        }, attr === "code_challenge_method" ? this.refreshCodeChallenge : () => true);
+        }, this.stateInvariant(attr));
     }
 
     render() {

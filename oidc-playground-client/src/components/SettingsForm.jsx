@@ -35,7 +35,8 @@ export const SettingsForm = observer(props => {
     scope,
     signedJWT,
     state,
-    token_endpoint_auth_method
+    token_endpoint_auth_method,
+    omitAuthentication
   } = props.form;
 
   return (
@@ -117,6 +118,8 @@ export const SettingsForm = observer(props => {
         codeVerifier={code_verifier}
         pkce={pkce}
         togglePkce={() => onChange("pkce", !pkce)}
+        omitAuthentication={omitAuthentication}
+        toggleOmitAuthentication={() => onChange("omitAuthentication", !omitAuthentication)}
         codeChallengeMethod={{
           value: code_challenge_method,
           options: store.config.code_challenge_methods_supported,

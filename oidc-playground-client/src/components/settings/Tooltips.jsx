@@ -189,6 +189,20 @@ export const pkceT = () => (
   </span>
 );
 
+export const omitAuthenticationT = () => (
+  <span>
+    The PKCE flow is intented to use for clients marked as <code>public</code> in Manage.
+    <br/>
+    <br/>
+    However non-public clients are of course also allowed to use this flow, but non-public clients are required to
+    <br/>
+    authenticate with <code>client-id</code> and <code>secret</code>
+    <br/>
+    <br/>
+    Toggle this checkbox to omit the client credentials in the <code>token</code> endpoint or not.
+  </span>
+);
+
 export const codeChallengeT = () => (
   <span>
     The Authorization Code Flow with Proof Key for Code Exchange (PKCE) is the

@@ -282,8 +282,8 @@ public class Oidc implements URLSupport {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
-        boolean codeVerifier = requestBody.containsKey("code_verifier");
-        if (!codeVerifier) {
+        boolean omitAuthentication = (boolean) body.getOrDefault("omitAuthentication", false);
+        if (!omitAuthentication) {
             if (authMethod.equals("client_secret_basic")) {
                 builder.header(AUTHORIZATION, "Basic " +
                         new String(Base64.getEncoder().encode((clientIdToUse + ":" + secretToUse).getBytes())));
