@@ -60,7 +60,7 @@ export const responseTypesT = () => (
     <span>
       Note that in the last example the <code>code</code> can be used to exchange the
       <br/>
-      Authorization Code for yet another pair of Access Token and ID Token
+      Authorization Code for yet another Access Token and ID Token pair.
     </span>
   </div>
 );
@@ -184,14 +184,14 @@ export const pkceT = () => (
     Authorization Code, and they cannot exchange it for a token without the Code Verifier.
     <br/>
     <br/>
-    OIDC OpenConext requires a RP to ne marked as <code>public</code> in Manage. In the PKCE flow the RP does not <br/>
-    authenticate with a client secret.
+    OIDC OpenConext requires a RP to be marked as <code>public</code> in Manage when the RP wants to use the PKCE flow <br/>
+    without authenticating with a client secret.
   </span>
 );
 
 export const omitAuthenticationT = () => (
   <span>
-    The PKCE flow is intented to use for clients marked as <code>public</code> in Manage.
+    The PKCE flow is mainly intented to use for clients marked as <code>public</code> in Manage.
     <br/>
     <br/>
     However non-public clients are of course also allowed to use this flow, but non-public clients are required to
@@ -199,7 +199,7 @@ export const omitAuthenticationT = () => (
     authenticate with <code>client-id</code> and <code>secret</code>
     <br/>
     <br/>
-    Toggle this checkbox to omit the client credentials in the <code>token</code> endpoint or not.
+    Toggle this checkbox to respectively omit or include the client credentials in the <code>token</code> endpoint.
   </span>
 );
 
@@ -212,7 +212,7 @@ export const codeChallengeT = () => (
     <br/>
     The Code Challenge is the base64 URL-encoded SHA-256 hash of the Code Verifier.
     <br/>
-    <br/> It is intended for public / native clients.
+    <br/> It is intended for public / native clients, but can also be used by regular RP's.
   </span>
 );
 
@@ -226,7 +226,9 @@ export const codeVerifierT = () => (
 );
 
 export const codeChallengeMethodT = () => (
-  <span>The code challenge method is the method used to derive an authorization code challenge.</span>
+  <span>The code challenge method is the method used to derive an authorization code challenge.
+    <br/><br/>
+    The <code>plain</code> method is supported, but not recommended.</span>
 );
 
 export const forceAuthenticationT = () => (
@@ -234,7 +236,7 @@ export const forceAuthenticationT = () => (
     The 'Force authentication' option adds the <code>prompt</code> parameter with the value <code>login</code> to the<br/>
     authorization request. This will be 'translated' to <code>ForceAuthn="true"</code> as an attribute for the SAML <code>AuthnRequest</code>.
     <br/><br/>
-    The Identity Provider must support this option.
+    The Identity Provider must support this option in order to force the user to re-authenticate.
   </span>
 );
 
@@ -258,7 +260,7 @@ export const clientIdT = () => (
 
 export const clientSecretT = () => (
   <span>
-    Secret for the OIDC 1.0 Relying Party in Manage. If the secret not valid you will be redirected to an<br/>
+    Secret for the OIDC 1.0 Relying Party in Manage. If the secret is not valid you will be redirected to an<br/>
     error page during authorization.
   </span>
 );
