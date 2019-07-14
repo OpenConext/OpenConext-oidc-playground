@@ -28,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -245,6 +247,16 @@ public class Oidc implements URLSupport {
         return new JWKSet(this.rsaKey.toPublicJWK()).toJSONObject().toString();
     }
 
+    @PostMapping(value = "/redirect", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public void redirectFormPost(@RequestParam MultiValueMap<String, String> form, HttpServletResponse response) throws IOException {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(clientRedirectUri);
+        form.forEach((key, value) -> {
+            if (!CollectionUtils.isEmpty(value)) {
+                builder.queryParam(key, encode(value.get(0)));
+            }
+        });
+        response.sendRedirect(builder.build().toUriString());
+    }
 
     private Map<String, Object> doToken(Map<String, Object> body, String grantType) throws URISyntaxException {
         HashMap<String, String> requestBody = new HashMap<>();
