@@ -70,6 +70,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("scope", "openid groups")
                 .p("claims", "{\"id_token\":{\"edumember_is_member_of\":null,\"email\":null}}")
                 .p("response_type", "code")
+                .p("response_mode", "query")
                 .p("redirect_uri", "http://localhost:3000/redirect")
                 .p("client_id", "playground_client")
                 .p("nonce", "some_nonce");
@@ -161,6 +162,7 @@ public class OidcTest extends AbstractIntegrationTest {
         Map<String, Object> expected = new FluentMap()
                 .p("scope", "openid")
                 .p("response_type", "code")
+                .p("response_mode", "query")
                 .p("redirect_uri", "http://localhost:3000/redirect")
                 .p("client_id", "playground_client")
                 .p("code_challenge", "123456")
@@ -183,6 +185,7 @@ public class OidcTest extends AbstractIntegrationTest {
         Map<String, Object> expected = new FluentMap()
                 .p("response_type", "code")
                 .p("redirect_uri", "http://localhost:3000/redirect")
+                .p("response_mode", "query")
                 .p("client_id", "playground_client");
 
         assertEquals(expected, queryParams);
