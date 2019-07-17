@@ -25,7 +25,7 @@ export const Config = observer(
         nonce: "example",
         pkce: false,
         omitAuthentication: false,
-        response_mode: "fragment",
+        response_mode: "query",
         response_type: "code",
         scope: [],
         signedJWT: false,
@@ -118,7 +118,8 @@ export const Config = observer(
         case "grant_type":
           const {grant_type} = this.state.form;
           if (grant_type === "implicit") {
-            this.setState({form: {...this.state.form, pkce: false, omitAuthentication: false}});
+            this.setState({form: {...this.state.form,
+                pkce: false, omitAuthentication: false, response_mode: "fragment"}});
           } else if (grant_type === "client_credentials") {
             this.setState({
               form: {
@@ -127,6 +128,10 @@ export const Config = observer(
                 omitAuthentication: false,
                 forceAuthentication: false
               }
+            });
+          } else if (grant_type === "authorization_code") {
+            this.setState({
+              form: {...this.state.form, response_mode: "query"}
             });
           }
           break;

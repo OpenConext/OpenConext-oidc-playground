@@ -65,6 +65,34 @@ export const responseTypesT = () => (
   </div>
 );
 
+export const responseModeT = () => (<div>
+  <span>Informs the Authorization Server of the mechanism to be used for returning <br/>
+  Authorization Response parameters from the Authorization Endpoint.
+    <br/>
+    <br/>
+  </span>
+  <ul>
+    <li>
+      <code>query</code> -  Authorization Response parameters are encoded in the <br/>
+      query string added to the redirect_uri when redirecting back to the Client.
+    </li>
+    <br/>
+    <li>
+      <code>fragment</code> - Authorization Response parameters are encoded in the <br/>
+      fragment added to the redirect_uri when redirecting back to the Client.
+    </li>
+    <br/>
+    <li><code>form_post</code> - Authorization Response parameters are encoded <br/>
+    as HTML form values that are auto-submitted in the browser.
+    </li>
+  </ul>
+  <br/>
+  <span>
+    The default Response Mode for the <code>code</code> Response Type is the <br/>
+    <code>query</code> encoding. The default Response Mode for the <code>token</code> Response<br/>Type is the <code>fragment</code> encoding.
+  </span>
+</div>);
+
 export const scopesT = () => (
   <div>
     <span>

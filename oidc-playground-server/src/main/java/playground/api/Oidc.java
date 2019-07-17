@@ -12,6 +12,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.oauth2.sdk.ResponseMode;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.pkce.CodeChallenge;
 import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
@@ -64,6 +65,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import static com.nimbusds.oauth2.sdk.ResponseMode.FORM_POST;
+import static com.nimbusds.oauth2.sdk.ResponseMode.FRAGMENT;
+import static com.nimbusds.oauth2.sdk.ResponseMode.QUERY;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController()
@@ -137,27 +141,30 @@ public class Oidc implements URLSupport {
     }
 
     @PostMapping(value = {"/authorization_code", "/implicit"})
-    public Map<String, String> authorize(@RequestBody Map<String, Object> body) throws URISyntaxException, JOSEException {
+    public Map<String, String> authorize(@RequestBody Map<String, Object> body) throws JOSEException {
         sanitizeMap(body);
         Map<String, String> parameters = new HashMap<>();
 
         ResponseType responseType = new ResponseType(((String) body.get("response_type")).split(" "));
         parameters.put("response_type", responseType.toString());
+
         List<String> scopes = (List<String>) body.get("scope");
         if (!CollectionUtils.isEmpty(scopes)) {
             parameters.put("scope", String.join(" ", scopes));
         }
-        String responseMode = (String) body.getOrDefault("response_mode", "fragment");
-        if (!responseType.impliesCodeFlow()) {
-            parameters.put("response_mode", responseMode);
-        }
+
+        String responseMode = (String) body.getOrDefault("response_mode",
+                responseType.impliesCodeFlow() ? QUERY.getValue() : FRAGMENT.getValue());
+        parameters.put("response_mode", responseMode);
+
         List<String> requestedClaims = (List<String>) body.get("claims");
         if (!CollectionUtils.isEmpty(requestedClaims)) {
             parameters.put("claims", claims(requestedClaims));
         }
+
         parameters.put("client_id", (String) body.getOrDefault("client_id", clientId));
 
-        if (!responseType.impliesCodeFlow() && responseMode.equals("form_post")) {
+        if (responseMode.equals(FORM_POST.getValue())) {
             parameters.put("redirect_uri", redirectUriFormPost);
         } else {
             parameters.put("redirect_uri", redirectUri);

@@ -69,7 +69,6 @@ export const SettingsForm = observer(props => {
           value={response_mode}
           options={store.config.response_modes_supported}
           onChange={val => onChange("response_mode", val)}
-          moderators={{ grant_type }}
         />
       </div>
 
