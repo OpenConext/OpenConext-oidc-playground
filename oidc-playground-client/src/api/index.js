@@ -26,8 +26,8 @@ function validFetch(path, options) {
   };
   const start = Date.now();
   return fetch(path, fetchOptions).then(res => {
-    //store.processingTime = start - Date.now();
-    validateResponse(res);
+    store.processingTime = Date.now() -start;
+    return validateResponse(res);
   });
 }
 

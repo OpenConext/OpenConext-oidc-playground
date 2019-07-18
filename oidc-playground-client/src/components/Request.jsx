@@ -38,7 +38,7 @@ export const Request = observer(() => {
           requestLabel: "Token Request - Backchannel request",
           toolTip: tokenRequestT()
         };
-  const tookTime = processingTime ? `(took ${processingTime}) ms` : "";
+  const tookTime = processingTime ? `- took ${processingTime} ms` : "";
   return (
     <div className="block">
       {authorization_url && (
