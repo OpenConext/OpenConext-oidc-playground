@@ -5,6 +5,7 @@ import {decorate, observable} from "mobx";
 class Store {
   message = undefined;
   request = undefined;
+  processingTime = undefined;
   normalFlowIdToken = undefined;
   normalFlowAccessToken = undefined;
   hybridFlowIdToken = undefined;
@@ -37,6 +38,7 @@ class Store {
 decorate(Store, {
   message: observable,
   request: observable,
+  processingTime: observable,
   normalFlowIdToken: observable,
   normalFlowAccessToken: observable,
   hybridFlowIdToken: observable,

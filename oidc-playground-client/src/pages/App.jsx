@@ -91,14 +91,15 @@ const App = observer(
                         onClick={() => this.setState({balancing: !this.state.balancing})}/>
             </header>
           </div>
-
+          {store.configLoaded &&
           <div className="pages-container">
+
             <div className="screen-left">
-              {store.configLoaded && <Config/>}
+              <Config/>
               <RetrieveContent/>
             </div>
             <Display/>
-          </div>
+          </div>}
         </div>
       );
     }

@@ -17,6 +17,7 @@ export const Request = observer(() => {
   }
 
   const {request_url, request_headers, request_body, result} = store.request || {};
+  const {processingTime} = store;
 
   const queryParameters = {};
   if (authorization_url) {
@@ -37,7 +38,7 @@ export const Request = observer(() => {
           requestLabel: "Token Request - Backchannel request",
           toolTip: tokenRequestT()
         };
-
+  const tookTime = processingTime ? `(took ${processingTime}) ms` : "";
   return (
     <div className="block">
       {authorization_url && (
@@ -74,7 +75,7 @@ export const Request = observer(() => {
 
       {result && (
         <div className="fieldset">
-          <label>Result</label>
+          <label>{`Result ${tookTime}`}</label>
           <JSONPretty data={result}/>
         </div>
       )}

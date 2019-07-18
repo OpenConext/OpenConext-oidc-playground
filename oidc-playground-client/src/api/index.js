@@ -1,5 +1,5 @@
 import { isEmpty } from "../utils/Utils";
-
+import store from "../store";
 //Internal API
 function validateResponse(res) {
 
@@ -24,8 +24,11 @@ function validFetch(path, options) {
       "Content-Type": "application/json"
     }
   };
-
-  return fetch(path, fetchOptions).then(validateResponse);
+  const start = Date.now();
+  return fetch(path, fetchOptions).then(res => {
+    //store.processingTime = start - Date.now();
+    validateResponse(res);
+  });
 }
 
 function fetchJson(path, options = {}) {
