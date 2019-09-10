@@ -10,22 +10,17 @@ import org.apache.commons.codec.binary.Base64;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
 import playground.AbstractIntegrationTest;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
@@ -233,12 +228,12 @@ public class OidcTest extends AbstractIntegrationTest {
                         .withBody("{}")));
 
         Map<String, Object> body = new HashMap<>();
-        body.put(endpoint, "http://localhost:8093"+path);
+        body.put(endpoint, "http://localhost:8093" + path);
         given()
                 .accept(ContentType.JSON)
                 .header("Content-type", "application/json")
                 .body(body)
-                .post("/oidc/api"+path)
+                .post("/oidc/api" + path)
                 .then()
                 .statusCode(200);
     }
