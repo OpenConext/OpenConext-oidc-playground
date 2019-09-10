@@ -8,13 +8,9 @@ export const RetrieveContent = observer(props => {
     ((store.request || {}).result || {}).access_token;
 
   const refreshToken = store.refreshToken || ((store.request || {}).result || {}).refresh_token;
-  const config = store.config || {};
   const body = {
     token: accessToken,
-    introspect_endpoint: config.introspect_endpoint,
-    userinfo_endpoint: config.userinfo_endpoint,
     refresh_token: refreshToken,
-    token_endpoint: config.token_endpoint
   };
 
   const handleResult = res => {
@@ -58,13 +54,13 @@ export const RetrieveContent = observer(props => {
           <button
             type="button"
             className="button userinfo"
-            disabled={!(config.userinfo_endpoint && accessToken && !store.clientCredentialsAccessToken)}
+            disabled={!(accessToken && !store.clientCredentialsAccessToken)}
             onClick={handleUserInfo}>Userinfo
           </button>
           <button
             type="button"
             className="button introspect"
-            disabled={!(config.introspect_endpoint && accessToken)}
+            disabled={!(accessToken)}
             onClick={handleIntrospect}>Introspect
           </button>
           <button
