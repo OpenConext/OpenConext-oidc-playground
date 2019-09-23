@@ -173,11 +173,7 @@ public class Oidc implements URLSupport {
 
         parameters.put("client_id", (String) body.getOrDefault("client_id", clientId));
 
-        if (responseMode.equals(FORM_POST.getValue())) {
-            parameters.put("redirect_uri", redirectUriFormPost);
-        } else {
-            parameters.put("redirect_uri", redirectUri);
-        }
+        parameters.put("redirect_uri", determineRedirectUri(responseMode));
 
         if ((boolean) body.getOrDefault("forceAuthentication", false)) {
             parameters.put("prompt", "login");
@@ -207,9 +203,17 @@ public class Oidc implements URLSupport {
         return Collections.singletonMap("url", builder.build().toUriString());
     }
 
+    private String determineRedirectUri(String responseMode) {
+        return responseMode.equals(FORM_POST.getValue()) ? redirectUriFormPost : redirectUri;
+    }
+
     @PostMapping("/token")
     public Map<String, Object> token(@RequestBody Map<String, Object> body) throws URISyntaxException {
-        body.put("redirect_uri", redirectUri);
+        ResponseType responseType = new ResponseType(((String) body.get("response_type")).split(" "));
+        String responseMode = (String) body.getOrDefault("response_mode",
+                responseType.impliesCodeFlow() ? QUERY.getValue() : FRAGMENT.getValue());
+
+        body.put("redirect_uri", determineRedirectUri(responseMode));
         return doToken(body, "authorization_code");
     }
 
@@ -278,18 +282,19 @@ public class Oidc implements URLSupport {
         HashMap<String, String> requestBody = new HashMap<>();
         requestBody.put("grant_type", grantType);
 
-        if (body.containsKey("code")) {
-            requestBody.put("code", (String) body.get("code"));
-        }
-        if (body.containsKey("refresh_token")) {
-            requestBody.put("refresh_token", (String) body.get("refresh_token"));
-        }
+        Arrays.asList("code", "redirect_uri", "refresh_token").forEach(k -> {
+            if (body.containsKey(k)) {
+                requestBody.put(k, (String) body.get(k));
+            }
+        });
+
         if (body.containsKey("scope")) {
             List<String> scopes = (List<String>) body.get("scope");
             if (!CollectionUtils.isEmpty(scopes)) {
                 requestBody.put("scope", String.join(" ", (List<String>) body.get("scope")));
             }
         }
+
         if ((boolean) body.getOrDefault("pkce", false)) {
             requestBody.put("code_verifier", (String) body.get("code_verifier"));
         }
