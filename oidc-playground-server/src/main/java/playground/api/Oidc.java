@@ -209,7 +209,8 @@ public class Oidc implements URLSupport {
 
     @PostMapping("/token")
     public Map<String, Object> token(@RequestBody Map<String, Object> body) throws URISyntaxException {
-        ResponseType responseType = new ResponseType(((String) body.get("response_type")).split(" "));
+        String responseTypeParam = (String) body.getOrDefault("response_type", ResponseType.getDefault().toString());
+        ResponseType responseType = new ResponseType(responseTypeParam.split(" "));
         String responseMode = (String) body.getOrDefault("response_mode",
                 responseType.impliesCodeFlow() ? QUERY.getValue() : FRAGMENT.getValue());
 

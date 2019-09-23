@@ -2,6 +2,7 @@ package playground.api;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import io.restassured.http.ContentType;
 import io.restassured.mapper.TypeRef;
@@ -246,6 +247,9 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("scope", asList("openid", "groups"))
                 .p("state", "example");
 
+        if (grantType.equals("authorization_code")) {
+            body.put("redirect_uri", "http://localhost:3000/redirect");
+        }
 
         Map<String, Object> map = doToken(path, body);
 
