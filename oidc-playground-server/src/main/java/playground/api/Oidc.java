@@ -19,6 +19,8 @@ import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import com.nimbusds.oauth2.sdk.util.OrderedJSONObject;
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
 import net.minidev.json.JSONObject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -80,6 +82,8 @@ public class Oidc implements URLSupport {
     private static ParameterizedTypeReference<LinkedHashMap<String, Object>> mapResponseType = new ParameterizedTypeReference<LinkedHashMap<String, Object>>() {
     };
 
+    private static final Log LOG = LogFactory.getLog(Oidc.class);
+
     private Pattern uuidPattern = Pattern.compile("([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}");
 
     private String clientId;
@@ -97,6 +101,8 @@ public class Oidc implements URLSupport {
     private String clientRedirectUri;
 
     private ObjectMapper objectMapper;
+
+    private Resource discoveryEndpoint;
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -125,14 +131,26 @@ public class Oidc implements URLSupport {
         this.redirectUri = redirectUri;
         this.redirectUriFormPost = redirectUriFormPost;
         this.clientRedirectUri = clientRedirectUri;
-
-        this.wellKnownConfiguration = objectMapper.readValue(discoveryEndpoint.getInputStream(), mapTypeReference);
+        this.objectMapper = objectMapper;
+        this.discoveryEndpoint = discoveryEndpoint;
         this.rsaKey = generateRsaKey();
+    }
+
+    private Map<String, Object> readWellKnownConfiguration() {
+        if (CollectionUtils.isEmpty(this.wellKnownConfiguration)) {
+            try {
+                this.wellKnownConfiguration = objectMapper.readValue(discoveryEndpoint.getInputStream(), mapTypeReference);
+            } catch (IOException e) {
+                LOG.error("Error reading well known configuration at " + this.discoveryEndpoint.getDescription(), e);
+                return Collections.EMPTY_MAP;
+            }
+        }
+        return this.wellKnownConfiguration;
     }
 
     @GetMapping("/discovery")
     public Map<String, Object> discovery() throws IOException {
-        return this.wellKnownConfiguration;
+        return readWellKnownConfiguration();
     }
 
     @PostMapping(value = "/code_challenge")
@@ -194,7 +212,7 @@ public class Oidc implements URLSupport {
             parameters.keySet().removeIf(key -> toRemove.contains(key));
         }
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString((String) this.wellKnownConfiguration.get("authorization_endpoint"));
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString((String) readWellKnownConfiguration().get("authorization_endpoint"));
         parameters.forEach((key, value) -> {
             if (StringUtils.hasText(value)) {
                 builder.queryParam(key, encode(value));
@@ -233,12 +251,12 @@ public class Oidc implements URLSupport {
         body.put("client_id", resourceServerId);
         body.put("client_secret", resourceServerSecret);
 
-        return doPost(body, Collections.singletonMap("token", (String) body.get("token")), (String) this.wellKnownConfiguration.get("introspect_endpoint"));
+        return doPost(body, Collections.singletonMap("token", (String) body.get("token")), (String) readWellKnownConfiguration().get("introspect_endpoint"));
     }
 
     @PostMapping("/userinfo")
     public Map<String, Object> userinfo(@RequestBody Map<String, Object> body) throws URISyntaxException {
-        String endpoint = (String) this.wellKnownConfiguration.get("userinfo_endpoint");
+        String endpoint = (String) readWellKnownConfiguration().get("userinfo_endpoint");
         String token = (String) body.get("token");
         RequestEntity.BodyBuilder builder = RequestEntity
                 .post(new URI(endpoint))
@@ -247,7 +265,7 @@ public class Oidc implements URLSupport {
                 .header("Authorization", "Bearer " + token);
 
         Map<String, String> requestBody = Collections.singletonMap("access_token", token);
-        return callPostEndpoint(requestBody, (String) this.wellKnownConfiguration.get("userinfo_endpoint"), builder);
+        return callPostEndpoint(requestBody, (String) readWellKnownConfiguration().get("userinfo_endpoint"), builder);
     }
 
     @GetMapping("/decode_jwt")
@@ -299,7 +317,7 @@ public class Oidc implements URLSupport {
         if ((boolean) body.getOrDefault("pkce", false)) {
             requestBody.put("code_verifier", (String) body.get("code_verifier"));
         }
-        return doPost(body, requestBody, (String) this.wellKnownConfiguration.get("token_endpoint"));
+        return doPost(body, requestBody, (String) readWellKnownConfiguration().get("token_endpoint"));
     }
 
     private Map<String, Object> doPost(Map<String, Object> body, Map<String, String> requestBody, String endpoint) throws URISyntaxException {
