@@ -16,6 +16,10 @@
   &:visited {
     text-decoration: none;
   }
+  &:hover:not(:disabled) {
+    color: darken($blue, 15%);
+    background-color: darken(white, 3%);
+  }
 
   &:not(:last-child) {
     margin-right: 15px;
@@ -48,6 +52,10 @@
     background-color: $blue;
     &.error {
       background-color: $red;
+    }
+    &:hover:not(:disabled) {
+      color: darken(white, 3%);
+      background-color: darken($blue, 5%);
     }
   }
 
