@@ -337,8 +337,9 @@ public class Oidc implements URLSupport {
         boolean omitAuthentication = (boolean) body.getOrDefault("omitAuthentication", false);
         if (!omitAuthentication) {
             if (authMethod.equals("client_secret_basic")) {
-                builder.header(AUTHORIZATION, "Basic " +
-                        new String(Base64.getEncoder().encode((clientIdToUse + ":" + secretToUse).getBytes())));
+                //The client_id and client_secret has to be percent encoded. See https://tools.ietf.org/html/rfc6749#section-2.3.1
+                String headerValueEncoded = encode(clientIdToUse) + ":" + encode(secretToUse);
+                builder.header(AUTHORIZATION, "Basic " + new String(Base64.getEncoder().encode(headerValueEncoded.getBytes())));
             } else {
                 requestBody.put("client_id", clientIdToUse);
                 requestBody.put("client_secret", secretToUse);
