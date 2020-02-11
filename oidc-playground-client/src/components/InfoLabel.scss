@@ -12,9 +12,14 @@ div.info-label {
     padding: 0 5px;
     font-size: 10px;
     cursor: pointer;
+    position: relative;
 
     &:hover {
       opacity: 1;
+    }
+    span.tool-tip-data-container {
+      position: absolute;
+      bottom: -5px;
     }
 
     .inner-tooltip {

@@ -22,6 +22,7 @@ export const Config = observer(
         code_verifier: "",
         forceAuthentication: false,
         grant_type: "authorization_code",
+        login_hint: "",
         nonce: "example",
         pkce: false,
         omitAuthentication: false,

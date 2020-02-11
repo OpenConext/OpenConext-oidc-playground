@@ -180,6 +180,16 @@ export const nonceT = () => (
     </div>
 );
 
+export const loginHintT = () => (
+    <div>
+    <span>Defined by the spec as a hint to the Authorization Server about the login<br/>identifier the End-User might use to log in.
+      <br/>
+      <br/>
+      OIDC OpenConext passes the <code>login_hint</code> to the SAML Proxy to scope the WAYF<br/>to the IdP identified by the hash in the <span>login_hint</span>
+    </span>
+
+</div>);
+
 export const acrValuesT = () => (
     <div>
     <span>

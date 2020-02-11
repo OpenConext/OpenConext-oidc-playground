@@ -204,6 +204,8 @@ public class Oidc implements URLSupport {
             parameters.put("code_challenge", (String) body.get("code_challenge"));
             parameters.put("code_challenge_method", (String) body.get("code_challenge_method"));
         }
+
+        parameters.put("login_hint", (String) body.get("login_hint"));
         parameters.put("acr_values", (String) body.get("acr_values"));
 
         if ((boolean) body.getOrDefault("signedJWT", false)) {

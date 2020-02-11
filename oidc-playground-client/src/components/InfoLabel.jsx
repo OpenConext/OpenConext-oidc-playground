@@ -18,7 +18,7 @@ export function InfoLabel({label, toolTip, htmlFor, className = "", onClick = ()
         {label}
       </label>
       <span className="tool-tip-section">
-        <span data-tip data-for={label}>
+        <span className="tool-tip-data-container" data-tip data-for={label}>
           <FontAwesomeIcon icon="question"/>
         </span>
         <ReactTooltip id={label} type="light" effect="solid" data-html={true} place="right">
