@@ -12,7 +12,7 @@
     <artifactId>oidc-playground-client</artifactId>
     <packaging>jar</packaging>
     <name>oidc-playground-client</name>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 
     <build>
         <plugins>

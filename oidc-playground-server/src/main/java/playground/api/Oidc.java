@@ -58,17 +58,20 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 import static com.nimbusds.oauth2.sdk.ResponseMode.FORM_POST;
 import static com.nimbusds.oauth2.sdk.ResponseMode.FRAGMENT;
 import static com.nimbusds.oauth2.sdk.ResponseMode.QUERY;
+import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController()
@@ -277,10 +280,17 @@ public class Oidc implements URLSupport {
         }
         SignedJWT signedJWT = SignedJWT.parse(jwt);
         JSONObject result = new OrderedJSONObject();
-        result.put("header", signedJWT.getHeader().toJSONObject());
-        result.put("payload", signedJWT.getJWTClaimsSet().toJSONObject());
+        result.put("header", sortMap(signedJWT.getHeader().toJSONObject().entrySet()));
+        result.put("payload", sortMap(signedJWT.getJWTClaimsSet().toJSONObject().entrySet()));
 
         return result.toJSONString();
+    }
+
+    private <K, V> Map<K, V> sortMap(Set<Map.Entry<K, V>> entrySet) {
+        return entrySet
+                .stream()
+                .sorted(Comparator.comparing(e -> e.getKey().toString()))
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
     }
 
     @GetMapping(value = {"/certs"}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
