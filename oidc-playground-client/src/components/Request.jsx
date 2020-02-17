@@ -3,7 +3,7 @@ import JSONPretty from "react-json-pretty";
 import {observer} from "mobx-react";
 import store from "store";
 import {InfoLabel} from "./InfoLabel";
-import {authorizationRequestT, introspectT, tokenRequestT, userInfoT, discoveryT} from "./settings/Tooltips";
+import {authorizationRequestT, discoveryT, introspectT, tokenRequestT, userInfoT} from "./settings/Tooltips";
 
 export const Request = observer(() => {
     const authorization_url = localStorage.getItem("authorization_url");
@@ -42,6 +42,12 @@ export const Request = observer(() => {
                         toolTip: tokenRequestT()
                     };
     const tookTime = processingTime ? `- took ${processingTime} ms` : "";
+
+    const sortObject = o => Object.keys(o).sort().reduce((acc, key) => {
+        acc[key] = o[key];
+        return acc;
+    }, {});
+
     return (
         <div className="block">
             {authorization_url && (
@@ -54,7 +60,7 @@ export const Request = observer(() => {
             {authorization_url && (
                 <div className="fieldset">
                     <label>Query parameters</label>
-                    <JSONPretty data={queryParameters}/>
+                    <JSONPretty data={sortObject(queryParameters)}/>
                 </div>
             )}
             {request_url && (
@@ -66,20 +72,20 @@ export const Request = observer(() => {
             {request_headers && (
                 <div className="fieldset">
                     <label>Headers</label>
-                    <JSONPretty data={request_headers}/>
+                    <JSONPretty data={sortObject(request_headers)}/>
                 </div>
             )}
             {request_body && (
                 <div className="fieldset">
                     <label>Form parameters</label>
-                    <JSONPretty data={request_body}/>
+                    <JSONPretty data={sortObject(request_body)}/>
                 </div>
             )}
 
             {result && (
                 <div className="fieldset">
                     <label>{`Result ${tookTime}`}</label>
-                    <JSONPretty data={result}/>
+                    <JSONPretty data={sortObject(result)}/>
                 </div>
             )}
         </div>
