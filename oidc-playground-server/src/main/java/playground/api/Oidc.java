@@ -125,7 +125,7 @@ public class Oidc implements URLSupport {
                 @Value("${oidc.redirect_uri_form_post}") String redirectUriFormPost,
                 @Value("${oidc.client_redirect_uri}") String clientRedirectUri,
                 ObjectMapper objectMapper
-    ) throws NoSuchProviderException, NoSuchAlgorithmException, IOException {
+    ) throws NoSuchProviderException, NoSuchAlgorithmException {
         Security.addProvider(new BouncyCastleProvider());
         this.clientId = clientId;
         this.secret = secret;
@@ -214,7 +214,7 @@ public class Oidc implements URLSupport {
         if ((boolean) body.getOrDefault("signedJWT", false)) {
             parameters.put("request", signedJWT(parameters).serialize());
             List<String> toRemove = Arrays.asList("response_mode", "claims", "prompt", "state", "code_challenge", "code_challenge_method", "acr_values");
-            parameters.keySet().removeIf(key -> toRemove.contains(key));
+            parameters.keySet().removeIf(toRemove::contains);
         }
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString((String) readWellKnownConfiguration().get("authorization_endpoint"));
