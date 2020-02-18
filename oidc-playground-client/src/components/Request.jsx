@@ -85,7 +85,7 @@ export const Request = observer(() => {
             {result && (
                 <div className="fieldset">
                     <label>{`Result ${tookTime}`}</label>
-                    <JSONPretty data={sortObject(result)}/>
+                    <JSONPretty data={(request_url && request_url.endsWith("openid-configuration")) ? result : sortObject(result)}/>
                 </div>
             )}
         </div>
