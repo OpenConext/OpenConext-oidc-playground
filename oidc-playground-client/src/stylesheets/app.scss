@@ -103,14 +103,11 @@
       &:not(.active) {
         background: $light-grey;
         border-color: $light-grey;
+        border-right: 3px solid white;
 
         h2 {
           color: $dark-grey;
         }
-      }
-
-      &:not(.active):nth-child(3) {
-        border-left: 1px solid $lighter-grey;
       }
 
       &.single-tab {
@@ -125,6 +122,10 @@
           color: $blue;
           font-weight: bold;
         }
+      }
+
+      &:last-child {
+        border-right: none;
       }
     }
   }
