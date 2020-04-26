@@ -37,10 +37,10 @@ export const Request = observer(() => {
                         requestLabel: "Discovery endpoint",
                         toolTip: discoveryT()
                     } :
-                    {
+                    request_url ? {
                         requestLabel: "Token Request - Backchannel request",
                         toolTip: tokenRequestT()
-                    };
+                    } : {};
     const tookTime = processingTime ? `- took ${processingTime} ms` : "";
 
     const sortObject = o => Object.keys(o).sort().reduce((acc, key) => {
@@ -85,7 +85,9 @@ export const Request = observer(() => {
             {result && (
                 <div className="fieldset">
                     <label>{`Result ${tookTime}`}</label>
-                    <JSONPretty data={(request_url && request_url.endsWith("openid-configuration")) ? result : sortObject(result)}/>
+                    <JSONPretty data={
+                        ((request_url && request_url.endsWith("openid-configuration")) || store.apiCall) ? result : sortObject(result)
+                    }/>
                 </div>
             )}
         </div>

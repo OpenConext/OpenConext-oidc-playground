@@ -347,3 +347,9 @@ export const idTokenT = () => (
     consumed and validated by the Relying Party. Additional user information like the user's name<br/>
     and / or emailcan be requested by the <code>claims</code> request parameter.</span>
 );
+
+export const apiT = () => (
+    <span>URL for an external API, for example <code>https://voot.test.surfconext.nl/me/groups</code>.<br/><br/>
+    The API endpoint will be called by the playground server and the obtained <code>access token</code><br/>
+    will be used for bearer authorization.</span>
+);

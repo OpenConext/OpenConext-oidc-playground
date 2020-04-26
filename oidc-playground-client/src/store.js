@@ -14,6 +14,7 @@ class Store {
   refreshToken = undefined;
   configLoaded = false;
   activeTab = "JWT";
+  apiCall = false;
   config = {
     acr_values_supported: [],
     claims_parameter_supported: false,
@@ -43,7 +44,8 @@ decorate(Store, {
   refreshToken: observable,
   config: observable,
   configLoaded: observable,
-  activeTab: observable
+  activeTab: observable,
+  apiCall: observable
 });
 
 const store = new Store();

@@ -286,6 +286,22 @@ public class Oidc implements URLSupport {
         return result.toJSONString();
     }
 
+    @PostMapping("/apicall")
+    public Object apiCall(@RequestBody Map<String, String> body) throws URISyntaxException {
+        String apiUrl = body.get("apiUrl");
+        String accessToken = body.get("accessToken");
+        RequestEntity<Void> requestEntity = RequestEntity
+                .get(new URI(apiUrl))
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_UTF8)
+                .header("Authorization", "Bearer " + accessToken).build();
+
+        Map<String, Object> result = new HashMap();
+        result.put("result", restTemplate.exchange(requestEntity, Object.class).getBody());
+        result.put("request_url", apiUrl);
+        result.put("request_headers", requestEntity.getHeaders().toSingleValueMap());
+        return result;
+    }
+
     private <K, V> Map<K, V> sortMap(Set<Map.Entry<K, V>> entrySet) {
         return entrySet
                 .stream()

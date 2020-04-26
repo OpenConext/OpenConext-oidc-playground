@@ -109,6 +109,10 @@
         }
       }
 
+      &:not(.active):nth-child(3) {
+        border-left: 1px solid $lighter-grey;
+      }
+
       &.single-tab {
         padding-bottom: 10px;
       }

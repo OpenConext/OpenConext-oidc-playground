@@ -16,6 +16,7 @@ export const RetrieveContent = observer(props => {
     const handleResult = res => {
         store.request = res;
         store.activeTab = "Request";
+        store.apiCall = false;
 
         if (res.result && res.result.refresh_token) {
             store.normalFlowAccessToken = res.result.access_token;
@@ -45,6 +46,7 @@ export const RetrieveContent = observer(props => {
     const handleDiscovery = () => discovery().then(res => {
         store.request = {result: res, request_url: res.issuer + "/oidc/.well-known/openid-configuration"};
         store.activeTab = "Request";
+        store.apiCall = true;
         window.scrollTo(0, 0);
     });
 
