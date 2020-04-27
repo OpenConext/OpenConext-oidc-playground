@@ -99,6 +99,7 @@ export const Config = observer(
                     if (json.request_body && json.request_body.grant_type === "client_credentials"
                         && json.result && json.result.access_token) {
                         store.clientCredentialsAccessToken = json.result.access_token;
+                        store.activeTab = "JWT";
                     }
                 })
                 .catch(err =>
