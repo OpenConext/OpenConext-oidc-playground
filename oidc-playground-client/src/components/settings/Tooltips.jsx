@@ -1,7 +1,7 @@
 import React from "react";
 
 export const authorizationProtocolT = () => (
-    <span>
+  <span>
     The Open ID Connect server also is
     <br/>a regular OAuth2 Authorization Server.
     <br/>
@@ -14,55 +14,55 @@ export const authorizationProtocolT = () => (
 );
 
 export const grantTypesT = () => (
-    <span>
+  <span>
     Grant types are a way to specify how a Relying Party wants to interact with the OIDC Server.
     <br/>
   </span>
 );
 
 export const responseTypesT = () => (
-    <div>
+  <div>
     <span>
       The type of response returned to the client when retrieving tokens. The set of response types supported:
       <br/>
       <br/>
     </span>
-        <ul>
-            <li>
-                <code>code</code> - The RP requests for an Authorization Code
-            </li>
-            <li>
-                <code>token</code> - The RP requests an Access Token
-            </li>
-            <li>
-                <code>id_token</code> - The RP requests a signed JWT ID Token
-            </li>
-        </ul>
-        <br/>
-        <span>
+    <ul>
+      <li>
+        <code>code</code> - The RP requests for an Authorization Code
+      </li>
+      <li>
+        <code>token</code> - The RP requests an Access Token
+      </li>
+      <li>
+        <code>id_token</code> - The RP requests a signed JWT ID Token
+      </li>
+    </ul>
+    <br/>
+    <span>
       The three can be combined in any way possible and the RP is requesting <br/>
       all of the details for the combination specified. For example:
     </span>
-        <br/>
-        <br/>
-        <ul>
-            <li>
-                <code>code token</code> - Request for both an Authorization Code and an Access Token
-            </li>
-            <li>
-                <code>token id_token</code> - Request for both an Access Token and an ID Token
-            </li>
-            <li>
-                <code>code token id_token</code> - Request for an Authorization Code, an Access Token and an ID Token.
-            </li>
-        </ul>
-        <br/>
-        <span>
+    <br/>
+    <br/>
+    <ul>
+      <li>
+        <code>code token</code> - Request for both an Authorization Code and an Access Token
+      </li>
+      <li>
+        <code>token id_token</code> - Request for both an Access Token and an ID Token
+      </li>
+      <li>
+        <code>code token id_token</code> - Request for an Authorization Code, an Access Token and an ID Token.
+      </li>
+    </ul>
+    <br/>
+    <span>
       Note that in the last example the <code>code</code> can be used to exchange the
       <br/>
       Authorization Code for yet another Access Token and ID Token pair.
     </span>
-    </div>
+  </div>
 );
 
 export const responseModeT = () => (<div>
@@ -71,30 +71,30 @@ export const responseModeT = () => (<div>
     <br/>
     <br/>
   </span>
-    <ul>
-        <li>
-            <code>query</code> - Authorization Response parameters are encoded in the <br/>
-            query string added to the redirect_uri when redirecting back to the Client.
-        </li>
-        <br/>
-        <li>
-            <code>fragment</code> - Authorization Response parameters are encoded in the <br/>
-            fragment added to the redirect_uri when redirecting back to the Client.
-        </li>
-        <br/>
-        <li><code>form_post</code> - Authorization Response parameters are encoded <br/>
-            as HTML form values that are auto-submitted in the browser.
-        </li>
-    </ul>
+  <ul>
+    <li>
+      <code>query</code> - Authorization Response parameters are encoded in the <br/>
+      query string added to the redirect_uri when redirecting back to the Client.
+    </li>
     <br/>
-    <span>
+    <li>
+      <code>fragment</code> - Authorization Response parameters are encoded in the <br/>
+      fragment added to the redirect_uri when redirecting back to the Client.
+    </li>
+    <br/>
+    <li><code>form_post</code> - Authorization Response parameters are encoded <br/>
+      as HTML form values that are auto-submitted in the browser.
+    </li>
+  </ul>
+  <br/>
+  <span>
     The default Response Mode for the <code>code</code> Response Type is the <br/>
     <code>query</code> encoding. The default Response Mode for the <code>token</code> Response<br/>Type is the <code>fragment</code> encoding.
   </span>
 </div>);
 
 export const scopesT = () => (
-    <div>
+  <div>
     <span>
       Scope is a mechanism in OAuth 2.0 to specify what access privileges
       <br/>
@@ -104,23 +104,23 @@ export const scopesT = () => (
       <br/>
       <br/>
     </span>
-        <span>
+    <span>
       OpenID Connect extends on the <code>scope</code> concept to determine the specific sets
       <br/>
       of information made available as Claim Values in the UserInfo endpoint.
     </span>
-        <br/>
-        <br/>
-        <span>
+    <br/>
+    <br/>
+    <span>
       OIDC OpenConext does not use scopes for determining the Claim Values as this is dictated
       <br/>
       by the Attribute Release Policy configured in Manage.
     </span>
-    </div>
+  </div>
 );
 
 export const tokenEndpointAuthenticationT = () => (
-    <span>
+  <span>
     The client authentication method used to obtain the token
     <br/>
      in the Authorization Code and Client Credentials flow.
@@ -129,31 +129,31 @@ export const tokenEndpointAuthenticationT = () => (
 );
 
 export const requestedClaimsT = () => (
-    <div>
+  <div>
     <span>
       The <code>claims</code> Authorization Request parameter is used to request for individual
       <br/>
       and specific Claims to be returned from the UserInfo Endpoint and/or in the ID Token.
     </span>
-        <br/>
-        <br/>
-        <span>
+    <br/>
+    <br/>
+    <span>
       The <code>claims</code> parameter value is represented in an OAuth 2.0 request as UTF-8
       <br/>
       encoded JSON (which ends up being form-urlencoded when passed as an OAuth parameter).
     </span>
-        <br/>
-        <br/>
-        <span>
+    <br/>
+    <br/>
+    <span>
       OIDC OpenConext only supports claims request for the ID Token and the Attribute Release Policy
       <br/>
       decides if the claim requests are granted.
     </span>
-    </div>
+  </div>
 );
 
 export const stateT = () => (
-    <div>
+  <div>
     <span>
       Opaque value used to maintain state between the request and the callback.
       <br/>
@@ -162,11 +162,11 @@ export const stateT = () => (
       <br/>
       binding the value of this parameter with a browser cookie.
     </span>
-    </div>
+  </div>
 );
 
 export const nonceT = () => (
-    <div>
+  <div>
     <span>
       String value used to associate a Client session with an ID Token, and to mitigate
       <br/>
@@ -177,11 +177,11 @@ export const nonceT = () => (
       <br/>
       Sufficient entropy must be present in the nonce values used to prevent attackers from guessing values.
     </span>
-    </div>
+  </div>
 );
 
 export const loginHintT = () => (
-    <div>
+  <div>
     <span>Defined by the spec as a hint to the Authorization Server about the login<br/>identifier the End-User might use to log in.
       <br/>
       <br/>
@@ -192,10 +192,10 @@ export const loginHintT = () => (
         <br/>
 
     </span>
-    </div>);
+  </div>);
 
 export const acrValuesT = () => (
-    <div>
+  <div>
     <span>
       Requested Authentication Context Class Reference values. Space-separated string that specifies
       <br/>
@@ -209,11 +209,11 @@ export const acrValuesT = () => (
       <br/>
       OIDC OpenConext passes the <code>acr_values</code> to the SAML Proxy for step-up authentication purposes.
     </span>
-    </div>
+  </div>
 );
 
 export const pkceT = () => (
-    <span>
+  <span>
     The PKCE-enhanced Authorization Code Flow introduces a secret created by the calling application that can be
     <br/>
     verified by the authorization server; this secret is called the Code Verifier.
@@ -232,7 +232,7 @@ export const pkceT = () => (
 );
 
 export const omitAuthenticationT = () => (
-    <span>
+  <span>
     The PKCE flow is mainly intented to use for clients marked as <code>public</code> in Manage.
     <br/>
     <br/>
@@ -246,7 +246,7 @@ export const omitAuthenticationT = () => (
 );
 
 export const codeChallengeT = () => (
-    <span>
+  <span>
     The Authorization Code Flow with Proof Key for Code Exchange (PKCE) is the
     <br/> standard Code flow with an additional <code>code_challenge</code>
     <br/>
@@ -259,7 +259,7 @@ export const codeChallengeT = () => (
 );
 
 export const codeVerifierT = () => (
-    <span>
+  <span>
     The code verifier is a random URL-safe string with a minimum length of 43 characters and a maximum length of 128.
     <br/>
     It is used to generate a code challenge which sent in the authorization code flow with Proof Key for Code Exchange
@@ -268,13 +268,13 @@ export const codeVerifierT = () => (
 );
 
 export const codeChallengeMethodT = () => (
-    <span>The code challenge method is the method used to derive an authorization code challenge.
+  <span>The code challenge method is the method used to derive an authorization code challenge.
     <br/><br/>
     The <code>plain</code> method is supported, but not recommended.</span>
 );
 
 export const forceAuthenticationT = () => (
-    <span>
+  <span>
     The 'Force authentication' option adds the <code>prompt</code> parameter with the value <code>login</code> to the<br/>
     authorization request. This will be 'translated' to <code>ForceAuthn="true"</code> as an attribute for the SAML <code>AuthnRequest</code>.
     <br/><br/>
@@ -283,7 +283,7 @@ export const forceAuthenticationT = () => (
 );
 
 export const signedJWTT = () => (
-    <span>
+  <span>
     Open ID Connect has support for sealing all authorization parameters in a signed JWT. This ensures that OpenID <br/>
     authentication requests cannot be modified or tampered with.
     <br/><br/>
@@ -294,14 +294,14 @@ export const signedJWTT = () => (
 );
 
 export const clientIdT = () => (
-    <span>
+  <span>
     Identifier for the OIDC 1.0 Relying Party in Manage. If the Client ID is not known you will be redirected to an<br/>
     error page during authorization.
   </span>
 );
 
 export const clientSecretT = () => (
-    <span>
+  <span>
     Secret for the OIDC 1.0 Relying Party in Manage. If the secret is not valid you will be redirected to an<br/>
     error page during authorization.
   </span>
@@ -320,48 +320,48 @@ export const clientJWTSecretT = () => (
 
 
 export const authorizationRequestT = () => (
-    <span>The request for Authorization Endpoint is a redirect requesting Authentication of the End-User.<br/>
+  <span>The request for Authorization Endpoint is a redirect requesting Authentication of the End-User.<br/>
   The browser sends the user to the OIDC Server's Authorization Endpoint for Authentication and Authorization,<br/>
   using request parameters defined by OAuth 2.0 and additional parameters and parameter values<br/>defined by OpenID Connect.</span>
 );
 
 export const tokenRequestT = () => (
-    <span>The request for a token is performed through a back-channel - e.g. not the browser - by the Relying Party.<br/>
+  <span>The request for a token is performed through a back-channel - e.g. not the browser - by the Relying Party.<br/>
     The authorization code is exchanged for a access token and optional refresh token. The token endpoint is used<br/>
   with every authorization grant except for the implicit grant type (since an access token is issued directly).</span>
 );
 
 export const userInfoT = () => (
-    <span>The UserInfo endpoint is an <code>access_token</code> protected resource of the OpenConext OIDC server<br/>
+  <span>The UserInfo endpoint is an <code>access_token</code> protected resource of the OpenConext OIDC server<br/>
   where Relying Parties can retrieve consented claims about the logged in end-user.<br/></span>
 );
 
 export const discoveryT = () => (
-    <span>The discovery endpoint defines a mechanism for an OpenID Connect Relying Party to discover the<br/>
+  <span>The discovery endpoint defines a mechanism for an OpenID Connect Relying Party to discover the<br/>
     End-User's OpenID Provider and obtain information needed to interact with it, including its<br/>
     OAuth 2.0 endpoint locations.</span>
 );
 
 export const introspectT = () => (
-    <span>The Token Introspection extension defines a mechanism for resource servers to obtain information about<br/>
+  <span>The Token Introspection extension defines a mechanism for resource servers to obtain information about<br/>
   access tokens. Resource server can check the validity of access tokens with the result and other<br/>
   information such as which scopes are associated with the token.</span>
 );
 
 export const accessTokenT = () => (
-    <span>The Access Token is a credential that can be used by a Relying Party to access an API. The OpenConext<br/>
+  <span>The Access Token is a credential that can be used by a Relying Party to access an API. The OpenConext<br/>
   OIDC Server is a JSON Web Token (JWT) with the user claims encrypted for caching purposes.</span>
 );
 
 export const idTokenT = () => (
-    <span>The ID Token, usually referred to as <code>id_token</code> in code samples, is a JSON Web Token (JWT)<br/>
+  <span>The ID Token, usually referred to as <code>id_token</code> in code samples, is a JSON Web Token (JWT)<br/>
     that contains the user profile attributes represented in the form of claims. The ID Token is<br/>
     consumed and validated by the Relying Party. Additional user information like the user's name<br/>
     and / or emailcan be requested by the <code>claims</code> request parameter.</span>
 );
 
 export const apiT = () => (
-    <span>URL for an external API, for example <code>https://voot.test.surfconext.nl/me/groups</code>.<br/><br/>
+  <span>URL for an external API, for example <code>https://voot.test.surfconext.nl/me/groups</code>.<br/><br/>
     The API endpoint will be called by the playground server and the obtained <code>access token</code><br/>
     will be used for bearer authorization.</span>
 );
@@ -378,5 +378,15 @@ export const clientSecretJwtT = () => (
   creates a JWT using an HMAC SHA algorithm, such as HMAC SHA-256.<br/><br/>
   The HMAC (Hash-based Message Authentication Code) is<br/>
   calculated using the octets of the UTF-8 representation<br/>of the JWT Client Secret as the shared key.<br/>
+  </span>
+);
+
+export const signedJWTRequestParameterT = () => (
+  <span>
+    All authorization parameters from the signed JWT request parameter.
+    <br/><br/>
+    Relying Parties have the option to seal all <code>OIDC</code> request parameters in a signed JWT.<br/>
+    The signed JWT is verified by the OIDC server using the <code>coin:certificate</code> information<br/>
+    in Manage for the RP.
   </span>
 );
