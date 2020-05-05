@@ -280,17 +280,19 @@ public class OidcTest extends AbstractIntegrationTest {
         Map<String, Object> map = objectMapper.readValue(new ClassPathResource("oidc_response.json").getInputStream(), mapTypeReference);
         String idToken = (String) map.get("id_token");
 
-        Map<String, Map<String, Object>> result = given()
+        Map<String, Object> result = given()
                 .accept(ContentType.JSON)
                 .queryParam("jwt", idToken)
                 .get("oidc/api/decode_jwt")
-                .as(new TypeRef<Map<String, Map<String, Object>>>() {
+                .as(new TypeRef<Map<String, Object>>() {
                 });
 
-        Map<String, Object> header = result.get("header");
+        Map<String, Object> header = (Map<String, Object>) result.get("header");
         assertEquals("oidc", header.get("kid"));
 
-        Map<String, Object> payload = result.get("payload");
+        assertEquals("SIGNED", result.get("state"));
+
+        Map<String, Object> payload = (Map<String, Object>) result.get("payload");
         assertEquals("playground_client", payload.get("aud"));
     }
 
