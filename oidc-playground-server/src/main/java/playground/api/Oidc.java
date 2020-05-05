@@ -297,6 +297,7 @@ public class Oidc implements URLSupport {
         SignedJWT signedJWT = SignedJWT.parse(jwt);
         JSONObject result = new OrderedJSONObject();
         result.put("header", sortMap(signedJWT.getHeader().toJSONObject().entrySet()));
+        result.put("state", signedJWT.getState());
         result.put("payload", sortMap(signedJWT.getJWTClaimsSet().toJSONObject().entrySet()));
 
         return result.toJSONString();
@@ -374,7 +375,6 @@ public class Oidc implements URLSupport {
 
         String jwtSecretToUse = (String) body.get("jwt_client_secret");
         jwtSecretToUse = StringUtils.hasText(jwtSecretToUse) ? jwtSecretToUse : jwtSecret;
-
 
         RequestEntity.BodyBuilder builder = RequestEntity
                 .post(new URI(endpoint))
