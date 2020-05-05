@@ -13,6 +13,11 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.ResponseType;
+import com.nimbusds.oauth2.sdk.auth.ClientSecretJWT;
+import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
+import com.nimbusds.oauth2.sdk.auth.PrivateKeyJWT;
+import com.nimbusds.oauth2.sdk.auth.Secret;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.pkce.CodeChallenge;
 import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
@@ -71,8 +76,10 @@ import java.util.regex.Pattern;
 import static com.nimbusds.oauth2.sdk.ResponseMode.FORM_POST;
 import static com.nimbusds.oauth2.sdk.ResponseMode.FRAGMENT;
 import static com.nimbusds.oauth2.sdk.ResponseMode.QUERY;
+import static com.nimbusds.oauth2.sdk.auth.JWTAuthentication.CLIENT_ASSERTION_TYPE;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 @RestController()
 @RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -92,6 +99,8 @@ public class Oidc implements URLSupport {
     private String clientId;
 
     private String secret;
+
+    private String jwtSecret;
 
     private String resourceServerId;
 
@@ -119,6 +128,7 @@ public class Oidc implements URLSupport {
     public Oidc(@Value("${oidc.discovery_endpoint}") Resource discoveryEndpoint,
                 @Value("${oidc.client_id}") String clientId,
                 @Value("${oidc.secret}") String secret,
+                @Value("${oidc.jwt_secret}") String jwtSecret,
                 @Value("${oidc.resource_server_id}") String resourceServerId,
                 @Value("${oidc.resource_server_secret}") String resourceServerSecret,
                 @Value("${oidc.redirect_uri}") String redirectUri,
@@ -129,6 +139,7 @@ public class Oidc implements URLSupport {
         Security.addProvider(new BouncyCastleProvider());
         this.clientId = clientId;
         this.secret = secret;
+        this.jwtSecret = jwtSecret;
         this.resourceServerId = resourceServerId;
         this.resourceServerSecret = resourceServerSecret;
         this.redirectUri = redirectUri;
@@ -213,11 +224,13 @@ public class Oidc implements URLSupport {
 
         if ((boolean) body.getOrDefault("signedJWT", false)) {
             parameters.put("request", signedJWT(parameters).serialize());
-            List<String> toRemove = Arrays.asList("response_mode", "claims", "prompt", "state", "code_challenge", "code_challenge_method", "acr_values");
+            List<String> toRemove =
+                    Arrays.asList("response_mode", "claims", "prompt", "state", "code_challenge", "code_challenge_method", "acr_values");
             parameters.keySet().removeIf(toRemove::contains);
         }
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString((String) readWellKnownConfiguration().get("authorization_endpoint"));
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromUriString((String) readWellKnownConfiguration().get("authorization_endpoint"));
         parameters.forEach((key, value) -> {
             if (StringUtils.hasText(value)) {
                 builder.queryParam(key, encode(value));
@@ -231,7 +244,7 @@ public class Oidc implements URLSupport {
     }
 
     @PostMapping("/token")
-    public Map<String, Object> token(@RequestBody Map<String, Object> body) throws URISyntaxException {
+    public Map<String, Object> token(@RequestBody Map<String, Object> body) throws URISyntaxException, JOSEException {
         String responseTypeParam = (String) body.getOrDefault("response_type", ResponseType.getDefault().toString());
         ResponseType responseType = new ResponseType(responseTypeParam.split(" "));
         String responseMode = (String) body.getOrDefault("response_mode",
@@ -242,21 +255,24 @@ public class Oidc implements URLSupport {
     }
 
     @PostMapping("/client_credentials")
-    public Map<String, Object> clientCredentials(@RequestBody Map<String, Object> body) throws URISyntaxException {
+    public Map<String, Object> clientCredentials(@RequestBody Map<String, Object> body) throws URISyntaxException, JOSEException {
         return doToken(body, "client_credentials");
     }
 
     @PostMapping("/refresh_token")
-    public Map<String, Object> refreshToken(@RequestBody Map<String, Object> body) throws URISyntaxException {
+    public Map<String, Object> refreshToken(@RequestBody Map<String, Object> body) throws URISyntaxException, JOSEException {
         return doToken(body, "refresh_token");
     }
 
     @PostMapping("/introspect")
-    public Map<String, Object> introspect(@RequestBody Map<String, Object> body) throws URISyntaxException {
+    public Map<String, Object> introspect(@RequestBody Map<String, Object> body) throws URISyntaxException, JOSEException {
         body.put("client_id", resourceServerId);
         body.put("client_secret", resourceServerSecret);
 
-        return doPost(body, Collections.singletonMap("token", (String) body.get("token")), (String) readWellKnownConfiguration().get("introspect_endpoint"));
+        return doPost(body,
+                Collections.singletonMap("token",
+                        (String) body.get("token")),
+                (String) readWellKnownConfiguration().get("introspect_endpoint"));
     }
 
     @PostMapping("/userinfo")
@@ -325,7 +341,7 @@ public class Oidc implements URLSupport {
         response.sendRedirect(builder.build().toUriString());
     }
 
-    private Map<String, Object> doToken(Map<String, Object> body, String grantType) throws URISyntaxException {
+    private Map<String, Object> doToken(Map<String, Object> body, String grantType) throws URISyntaxException, JOSEException {
         HashMap<String, String> requestBody = new HashMap<>();
         requestBody.put("grant_type", grantType);
 
@@ -348,13 +364,17 @@ public class Oidc implements URLSupport {
         return doPost(body, requestBody, (String) readWellKnownConfiguration().get("token_endpoint"));
     }
 
-    private Map<String, Object> doPost(Map<String, Object> body, Map<String, String> requestBody, String endpoint) throws URISyntaxException {
+    private Map<String, Object> doPost(Map<String, Object> body, Map<String, String> requestBody, String endpoint) throws URISyntaxException, JOSEException {
         sanitizeMap(body);
         String clientIdToUse = (String) body.get("client_id");
         clientIdToUse = StringUtils.hasText(clientIdToUse) ? clientIdToUse : clientId;
 
         String secretToUse = (String) body.get("client_secret");
         secretToUse = StringUtils.hasText(secretToUse) ? secretToUse : secret;
+
+        String jwtSecretToUse = (String) body.get("jwt_client_secret");
+        jwtSecretToUse = StringUtils.hasText(jwtSecretToUse) ? jwtSecretToUse : jwtSecret;
+
 
         RequestEntity.BodyBuilder builder = RequestEntity
                 .post(new URI(endpoint))
@@ -364,19 +384,59 @@ public class Oidc implements URLSupport {
         String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
         boolean omitAuthentication = (boolean) body.getOrDefault("omitAuthentication", false);
         if (!omitAuthentication) {
-            if (authMethod.equals("client_secret_basic")) {
-                //The client_id and client_secret has to be percent encoded. See https://tools.ietf.org/html/rfc6749#section-2.3.1
-                String headerValueEncoded = encode(clientIdToUse) + ":" + encode(secretToUse);
-                builder.header(AUTHORIZATION, "Basic " + new String(Base64.getEncoder().encode(headerValueEncoded.getBytes())));
-            } else {
-                requestBody.put("client_id", clientIdToUse);
-                requestBody.put("client_secret", secretToUse);
-            }
+            tokenEndpointAuthMethod(requestBody, clientIdToUse, secretToUse, jwtSecretToUse, builder, authMethod);
         } else {
             requestBody.put("client_id", clientIdToUse);
         }
 
         return callPostEndpoint(requestBody, endpoint, builder);
+    }
+
+    private void tokenEndpointAuthMethod(Map<String, String> requestBody, String clientIdToUse, String secretToUse,
+                                         String jwtSecretToUse,
+                                         RequestEntity.BodyBuilder builder, String authMethod) throws JOSEException {
+        switch (authMethod) {
+            case "client_secret_basic": {
+                //The client_id and client_secret has to be percent encoded. See https://tools.ietf.org/html/rfc6749#section-2.3.1
+                String headerValueEncoded = encode(clientIdToUse) + ":" + encode(secretToUse);
+                builder.header(AUTHORIZATION, "Basic " + new String(Base64.getEncoder().encode(headerValueEncoded.getBytes())));
+                break;
+            }
+            case "client_secret_post": {
+                requestBody.put("client_id", clientIdToUse);
+                requestBody.put("client_secret", secretToUse);
+                break;
+            }
+            case "client_secret_jwt": {
+                ClientSecretJWT clientSecretJWT = new ClientSecretJWT(
+                        new ClientID(clientIdToUse),
+                        URI.create((String) readWellKnownConfiguration().get("token_endpoint")),
+                        JWSAlgorithm.HS256,
+                        new Secret(jwtSecretToUse));
+                addClientJWTAssertion(requestBody, builder, clientSecretJWT);
+                break;
+            }
+            case "private_key_jwt": {
+                PrivateKeyJWT privateKeyJWT = new PrivateKeyJWT(
+                        new ClientID(clientIdToUse),
+                        URI.create((String) readWellKnownConfiguration().get("token_endpoint")),
+                        JWSAlgorithm.RS256,
+                        this.rsaKey.toRSAPrivateKey(),
+                        this.rsaKeyId,
+                        null);
+                addClientJWTAssertion(requestBody, builder, privateKeyJWT);
+                break;
+            }
+            default: {
+                throw new IllegalArgumentException("Not supported token_endpoint_auth_method: " + authMethod);
+            }
+        }
+    }
+
+    private void addClientJWTAssertion(Map<String, String> requestBody, RequestEntity.BodyBuilder builder, JWTAuthentication jwtAuthentication) {
+        builder.header(CONTENT_TYPE, "application/x-www-form-urlencoded");
+        requestBody.put("client_assertion_type", CLIENT_ASSERTION_TYPE);
+        requestBody.put("client_assertion", jwtAuthentication.getClientAssertion().serialize());
     }
 
     private Map<String, Object> callPostEndpoint(Map<String, String> requestBody, String endpoint, RequestEntity.BodyBuilder builder) {

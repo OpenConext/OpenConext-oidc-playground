@@ -19,6 +19,7 @@ export const Config = observer(
                 claims: [],
                 client_id: "",
                 client_secret: "",
+                jwt_client_secret: "",
                 code_challenge_method: "",
                 code_challenge: "",
                 code_verifier: "",

@@ -307,6 +307,18 @@ export const clientSecretT = () => (
   </span>
 );
 
+export const clientJWTSecretT = () => (
+  <span>
+    JWT Secret for the OIDC 1.0 Relying Party in Manage.<br/><br/>
+    The JWT Secret is used in the <code>client_secret_jwt</code> TokenEndpoint authorization flow. It<br/>
+    differs from the normal client secret as it must be minimal 32 characters to be a valid<br/>
+    <code>Message Authentication Code</code> (MAC) verifier<br/><br/>
+
+    If the JWT secret is not valid you will be redirected to an error page during authorization.
+  </span>
+);
+
+
 export const authorizationRequestT = () => (
     <span>The request for Authorization Endpoint is a redirect requesting Authentication of the End-User.<br/>
   The browser sends the user to the OIDC Server's Authorization Endpoint for Authentication and Authorization,<br/>
@@ -352,4 +364,19 @@ export const apiT = () => (
     <span>URL for an external API, for example <code>https://voot.test.surfconext.nl/me/groups</code>.<br/><br/>
     The API endpoint will be called by the playground server and the obtained <code>access token</code><br/>
     will be used for bearer authorization.</span>
+);
+
+export const privateKeyJwtT = () => (
+  <span>The <code>private_key_jwt</code> Client Authentication method used<br/>
+  to authenticate against the Token endpoint<br/>
+  creates a JWT signed by the certificate registered in Manage.</span>
+);
+
+export const clientSecretJwtT = () => (
+  <span>The <code>client_secret_jwt</code> Client Authentication method used <br/>
+  to authenticate against the Token endpoint<br/>
+  creates a JWT using an HMAC SHA algorithm, such as HMAC SHA-256.<br/><br/>
+  The HMAC (Hash-based Message Authentication Code) is<br/>
+  calculated using the octets of the UTF-8 representation<br/>of the JWT Client Secret as the shared key.<br/>
+  </span>
 );

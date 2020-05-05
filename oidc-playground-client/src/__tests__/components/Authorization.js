@@ -5,7 +5,8 @@ import { Authorization } from "components";
 const props = {
   form: {
     client_id: "",
-    client_secret: ""
+    client_secret: "",
+    jwt_client_secret: ""
   }
 };
 

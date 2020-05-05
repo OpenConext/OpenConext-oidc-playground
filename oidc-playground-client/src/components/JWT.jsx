@@ -6,7 +6,7 @@ import {decodeJWT} from "api";
 import {InfoLabel} from "./InfoLabel";
 import {accessTokenT, idTokenT} from "./settings/Tooltips";
 
-class DecodeToken extends React.Component {
+export class DecodeToken extends React.Component {
     state = {
         jwt: {}
     };

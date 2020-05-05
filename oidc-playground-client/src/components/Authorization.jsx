@@ -1,6 +1,6 @@
 import React from "react";
 import {InfoLabel} from "./InfoLabel";
-import {clientIdT, clientSecretT} from "./settings/Tooltips";
+import {clientIdT, clientJWTSecretT, clientSecretT} from "./settings/Tooltips";
 
 export const Authorization = props => (
     <form className="block" onSubmit={props.onSubmit}>
@@ -13,6 +13,11 @@ export const Authorization = props => (
             <InfoLabel label="Client secret" toolTip={clientSecretT()}/>
             <input value={props.form.client_secret} onChange={e => props.onChange("client_secret", e.target.value)}/>
         </fieldset>
+
+      <fieldset>
+          <InfoLabel label="JWT Client secret" toolTip={clientJWTSecretT()}/>
+          <input value={props.form.jwt_client_secret} onChange={e => props.onChange("jwt_client_secret", e.target.value)}/>
+      </fieldset>
 
         <fieldset>
             <button type="submit" className={`button blue`}>

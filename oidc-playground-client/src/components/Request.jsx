@@ -3,7 +3,21 @@ import JSONPretty from "react-json-pretty";
 import {observer} from "mobx-react";
 import store from "store";
 import {InfoLabel} from "./InfoLabel";
-import {authorizationRequestT, discoveryT, introspectT, tokenRequestT, userInfoT} from "./settings/Tooltips";
+import {
+  clientSecretJwtT,
+  authorizationRequestT,
+  discoveryT,
+  introspectT,
+  tokenRequestT,
+  userInfoT, privateKeyJwtT
+} from "./settings/Tooltips";
+import {DecodeToken} from "./JWT";
+
+const clientAssertionToolTip = () => {
+  const state = JSON.parse(localStorage.getItem("state"));
+  return state.form.token_endpoint_auth_method === "client_secret_jwt" ?
+    clientSecretJwtT(): privateKeyJwtT() ;
+}
 
 export const Request = observer(() => {
     const authorization_url = localStorage.getItem("authorization_url");
@@ -80,6 +94,12 @@ export const Request = observer(() => {
                     <label>Form parameters</label>
                     <JSONPretty data={sortObject(request_body)}/>
                 </div>
+            )}
+            {(request_body && request_body.client_assertion) && (
+              <div className="fieldset">
+                <DecodeToken token={request_body.client_assertion}
+                             name="JWT client assertion" toolTip={clientAssertionToolTip()}/>
+              </div>
             )}
 
             {result && (
