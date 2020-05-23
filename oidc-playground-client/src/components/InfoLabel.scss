@@ -6,6 +6,10 @@ div.info-label {
   align-content: center;
   align-items: center;
 
+  label.checkbox {
+    cursor: pointer;
+  }
+
   span.tool-tip-section {
     opacity: .4;
     display: inline-block;
@@ -17,6 +21,7 @@ div.info-label {
     &:hover {
       opacity: 1;
     }
+
     span.tool-tip-data-container {
       position: absolute;
       bottom: -5px;

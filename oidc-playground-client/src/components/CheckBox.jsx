@@ -13,6 +13,6 @@ export const CheckBox = ({ name, value, onChange, label, toolTip }) => (
       </span>
     </label>
 
-    <InfoLabel label={label} toolTip={toolTip} htmlFor={name} />
+    <InfoLabel label={label} toolTip={toolTip} htmlFor={name} className="checkbox"/>
   </div>
 );
