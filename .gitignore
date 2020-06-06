@@ -10,3 +10,5 @@ client/dist
 client/coverage
 *.css
 seeds
+demo.txt
+
