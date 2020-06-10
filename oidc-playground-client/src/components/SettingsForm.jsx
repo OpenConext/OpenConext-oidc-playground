@@ -7,6 +7,7 @@ import {
     Claims,
     CodeChallenge,
     ForceAuthentication,
+    ForceConsent,
     GrantType,
     ResponseMode,
     ResponseType,
@@ -27,6 +28,7 @@ export const SettingsForm = observer(props => {
         code_challenge,
         code_verifier,
         forceAuthentication,
+        forceConsent,
         grant_type,
         login_hint,
         nonce,
@@ -140,6 +142,12 @@ export const SettingsForm = observer(props => {
                 onChange={val => onChange("forceAuthentication", val)}
                 moderators={{grant_type}}
             />
+
+          <ForceConsent
+            value={forceConsent}
+            onChange={val => onChange("forceConsent", val)}
+            moderators={{grant_type}}
+          />
 
             <SignedJWT value={signedJWT} onChange={val => onChange("signedJWT", val)} moderators={{auth_protocol}}/>
 

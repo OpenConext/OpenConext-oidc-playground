@@ -23,6 +23,7 @@ import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import com.nimbusds.oauth2.sdk.util.OrderedJSONObject;
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
+import com.nimbusds.openid.connect.sdk.Prompt;
 import net.minidev.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,6 +61,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
@@ -207,8 +209,15 @@ public class Oidc implements URLSupport {
 
         parameters.put("redirect_uri", determineRedirectUri(responseMode));
 
+        List<String> prompt = new ArrayList<>();
         if ((boolean) body.getOrDefault("forceAuthentication", false)) {
-            parameters.put("prompt", "login");
+            prompt.add("login");
+        }
+        if ((boolean) body.getOrDefault("forceConsent", false)) {
+            prompt.add("consent");
+        }
+        if (!prompt.isEmpty()) {
+            parameters.put("prompt", String.join(" ", prompt));
         }
 
         parameters.put("nonce", (String) body.get("nonce"));

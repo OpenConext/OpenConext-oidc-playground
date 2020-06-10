@@ -24,6 +24,7 @@ export const Config = observer(
                 code_challenge: "",
                 code_verifier: "",
                 forceAuthentication: false,
+                forceConsent: false,
                 grant_type: "authorization_code",
                 login_hint: "",
                 nonce: "example",
@@ -158,7 +159,8 @@ export const Config = observer(
                                 ...this.state.form,
                                 pkce: false,
                                 omitAuthentication: false,
-                                forceAuthentication: false
+                                forceAuthentication: false,
+                                forceConsent: false
                             }
                         });
                     } else if (grant_type === "authorization_code") {

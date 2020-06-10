@@ -58,7 +58,9 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("response_type", "code")
                 .p("scope", asList("openid", "groups"))
                 .p("claims", asList("email", "edumember_is_member_of"))
-                .p("nonce", "some_nonce");
+                .p("nonce", "some_nonce")
+                .p("forceAuthentication", true)
+                .p("forceConsent", true);
 
         Map<String, String> queryParams = doPostForAuthorize(body, "authorization_code");
 
@@ -69,7 +71,8 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("response_mode", "query")
                 .p("redirect_uri", "http://localhost:3000/redirect")
                 .p("client_id", "playground_client")
-                .p("nonce", "some_nonce");
+                .p("nonce", "some_nonce")
+                .p("prompt", "login consent");
 
         assertEquals(expected, queryParams);
     }

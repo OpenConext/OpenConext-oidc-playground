@@ -282,6 +282,13 @@ export const forceAuthenticationT = () => (
   </span>
 );
 
+export const forceConsentT = () => (
+  <span>
+    The 'Force consent' option adds the <code>prompt</code> parameter with the value <code>consent</code> to the<br/>
+    authorization request. The authorization server prompts the user for consent before returning<br/>information to the client.
+  </span>
+);
+
 export const signedJWTT = () => (
   <span>
     Open ID Connect has support for sealing all authorization parameters in a signed JWT. This ensures that OpenID <br/>
