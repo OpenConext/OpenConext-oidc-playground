@@ -25,7 +25,7 @@
     "react-tooltip": "^3.10.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3006 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -33,7 +33,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "http://localhost:8081",
+  "proxy": "http://localhost:8079",
   "browserslist": {
     "production": [
       ">0.2%",
