@@ -370,7 +370,10 @@ export const idTokenT = () => (
 export const apiT = () => (
   <span>URL for an external API, for example <code>https://voot.test.surfconext.nl/me/groups</code>.<br/><br/>
     The API endpoint will be called by the playground server and the obtained <code>access token</code><br/>
-    will be used for bearer authorization.</span>
+    will be used for bearer authorization.<br/><br/>
+    Do not forget to add the correct scopes before authorizing, for example <code>groups</code> when<br/>
+    querying the <code>voot</code> endpoint.
+  </span>
 );
 
 export const privateKeyJwtT = () => (
