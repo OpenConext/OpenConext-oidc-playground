@@ -48,6 +48,9 @@ public class OidcTest extends AbstractIntegrationTest {
                 .get("oidc/api/discovery")
                 .as(mapTypeRef);
         Map<String, Object> expected = objectMapper.readValue(new ClassPathResource("discovery_endpoint.json").getInputStream(), mapTypeReference);
+        expected.put("remote_client_id", "playground_client");
+        expected.put("redirect_uri", "http://localhost:3000/redirect");
+
         assertEquals(expected, result);
     }
 

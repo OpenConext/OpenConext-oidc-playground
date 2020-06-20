@@ -4,7 +4,8 @@ import { ResponseMode } from "components/settings";
 
 const props = {
   moderators: {},
-  onChange: () => {}
+  onChange: () => {},
+  options: []
 };
 
 it("renders without crashing", () => {
