@@ -160,6 +160,8 @@ public class Oidc implements URLSupport {
                 LOG.error("Error reading well known configuration at " + this.discoveryEndpoint.getDescription(), e);
                 return Collections.EMPTY_MAP;
             }
+            this.wellKnownConfiguration.put("remote_client_id", clientId);
+            this.wellKnownConfiguration.put("redirect_uri", redirectUri);
         }
         return this.wellKnownConfiguration;
     }

@@ -25,6 +25,7 @@ export const Config = observer(
                 code_verifier: "",
                 forceAuthentication: false,
                 forceConsent: false,
+                frontChannelTokenRequest: false,
                 grant_type: "authorization_code",
                 login_hint: "",
                 nonce: "example",
@@ -160,7 +161,8 @@ export const Config = observer(
                                 pkce: false,
                                 omitAuthentication: false,
                                 forceAuthentication: false,
-                                forceConsent: false
+                                forceConsent: false,
+                                frontChannelTokenRequest: false
                             }
                         });
                     } else if (grant_type === "authorization_code") {
@@ -172,7 +174,22 @@ export const Config = observer(
                 case "auth_protocol":
                     this.setState({form: {...this.state.form, signedJWT: false, claims: [], acr_values: []}});
                     break;
-                default:
+              case "frontChannelTokenRequest":
+                const {frontChannelTokenRequest} = this.state.form;
+                if (frontChannelTokenRequest) {
+                  this.setState({
+                    form: {
+                      ...this.state.form,
+                      pkce: true,
+                      omitAuthentication: true,
+                      response_mode: "query",
+                      response_type: "code",
+                      signedJWT: false
+                    }
+                  });
+                }
+                break;
+              default:
                     break;
             }
         };

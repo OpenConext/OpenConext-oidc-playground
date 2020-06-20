@@ -8,6 +8,7 @@ import store from "store";
 import {getRedirectParams} from "utils/Url";
 import {addIcons} from "utils/IconLibrary";
 import {ReactComponent as Balancer} from "images/Balancer.svg";
+import {getTokensFrontChannel} from "../api/frontChannelTokenRequest";
 
 addIcons();
 
@@ -57,8 +58,9 @@ const App = observer(
         code
       };
 
-      getTokens(body)
-        .then(data => {
+      const promise = body.frontChannelTokenRequest ? getTokensFrontChannel(body) : getTokens(body);
+
+      promise.then(data => {
           store.hybridFlowAccessToken = data.result.access_token;
           store.hybridFlowIdToken = data.result.id_token;
           store.refreshToken = data.result.refresh_token;

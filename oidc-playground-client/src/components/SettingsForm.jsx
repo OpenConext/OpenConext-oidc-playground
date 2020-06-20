@@ -8,6 +8,7 @@ import {
     CodeChallenge,
     ForceAuthentication,
     ForceConsent,
+    FrontChannelTokenRequest,
     GrantType,
     ResponseMode,
     ResponseType,
@@ -29,6 +30,7 @@ export const SettingsForm = observer(props => {
         code_verifier,
         forceAuthentication,
         forceConsent,
+        frontChannelTokenRequest,
         grant_type,
         login_hint,
         nonce,
@@ -57,7 +59,7 @@ export const SettingsForm = observer(props => {
                 value={grant_type}
                 options={store.config.grant_types_supported}
                 onChange={val => onChange("grant_type", val)}
-                moderators={{auth_protocol}}
+                moderators={{auth_protocol, frontChannelTokenRequest}}
             />
 
             <div className="field-block">
@@ -72,6 +74,7 @@ export const SettingsForm = observer(props => {
                     value={response_mode}
                     options={store.config.response_modes_supported}
                     onChange={val => onChange("response_mode", val)}
+                    moderators={{frontChannelTokenRequest}}
                 />
             </div>
 
@@ -86,7 +89,7 @@ export const SettingsForm = observer(props => {
                 value={token_endpoint_auth_method}
                 options={store.config.token_endpoint_auth_methods_supported}
                 onChange={val => onChange("token_endpoint_auth_method", val)}
-                moderators={{grant_type}}
+                moderators={{grant_type, frontChannelTokenRequest}}
             />
 
             <Claims
@@ -134,7 +137,7 @@ export const SettingsForm = observer(props => {
                     options: store.config.code_challenge_methods_supported,
                     onChange: val => onChange("code_challenge_method", val)
                 }}
-                moderators={{grant_type}}
+                moderators={{grant_type, frontChannelTokenRequest}}
             />
 
             <ForceAuthentication
@@ -149,7 +152,14 @@ export const SettingsForm = observer(props => {
             moderators={{grant_type}}
           />
 
-            <SignedJWT value={signedJWT} onChange={val => onChange("signedJWT", val)} moderators={{auth_protocol}}/>
+          <FrontChannelTokenRequest
+            value={frontChannelTokenRequest}
+            onChange={val => onChange("frontChannelTokenRequest", val)}
+            moderators={{grant_type}}
+          />
+
+          <SignedJWT value={signedJWT} onChange={val => onChange("signedJWT", val)}
+                     moderators={{auth_protocol, frontChannelTokenRequest}}/>
 
             <fieldset>
                 <button type="submit" className="button blue">

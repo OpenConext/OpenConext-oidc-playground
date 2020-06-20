@@ -15,6 +15,7 @@ export function CodeChallenge(props) {
       <CheckBox
         value={pkce}
         name="code-challenge"
+        disabled={moderators.frontChannelTokenRequest}
         label="Proof key for Code Exchange (PKCE)"
         toolTip={pkceT()}
         onChange={togglePkce}
@@ -43,6 +44,7 @@ export function CodeChallenge(props) {
               name="omit-authentication"
               label="Omit client credentials"
               toolTip={omitAuthenticationT()}
+              disabled={moderators.frontChannelTokenRequest}
               onChange={toggleOmitAuthentication}
             />
           </fieldset>

@@ -289,6 +289,14 @@ export const forceConsentT = () => (
   </span>
 );
 
+export const frontChannelTokenRequestT = () => (
+  <span>If checked the token request - the exchange of the authorization code for the access<br/>
+  and ID tokens - is done in the JS code as opposed to the channel token request done<br/>
+  in the backend server.<br/><br/>
+  The authorization is omitted and PKCE is used to secure the code exchange.
+  </span>
+);
+
 export const signedJWTT = () => (
   <span>
     Open ID Connect has support for sealing all authorization parameters in a signed JWT. This ensures that OpenID <br/>
@@ -333,7 +341,13 @@ export const authorizationRequestT = () => (
 );
 
 export const tokenRequestT = () => (
-  <span>The request for a token is performed through a back-channel - e.g. not the browser - by the Relying Party.<br/>
+  <span>The request for a token is performed through a back-channel - e.g. not the browser - by the Relying Party.<br/><br/>
+    The authorization code is exchanged for a access token and optional refresh token. The token endpoint is used<br/>
+  with every authorization grant except for the implicit grant type (since an access token is issued directly).</span>
+);
+
+export const tokenRequestFrontChannelT = () => (
+  <span>The request for a token is performed through the front-channel - e.g. performed by the JS - as the Relying Party.<br/><br/>
     The authorization code is exchanged for a access token and optional refresh token. The token endpoint is used<br/>
   with every authorization grant except for the implicit grant type (since an access token is issued directly).</span>
 );
@@ -400,3 +414,8 @@ export const signedJWTRequestParameterT = () => (
     in Manage for the RP.
   </span>
 );
+
+export const clientAssertionToolTip = state => {
+  return state.form.token_endpoint_auth_method === "client_secret_jwt" ?
+    clientSecretJwtT() : privateKeyJwtT();
+}

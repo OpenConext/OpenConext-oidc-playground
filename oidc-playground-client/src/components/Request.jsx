@@ -5,23 +5,20 @@ import store from "store";
 import {InfoLabel} from "./InfoLabel";
 import {
   authorizationRequestT,
-  clientSecretJwtT,
+  clientAssertionToolTip,
   discoveryT,
   introspectT,
-  privateKeyJwtT, signedJWTRequestParameterT,
+  signedJWTRequestParameterT,
+  tokenRequestFrontChannelT,
   tokenRequestT,
   userInfoT
 } from "./settings/Tooltips";
 import {DecodeToken} from "./JWT";
 
-const clientAssertionToolTip = () => {
-  const state = JSON.parse(localStorage.getItem("state"));
-  return state.form.token_endpoint_auth_method === "client_secret_jwt" ?
-    clientSecretJwtT() : privateKeyJwtT();
-}
-
 export const Request = observer(() => {
   const authorization_url = localStorage.getItem("authorization_url");
+
+  const state = JSON.parse(localStorage.getItem("state"));
 
   if (!store.request && !authorization_url) {
     return (
@@ -39,6 +36,8 @@ export const Request = observer(() => {
     const urlSearchParams = new URLSearchParams(query);
     Array.from(urlSearchParams.keys()).forEach(key => queryParameters[key] = urlSearchParams.get(key));
   }
+  const frontChannelTokenRequest = state.form.frontChannelTokenRequest;
+
   const {requestLabel, toolTip} =
     (request_url && request_url.endsWith("userinfo")) ? {
         requestLabel: "UserInfo endpoint",
@@ -52,10 +51,13 @@ export const Request = observer(() => {
             requestLabel: "Discovery endpoint",
             toolTip: discoveryT()
           } :
-          request_url ? {
-            requestLabel: "Token Request - Backchannel request",
+          (request_url && frontChannelTokenRequest) ? {
+            requestLabel: "Token Request - front channel request",
+            toolTip: tokenRequestFrontChannelT()
+          } : (request_url ? {
+            requestLabel: "Token Request - back channel request",
             toolTip: tokenRequestT()
-          } : {};
+          } : {});
   const tookTime = processingTime ? `- took ${processingTime} ms` : "";
 
   const sortObject = o => Object.keys(o).sort().reduce((acc, key) => {
@@ -105,7 +107,7 @@ export const Request = observer(() => {
       {(request_body && request_body.client_assertion) && (
         <div className="fieldset">
           <DecodeToken token={request_body.client_assertion}
-                       name="JWT client assertion" toolTip={clientAssertionToolTip()}/>
+                       name="JWT client assertion" toolTip={clientAssertionToolTip(state)}/>
         </div>
       )}
 

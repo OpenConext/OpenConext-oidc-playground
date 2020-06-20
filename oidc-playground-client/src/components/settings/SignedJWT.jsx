@@ -3,7 +3,7 @@ import { CheckBox } from "components";
 import { signedJWTT } from "components/settings/Tooltips";
 
 export const SignedJWT = props => {
-  if (props.moderators.auth_protocol === "Oauth2") {
+  if (props.moderators.auth_protocol === "Oauth2" || props.moderators.frontChannelTokenRequest) {
     return null;
   }
 

@@ -28,6 +28,12 @@ div.checkbox {
         outline: none;
       }
     }
+    &.disabled {
+      span {
+        border: 2px solid $medium-grey;
+        cursor: not-allowed;
+      }
+    }
   }
 
   input[type="checkbox"] + label span {
@@ -47,4 +53,15 @@ div.checkbox {
       padding: 0 2px;
     }
   }
+
+  input[type="checkbox"][disabled]:checked + label span {
+    background: $medium-grey;
+
+    svg {
+      background-color: $medium-grey;
+      color: white;
+      padding: 0 2px;
+    }
+  }
+
 }

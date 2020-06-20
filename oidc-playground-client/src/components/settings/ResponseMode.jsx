@@ -1,14 +1,24 @@
 import React from "react";
-import { ReactSelect } from "components";
+import {ReactSelect} from "components";
 import {responseModeT} from "./Tooltips";
 import {InfoLabel} from "../InfoLabel";
 
-export function ResponseMode(props) {
+export class ResponseMode extends React.Component {
 
-  return (
-    <fieldset>
-      <InfoLabel label="Response mode" toolTip={responseModeT()} />
-      <ReactSelect {...props} />
-    </fieldset>
-  );
+  sanitizeOptions() {
+    const frontChannelTokenRequest = this.props.moderators.frontChannelTokenRequest;
+
+    return this.props.options
+      .filter(opt => opt !== "refresh_token")
+      .filter(opt => !frontChannelTokenRequest || opt !== "form_post");
+  }
+
+  render() {
+    return (
+      <fieldset>
+        <InfoLabel label="Response mode" toolTip={responseModeT()}/>
+        <ReactSelect {...this.props} options={this.sanitizeOptions()}/>
+      </fieldset>
+    );
+  }
 }
