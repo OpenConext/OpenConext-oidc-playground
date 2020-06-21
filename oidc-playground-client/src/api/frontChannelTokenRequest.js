@@ -12,6 +12,7 @@ export function getTokensFrontChannel(options) {
     code_challenge_method: options.code_challenge_method,
     grant_type: options.grant_type
   };
+
   const body = new URLSearchParams(bodyOptions);
 
   const fetchOptions = {
@@ -23,6 +24,7 @@ export function getTokensFrontChannel(options) {
       "Content-Type": "application/x-www-form-urlencoded"
     }
   };
+
   const start = Date.now();
   const tokenEndpoint = options.token_endpoint;
 
