@@ -13,11 +13,9 @@ export function getTokensFrontChannel(options) {
     grant_type: options.grant_type
   };
 
-  const body = new URLSearchParams(bodyOptions);
-
   const fetchOptions = {
     method: "POST",
-    body: body,
+    body: new URLSearchParams(bodyOptions),
     credentials: "same-origin",
     headers: {
       Accept: "application/json",
