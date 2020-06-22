@@ -36,7 +36,7 @@ export const Request = observer(() => {
     const urlSearchParams = new URLSearchParams(query);
     Array.from(urlSearchParams.keys()).forEach(key => queryParameters[key] = urlSearchParams.get(key));
   }
-  const frontChannelTokenRequest = state.form.frontChannelTokenRequest;
+  const frontChannelTokenRequest = state && state.form ? state.form.frontChannelTokenRequest : false;
 
   const {requestLabel, toolTip} =
     (request_url && request_url.endsWith("userinfo")) ? {
