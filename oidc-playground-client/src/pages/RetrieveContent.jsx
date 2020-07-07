@@ -13,6 +13,8 @@ export const RetrieveContent = observer(props => {
         refresh_token: refreshToken,
     };
 
+    const state = JSON.parse(localStorage.getItem("state"));
+
     const handleResult = res => {
         store.request = res;
         store.activeTab = "Request";
@@ -31,17 +33,17 @@ export const RetrieveContent = observer(props => {
                               Error: ${res.error} (${res.status}). Cause ${res.message}`)
     );
 
-    const handleIntrospect = () => postIntrospect(body)
+    const handleIntrospect = () => postIntrospect({...state.form, ...body})
         .then(handleResult)
         .catch(err => handleError(err, "introspect"));
 
-    const handleUserInfo = () => postUserinfo(body)
+    const handleUserInfo = () => postUserinfo({...state.form, ...body})
         .then(handleResult)
         .catch(err => handleError(err, "userinfo"));
 
-    const handleRefreshToken = () => postRefreshToken({...store.config, ...body})
-        .then(handleResult)
-        .catch(err => handleError(err, "refresh_token"));
+    const handleRefreshToken = () => postRefreshToken({...state.form, ...store.config, ...body})
+          .then(handleResult)
+          .catch(err => handleError(err, "refresh_token"));
 
     const handleDiscovery = () => discovery().then(res => {
         store.request = {result: res, request_url: res.issuer + "/oidc/.well-known/openid-configuration"};
