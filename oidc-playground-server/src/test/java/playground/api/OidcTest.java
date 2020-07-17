@@ -49,7 +49,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .as(mapTypeRef);
         Map<String, Object> expected = objectMapper.readValue(new ClassPathResource("discovery_endpoint.json").getInputStream(), mapTypeReference);
         expected.put("remote_client_id", "playground_client");
-        expected.put("redirect_uri", "http://localhost:3000/redirect");
+        expected.put("redirect_uri", "http://localhost:3006/redirect");
 
         assertEquals(expected, result);
     }
@@ -72,7 +72,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("claims", "{\"id_token\":{\"edumember_is_member_of\":null,\"email\":null}}")
                 .p("response_type", "code")
                 .p("response_mode", "query")
-                .p("redirect_uri", "http://localhost:3000/redirect")
+                .p("redirect_uri", "http://localhost:3006/redirect")
                 .p("client_id", "playground_client")
                 .p("nonce", "some_nonce")
                 .p("prompt", "login consent");
@@ -100,7 +100,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("scope", "openid")
                 .p("response_type", "code")
                 .p("nonce", "some_nonce")
-                .p("redirect_uri", "http://localhost:3000/redirect")
+                .p("redirect_uri", "http://localhost:3006/redirect")
                 .p("client_id", "playground_client")
                 .p("request", serialize);
 
@@ -121,7 +121,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("scope", "openid groups")
                 .p("response_type", "implicit")
                 .p("response_mode", "fragment")
-                .p("redirect_uri", "http://localhost:3000/redirect")
+                .p("redirect_uri", "http://localhost:3006/redirect")
                 .p("client_id", "playground_client")
                 .p("state", "example");
 
@@ -142,7 +142,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("scope", "openid")
                 .p("response_type", "implicit")
                 .p("response_mode", "form_post")
-                .p("redirect_uri", "http://localhost:3000/oidc/api/redirect")
+                .p("redirect_uri", "http://localhost:3006/oidc/api/redirect")
                 .p("client_id", "playground_client");
 
         assertEquals(expected, queryParams);
@@ -165,7 +165,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("scope", "openid")
                 .p("response_type", "code")
                 .p("response_mode", "query")
-                .p("redirect_uri", "http://localhost:3000/redirect")
+                .p("redirect_uri", "http://localhost:3006/redirect")
                 .p("client_id", "playground_client")
                 .p("code_challenge", "123456")
                 .p("code_challenge_method", "plain")
@@ -186,7 +186,7 @@ public class OidcTest extends AbstractIntegrationTest {
 
         Map<String, Object> expected = new FluentMap()
                 .p("response_type", "code")
-                .p("redirect_uri", "http://localhost:3000/redirect")
+                .p("redirect_uri", "http://localhost:3006/redirect")
                 .p("response_mode", "query")
                 .p("client_id", "playground_client");
 
@@ -254,7 +254,7 @@ public class OidcTest extends AbstractIntegrationTest {
                 .p("state", "example");
 
         if (grantType.equals("authorization_code")) {
-            body.put("redirect_uri", "http://localhost:3000/redirect");
+            body.put("redirect_uri", "http://localhost:3006/redirect");
         }
 
         Map<String, Object> map = doToken(path, body);

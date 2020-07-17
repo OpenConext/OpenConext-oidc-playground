@@ -22,9 +22,9 @@ oidc:
   jwt_secret: "very-long-long-long-long-long-secret"
   resource_server_id: "resource-server-playground-client"
   resource_server_secret: "secret"
-  redirect_uri: "http://localhost:3000/redirect"
-  redirect_uri_form_post: "http://localhost:3000/oidc/api/redirect"
-  client_redirect_uri: "http://localhost:3000/redirect"
+  redirect_uri: "http://localhost:3006/redirect"
+  redirect_uri_form_post: "http://localhost:3006/oidc/api/redirect"
+  client_redirect_uri: "http://localhost:3006/redirect"
 
 gui:
   disclaimer:
