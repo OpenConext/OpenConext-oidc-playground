@@ -371,7 +371,7 @@ export const introspectT = () => (
 
 export const accessTokenT = () => (
   <span>The Access Token is a credential that can be used by a Relying Party to access an API. The OpenConext<br/>
-  OIDC Server is a JSON Web Token (JWT) with the user claims encrypted for caching purposes.</span>
+  OIDC Server Access Tokens are JSON Web Tokens (JWT) with the user claims encrypted for caching purposes.</span>
 );
 
 export const idTokenT = () => (
@@ -379,6 +379,12 @@ export const idTokenT = () => (
     that contains the user profile attributes represented in the form of claims. The ID Token is<br/>
     consumed and validated by the Relying Party. Additional user information like the user's name<br/>
     and / or emailcan be requested by the <code>claims</code> request parameter.</span>
+);
+
+export const refreshTokenT = () => (
+  <span>A Refresh Token is a special token that is used to generate additional access tokens.<br/><br/>
+  This allows to have short-lived access tokens without having to collect credentials every time one expires. <br/>
+  The OpenConext OIDC Server Refresh Tokens are JSON Web Tokens (JWT) with the user claims encrypted for caching purposes.</span>
 );
 
 export const apiT = () => (
