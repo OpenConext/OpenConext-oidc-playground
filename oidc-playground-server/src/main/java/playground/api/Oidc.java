@@ -340,8 +340,8 @@ public class Oidc implements URLSupport {
     }
 
     @GetMapping(value = {"/certs"}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public String publishClientJwk() throws NoSuchProviderException, NoSuchAlgorithmException {
-        return new JWKSet(this.rsaKey.toPublicJWK()).toJSONObject().toString();
+    public Map<String, Object> publishClientJwk() throws NoSuchProviderException, NoSuchAlgorithmException {
+        return new JWKSet(this.rsaKey.toPublicJWK()).toJSONObject();
     }
 
     @PostMapping(value = "/redirect", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
