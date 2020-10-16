@@ -23,7 +23,6 @@ import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import com.nimbusds.oauth2.sdk.util.OrderedJSONObject;
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
-import com.nimbusds.openid.connect.sdk.Prompt;
 import net.minidev.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -247,7 +246,7 @@ public class Oidc implements URLSupport {
                 builder.queryParam(key, encode(value));
             }
         });
-        return Collections.singletonMap("url", builder.build().toUriString());
+        return mutableMap("url", builder.build().toUriString());
     }
 
     private String determineRedirectUri(String responseMode) {
@@ -283,8 +282,7 @@ public class Oidc implements URLSupport {
             body.put("client_secret", resourceServerSecret);
         }
         return doPost(body,
-                Collections.singletonMap("token",
-                        (String) body.get("token")),
+                mutableMap("token", (String) body.get("token")),
                 (String) readWellKnownConfiguration().get("introspect_endpoint"));
     }
 
@@ -298,7 +296,7 @@ public class Oidc implements URLSupport {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("Authorization", "Bearer " + token);
 
-        Map<String, String> requestBody = Collections.singletonMap("access_token", token);
+        Map<String, String> requestBody = mutableMap("access_token", token);
         return callPostEndpoint(requestBody, (String) readWellKnownConfiguration().get("userinfo_endpoint"), builder);
     }
 
@@ -525,6 +523,12 @@ public class Oidc implements URLSupport {
         JWSSigner jswsSigner = new RSASSASigner(this.rsaKey.toPrivateKey());
         signedJWT.sign(jswsSigner);
         return signedJWT;
+    }
+
+    private Map<String, String> mutableMap(String key, String value) {
+        Map<String, String> res = new HashMap<>();
+        res.put(key, value);
+        return res;
     }
 
 }
