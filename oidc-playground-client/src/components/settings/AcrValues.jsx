@@ -10,7 +10,7 @@ export const AcrValues = ({ moderators, ...rest }) => {
   return (
     <fieldset>
       <InfoLabel label="ACR values" toolTip={acrValuesT()} />
-      <ReactSelect {...rest} isMulti />
+      <ReactSelect {...rest} isMulti freeFormat/>
     </fieldset>
   );
 };
