@@ -46,6 +46,9 @@ export const RetrieveContent = observer(props => {
           .catch(err => handleError(err, "refresh_token"));
 
     const handleDiscovery = () => discovery().then(res => {
+        delete res.remote_client_id;
+        delete res.redirect_uri;
+        delete res.acr_values_supported;
         store.request = {result: res, request_url: res.issuer + "/oidc/.well-known/openid-configuration"};
         store.activeTab = "Request";
         store.apiCall = true;
