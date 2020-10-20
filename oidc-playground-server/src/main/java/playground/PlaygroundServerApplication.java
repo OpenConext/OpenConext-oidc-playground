@@ -9,11 +9,14 @@ import org.springframework.boot.actuate.autoconfigure.metrics.export.simple.Simp
 import org.springframework.boot.actuate.autoconfigure.trace.http.HttpTraceAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import playground.api.ACR;
 
 @SpringBootApplication(exclude = {AuditAutoConfiguration.class, HttpTraceAutoConfiguration.class,
         JmxAutoConfiguration.class, JmxEndpointAutoConfiguration.class,
         JvmMetricsAutoConfiguration.class, MetricsAutoConfiguration.class, SimpleMetricsExportAutoConfiguration.class,
 })
+@EnableConfigurationProperties(ACR.class)
 public class PlaygroundServerApplication {
 
     public static void main(String[] args) {

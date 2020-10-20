@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit4.SpringRunner;
+import playground.api.ACR;
 import playground.api.URLSupport;
 
 import java.io.IOException;
@@ -27,6 +28,9 @@ public abstract class AbstractIntegrationTest implements URLSupport {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @Autowired
+    protected ACR acr;
 
     @Before
     public void before() throws IOException {

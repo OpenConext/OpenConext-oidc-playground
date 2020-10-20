@@ -2,7 +2,6 @@ package playground.api;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import io.restassured.http.ContentType;
 import io.restassured.mapper.TypeRef;
@@ -50,6 +49,7 @@ public class OidcTest extends AbstractIntegrationTest {
         Map<String, Object> expected = objectMapper.readValue(new ClassPathResource("discovery_endpoint.json").getInputStream(), mapTypeReference);
         expected.put("remote_client_id", "playground_client");
         expected.put("redirect_uri", "http://localhost:3006/redirect");
+        expected.put("acr_values_supported", this.acr.getValues());
 
         assertEquals(expected, result);
     }

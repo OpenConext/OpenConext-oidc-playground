@@ -125,6 +125,8 @@ public class Oidc implements URLSupport {
 
     private Map<String, Object> wellKnownConfiguration;
 
+    private ACR acr;
+
     @Autowired
     public Oidc(@Value("${oidc.discovery_endpoint}") Resource discoveryEndpoint,
                 @Value("${oidc.client_id}") String clientId,
@@ -135,7 +137,8 @@ public class Oidc implements URLSupport {
                 @Value("${oidc.redirect_uri}") String redirectUri,
                 @Value("${oidc.redirect_uri_form_post}") String redirectUriFormPost,
                 @Value("${oidc.client_redirect_uri}") String clientRedirectUri,
-                ObjectMapper objectMapper
+                ObjectMapper objectMapper,
+                ACR acr
     ) throws NoSuchProviderException, NoSuchAlgorithmException {
         Security.addProvider(new BouncyCastleProvider());
         this.clientId = clientId;
@@ -149,6 +152,7 @@ public class Oidc implements URLSupport {
         this.objectMapper = objectMapper;
         this.discoveryEndpoint = discoveryEndpoint;
         this.rsaKey = generateRsaKey();
+        this.acr = acr;
     }
 
     private Map<String, Object> readWellKnownConfiguration() {
@@ -161,6 +165,7 @@ public class Oidc implements URLSupport {
             }
             this.wellKnownConfiguration.put("remote_client_id", clientId);
             this.wellKnownConfiguration.put("redirect_uri", redirectUri);
+            this.wellKnownConfiguration.put("acr_values_supported", this.acr.getValues());
         }
         return this.wellKnownConfiguration;
     }
