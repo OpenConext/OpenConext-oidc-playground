@@ -286,6 +286,8 @@ public class Oidc implements URLSupport {
             body.put("client_id", resourceServerId);
             body.put("client_secret", resourceServerSecret);
         }
+        //always basic auth for introspection
+        body.put("token_endpoint_auth_method", "client_secret_basic");
         return doPost(body,
                 mutableMap("token", (String) body.get("token")),
                 (String) readWellKnownConfiguration().get("introspect_endpoint"));
