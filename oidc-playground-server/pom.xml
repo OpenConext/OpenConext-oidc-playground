@@ -37,7 +37,7 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>6.13</version>
+            <version>8.20</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
