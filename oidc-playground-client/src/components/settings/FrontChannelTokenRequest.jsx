@@ -3,7 +3,8 @@ import { CheckBox } from "components";
 import { frontChannelTokenRequestT } from "components/settings/Tooltips";
 
 export const FrontChannelTokenRequest = props => {
-  if (props.moderators.grant_type === "client_credentials") {
+  const grantType = props.moderators.grant_type;
+  if (grantType === "client_credentials" || grantType === "implicit") {
     return null;
   }
 
