@@ -7,11 +7,11 @@ logging:
 server:
   port : 8079
   max-http-header-size: 10000000
-  tomcat:
-    max-http-post-size: 10000000
   server-header:
   servlet:
     context-path: /oidc/api
+  tomcat:
+    max-http-form-post-size: 10000000
 
 oidc:
 #  discovery_endpoint: "https://connect.test2.surfconext.nl/oidc/.well-known/openid-configuration"
