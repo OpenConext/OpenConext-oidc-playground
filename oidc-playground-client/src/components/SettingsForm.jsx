@@ -17,6 +17,7 @@ import {
     TokenEndpointAuthMethod
 } from "components/settings";
 import {authorizationProtocolT, loginHintT, nonceT, stateT} from "./settings/Tooltips";
+import {ForceConsent} from "./settings";
 
 export const SettingsForm = observer(props => {
     const {onSubmit, onChange} = props;
@@ -29,7 +30,7 @@ export const SettingsForm = observer(props => {
         code_challenge,
         code_verifier,
         forceAuthentication,
-        // forceConsent,
+        forceConsent,
         frontChannelTokenRequest,
         grant_type,
         login_hint,
@@ -146,11 +147,11 @@ export const SettingsForm = observer(props => {
                 moderators={{grant_type}}
             />
 
-          {/*<ForceConsent*/}
-          {/*  value={forceConsent}*/}
-          {/*  onChange={val => onChange("forceConsent", val)}*/}
-          {/*  moderators={{grant_type}}*/}
-          {/*/>*/}
+          <ForceConsent
+            value={forceConsent}
+            onChange={val => onChange("forceConsent", val)}
+            moderators={{grant_type}}
+          />
 
           <FrontChannelTokenRequest
             value={frontChannelTokenRequest}

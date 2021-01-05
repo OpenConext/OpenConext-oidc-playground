@@ -286,6 +286,9 @@ export const forceConsentT = () => (
   <span>
     The 'Force consent' option adds the <code>prompt</code> parameter with the value <code>consent</code> to the<br/>
     authorization request. The authorization server prompts the user for consent before returning<br/>information to the client.
+    <br/><br/>
+    Do note that only consent is is prompted when there are scopes requested that belong to a Resource Server<br/>
+    connected to the playground RP.
   </span>
 );
 
