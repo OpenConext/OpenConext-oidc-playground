@@ -48,8 +48,6 @@ info:
 
 acr:
   values:
-    - "http://test.surfconext.nl/assurance/loa1"
-    - "http://test.surfconext.nl/assurance/loa2"
-    - "http://test.surfconext.nl/assurance/loa3"
-    - "http://test.surfconext.nl/assurance/sfo-level2"
-    - "http://test.surfconext.nl/assurance/sfo-level3"
+    - "https://eduid.nl/trust/validate-names"
+    - "https://eduid.nl/trust/linked-institution"
+    - "https://eduid.nl/trust/affiliation-student"
