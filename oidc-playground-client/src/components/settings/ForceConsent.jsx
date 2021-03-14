@@ -3,6 +3,7 @@ import { CheckBox } from "components";
 import { forceConsentT } from "components/settings/Tooltips";
 
 export const ForceConsent = props => {
+
   if (props.moderators.grant_type === "client_credentials") {
     return null;
   }

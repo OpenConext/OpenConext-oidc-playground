@@ -3,6 +3,7 @@ import { InfoLabel, ReactSelect } from "components";
 import { grantTypesT } from "./Tooltips";
 
 export class GrantType extends React.Component {
+
   sanitizeOptions() {
     const isOpenId = this.props.moderators.auth_protocol === "OpenID";
     const frontChannelTokenRequest = this.props.moderators.frontChannelTokenRequest;
