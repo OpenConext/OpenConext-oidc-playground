@@ -3,6 +3,7 @@ package playground.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,19 +31,16 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
         this.objectMapper = objectMapper;
     }
 
-    @Override
-    public String getErrorPath() {
-        return "/error";
-    }
-
     @RequestMapping("/error")
     public ResponseEntity<Map> error(HttpServletRequest request) throws IOException {
         ServletWebRequest webRequest = new ServletWebRequest(request);
-        Map<String, Object> result = this.errorAttributes.getErrorAttributes(webRequest, false);
+
+        Map<String, Object> result = errorAttributes.getErrorAttributes(webRequest, ErrorAttributeOptions.defaults());
+
+        Throwable error = errorAttributes.getError(webRequest);
 
         LOG.error("Error has occurred: " + result);
 
-        Throwable error = this.errorAttributes.getError(webRequest);
         boolean hasValidStatus = result.containsKey("status") && !result.get("status").equals(999);
         HttpStatus statusCode = hasValidStatus ? HttpStatus.resolve((Integer) result.get("status")) : BAD_REQUEST;
         if (error != null) {

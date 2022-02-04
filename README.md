@@ -8,7 +8,7 @@ Test app for an OpenID Connect server
 
 ### [System Requirements](#system-requirements)
 
-- Java 8
+- Java 11
 - Maven 3
 - yarn 1.x
 - NodeJS v8.12.0 (best managed with `nvm`)

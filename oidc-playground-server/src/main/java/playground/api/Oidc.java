@@ -83,7 +83,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 @RestController()
-@RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @SuppressWarnings("unchecked")
 public class Oidc implements URLSupport {
 
@@ -282,7 +282,7 @@ public class Oidc implements URLSupport {
     @PostMapping("/introspect")
     public Map<String, Object> introspect(@RequestBody Map<String, Object> body) throws URISyntaxException, JOSEException {
         String clientId = (String) body.get("client_id");
-        if (StringUtils.isEmpty(clientId)) {
+        if (!StringUtils.hasText(clientId)) {
             body.put("client_id", resourceServerId);
             body.put("client_secret", resourceServerSecret);
         }
@@ -299,7 +299,7 @@ public class Oidc implements URLSupport {
         String token = (String) body.get("token");
         RequestEntity.BodyBuilder builder = RequestEntity
                 .post(new URI(endpoint))
-                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("Authorization", "Bearer " + token);
 
@@ -327,7 +327,7 @@ public class Oidc implements URLSupport {
         String accessToken = body.get("accessToken");
         RequestEntity<Void> requestEntity = RequestEntity
                 .get(new URI(apiUrl))
-                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + accessToken).build();
 
         Map<String, Object> result = new HashMap();
@@ -344,7 +344,7 @@ public class Oidc implements URLSupport {
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
     }
 
-    @GetMapping(value = {"/certs"}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = {"/certs"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> publishClientJwk() throws NoSuchProviderException, NoSuchAlgorithmException {
         return new JWKSet(this.rsaKey.toPublicJWK()).toJSONObject();
     }
@@ -396,7 +396,7 @@ public class Oidc implements URLSupport {
 
         RequestEntity.BodyBuilder builder = RequestEntity
                 .post(new URI(endpoint))
-                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         String authMethod = (String) body.getOrDefault("token_endpoint_auth_method", "client_secret_basic");
@@ -479,7 +479,7 @@ public class Oidc implements URLSupport {
                 return CollectionUtils.isEmpty((List) val);
             }
             if (val instanceof String) {
-                return StringUtils.isEmpty(val);
+                return !StringUtils.hasText((String) val);
             }
             return false;
         });

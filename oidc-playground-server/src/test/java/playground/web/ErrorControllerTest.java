@@ -27,11 +27,6 @@ public class ErrorControllerTest {
     }
 
     @Test
-    public void errorPath() {
-        assertEquals("/error", errorController.getErrorPath());
-    }
-
-    @Test
     public void errorInternalServerError() throws IOException {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setAttribute("javax.servlet.error.exception",
