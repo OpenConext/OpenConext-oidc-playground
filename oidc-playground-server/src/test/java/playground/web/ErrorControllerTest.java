@@ -15,8 +15,9 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 
 public class ErrorControllerTest {
-    private ObjectMapper objectMapper = new ObjectMapper();
-    private ErrorController errorController = new ErrorController(new DefaultErrorAttributes(), objectMapper);
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ErrorController errorController = new ErrorController(new DefaultErrorAttributes(), objectMapper);
 
 
     @Test

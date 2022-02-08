@@ -23,8 +23,8 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
 
     private static final Log LOG = LogFactory.getLog(ErrorController.class);
 
-    private ErrorAttributes errorAttributes;
-    private ObjectMapper objectMapper;
+    private final ErrorAttributes errorAttributes;
+    private final ObjectMapper objectMapper;
 
     public ErrorController(ErrorAttributes errorAttributes, ObjectMapper objectMapper) {
         this.errorAttributes = errorAttributes;
