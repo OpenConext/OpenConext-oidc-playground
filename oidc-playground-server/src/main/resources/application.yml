@@ -60,3 +60,4 @@ acr:
     - "https://eduid.nl/trust/validate-names"
     - "https://eduid.nl/trust/linked-institution"
     - "https://eduid.nl/trust/affiliation-student"
+    - "https://refeds.org/profile/mfa"
