@@ -13,97 +13,97 @@ import {getTokensFrontChannel} from "../api/frontChannelTokenRequest";
 addIcons();
 
 const App = observer(
-  class App extends React.Component {
+    class App extends React.Component {
 
-    constructor(props, ctx) {
-      super(props, ctx);
-      this.state = {balancing: false};
-      if (window.location.pathname === "/") {
-        localStorage.clear();
-      }
-    }
-
-    componentDidMount() {
-      discovery().then(config => {
-        store.config = config;
-        store.configLoaded = true;
-      });
-
-      const params = getRedirectParams();
-
-      when(
-        () => store.configLoaded && params,
-        () => {
-          if (params.error) {
-            return (store.message = `Invalid request. ${params.error_description}`);
-          }
-
-          store.normalFlowAccessToken = params.access_token;
-          store.normalFlowIdToken = params.id_token;
-          store.refreshToken = params.refresh_token;
-
-          this.swapCode(params.code);
+        constructor(props, ctx) {
+            super(props, ctx);
+            this.state = {balancing: false};
+            if (window.location.pathname === "/") {
+                localStorage.clear();
+            }
         }
-      );
-    }
 
-    swapCode(code) {
-      if (!code) {
-        return;
-      }
+        componentDidMount() {
+            discovery().then(config => {
+                store.config = config;
+                store.configLoaded = true;
+            });
 
-      const body = {
-        ...store.config,
-        ...JSON.parse(localStorage.getItem("state")).form,
-        code
-      };
+            const params = getRedirectParams();
 
-      const promise = body.frontChannelTokenRequest ? getTokensFrontChannel(body) : getTokens(body);
+            when(
+                () => store.configLoaded && params,
+                () => {
+                    if (params.error) {
+                        return (store.message = `Invalid request. ${params.error_description}`);
+                    }
 
-      promise.then(data => {
-          store.hybridFlowAccessToken = data.result.access_token;
-          store.hybridFlowIdToken = data.result.id_token;
-          store.refreshToken = data.result.refresh_token;
-          store.request = {
-            request_url: data.request_url,
-            request_headers: data.request_headers,
-            request_body: data.request_body,
-            result: data.result
-          };
-        })
-        .catch(err =>
-          err.json().then(
-            res =>
-              (store.message = `Tokens could not be retrieved with this code.
+                    store.normalFlowAccessToken = params.access_token;
+                    store.normalFlowIdToken = params.id_token;
+                    store.refreshToken = params.refresh_token;
+
+                    this.swapCode(params.code);
+                }
+            );
+        }
+
+        swapCode(code) {
+            if (!code) {
+                return;
+            }
+
+            const body = {
+                ...store.config,
+                ...JSON.parse(localStorage.getItem("state")).form,
+                code
+            };
+
+            const promise = body.frontChannelTokenRequest ? getTokensFrontChannel(body) : getTokens(body);
+
+            promise.then(data => {
+                store.hybridFlowAccessToken = data.result.access_token;
+                store.hybridFlowIdToken = data.result.id_token;
+                store.refreshToken = data.result.refresh_token;
+                store.request = {
+                    request_url: data.request_url,
+                    request_headers: data.request_headers,
+                    request_body: data.request_body,
+                    result: data.result
+                };
+            })
+                .catch(err =>
+                    err.json().then(
+                        res =>
+                            (store.message = `Tokens could not be retrieved with this code.
                               Error: ${res.error} (${res.status}). Cause ${res.message}`)
-          )
-        );
+                    )
+                );
+        }
+
+        render() {
+            return (
+                <div className="app-container">
+                    <Flash/>
+
+                    <div className="header-container">
+                        <header>
+                            <h2 onClick={() => document.location.replace("/")}>Open ID Connect Playground</h2>
+                            <Balancer id="balancer" className={this.state.balancing ? "balancer balancing" : "balancer"}
+                                      onClick={() => this.setState({balancing: !this.state.balancing})}/>
+                        </header>
+                    </div>
+                    {store.configLoaded &&
+                        <div className="pages-container">
+
+                            <div className="screen-left">
+                                <Config/>
+                                <RetrieveContent/>
+                            </div>
+                            <Display/>
+                        </div>}
+                </div>
+            );
+        }
     }
-
-    render() {
-      return (
-        <div className="app-container">
-          <Flash/>
-
-          <div className="header-container">
-            <header>
-              <h2 onClick={() => document.location.replace("/")}>Open ID Connect Playground</h2>
-              <Balancer id="balancer" className={this.state.balancing ? "balancer balancing" : "balancer"}
-                        onClick={() => this.setState({balancing: !this.state.balancing})}/>
-            </header>
-          </div>
-          {store.configLoaded &&
-          <div className="pages-container">
-
-            <div className="screen-left">
-              <Config/>
-              <RetrieveContent/>
-            </div>
-            <Display/>
-          </div>}
-        </div>
-      );
-    }
-  }
 );
 export default App;
