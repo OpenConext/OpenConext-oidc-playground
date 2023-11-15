@@ -33,7 +33,7 @@ public abstract class AbstractIntegrationTest implements URLSupport {
     protected ACR acr;
 
     @Before
-    public void before() throws IOException {
+    public void before() {
         RestAssured.port = port;
     }
 

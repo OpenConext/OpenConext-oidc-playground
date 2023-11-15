@@ -24,10 +24,10 @@
     "react-tooltip": "^3.10.0"
   },
   "scripts": {
-    "start": "PORT=3006 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "why DANGEROUSLY_DISABLE_HOST_CHECK": "https://stackoverflow.com/questions/70374005/invalid-options-object-dev-server-has-been-initialized-using-an-options-object",
+    "start": "DANGEROUSLY_DISABLE_HOST_CHECK=true PORT=3006 react-scripts start",
+    "build": "DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts build",
+    "test": "DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"

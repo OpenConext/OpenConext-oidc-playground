@@ -31,7 +31,7 @@ import static playground.api.Oidc.mapTypeReference;
 
 public class OidcTest extends AbstractIntegrationTest {
 
-    private TypeRef<Map<String, Object>> mapTypeRef = new TypeRef<Map<String, Object>>() {
+    private final TypeRef<Map<String, Object>> mapTypeRef = new TypeRef<>() {
     };
 
     @Rule

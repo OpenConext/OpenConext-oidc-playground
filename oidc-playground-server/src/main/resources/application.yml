@@ -16,14 +16,14 @@ server:
     max-http-form-post-size: 10000000
 
 oidc:
-#  discovery_endpoint: "https://connect.test2.surfconext.nl/oidc/.well-known/openid-configuration"
+  discovery_endpoint: "https://connect.test2.surfconext.nl/oidc/.well-known/openid-configuration"
   # Use this when you want to test against a local instance of OIDC-NG
-  discovery_endpoint: "http://localhost:8080/oidc/.well-known/openid-configuration"
+#  discovery_endpoint: "http://localhost:8080/oidc/.well-known/openid-configuration"
   client_id: "playground_client"
   secret: "secret"
   jwt_secret: "very-long-long-long-long-long-secret"
   resource_server_id: "resource-server-playground-client"
-  resource_server_secret: "secret"
+  resource_server_secret: "l36VaA1YXR9gG7Pw9POuiQ60h1rU3IhfT5kC"
   redirect_uri: "http://localhost:3006/redirect"
   redirect_uri_form_post: "http://localhost:3006/oidc/api/redirect"
   client_redirect_uri: "http://localhost:3006/redirect"
