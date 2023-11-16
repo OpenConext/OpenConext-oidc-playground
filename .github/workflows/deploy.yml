@@ -53,3 +53,13 @@ jobs:
         push: true
         tags: |
           ghcr.io/openconext/openconext-oidc-playground/oidc-playground-client:${{ github.ref_name }}
+
+    - name: Build and push the oidc playground server image
+      uses: docker/build-push-action@v4
+      with:
+        context: oidc-playground-server
+        file: oidc-playground-server/docker/Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags: |
+          ghcr.io/openconext/openconext-oidc-playground/oidc-playground-server:${{ github.ref_name }}
