@@ -1,0 +1,26 @@
+server:
+  port: 8079
+  error:
+    path: "/error"
+  max-http-header-size: 10000000
+  server-header:
+  servlet:
+    context-path: /oidc/api
+  tomcat:
+    max-http-form-post-size: 10000000
+
+oidc:
+  discovery_endpoint: "https://dev.openconext.local/oidc/.well-known/openid-configuration"
+  client_id: "playground_client"
+  secret: "secret"
+  jwt_secret: "very-long-long-long-long-long-secret"
+  resource_server_id: "resource-server-playground-client"
+  resource_server_secret: "secret"
+  redirect_uri: "https://dev.openconext.local/redirect"
+  redirect_uri_form_post: "https://dev.openconext.local/oidc/api/redirect"
+  client_redirect_uri: "https://dev.openconext.local/redirect"
+
+gui:
+  disclaimer:
+    background-color: red
+    content: DEV
