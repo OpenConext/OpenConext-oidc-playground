@@ -3,18 +3,18 @@ import {observer} from "mobx-react";
 import store from "store";
 import {InfoLabel, ReactSelect} from "components";
 import {
-  AcrValues,
-  Claims,
-  CodeChallenge,
-  ForceAuthentication,
-  ForceConsent,
-  FrontChannelTokenRequest,
-  GrantType,
-  ResponseMode,
-  ResponseType,
-  Scopes,
-  SignedJWT,
-  TokenEndpointAuthMethod
+    AcrValues,
+    Claims,
+    CodeChallenge,
+    ForceAuthentication,
+    ForceConsent,
+    FrontChannelTokenRequest,
+    GrantType,
+    ResponseMode,
+    ResponseType,
+    Scopes,
+    SignedJWT,
+    TokenEndpointAuthMethod
 } from "components/settings";
 import {authorizationProtocolT, loginHintT, nonceT, stateT} from "./settings/Tooltips";
 
@@ -44,6 +44,8 @@ export const SettingsForm = observer(props => {
     omitAuthentication
   } = props.form;
 
+    const deviceCodeFlow = grant_type === "urn:ietf:params:oauth:grant-type:device_code";
+
   return (
     <form className="block" onSubmit={onSubmit}>
       <fieldset>
@@ -61,22 +63,22 @@ export const SettingsForm = observer(props => {
         onChange={val => onChange("grant_type", val)}
         moderators={{auth_protocol, frontChannelTokenRequest}}
       />
-
+        {!deviceCodeFlow &&
       <div className="field-block">
-        <ResponseType
-          value={response_type}
-          options={store.config.response_types_supported}
-          onChange={val => onChange("response_type", val)}
-          moderators={{auth_protocol, grant_type}}
-        />
 
-        <ResponseMode
-          value={response_mode}
-          options={store.config.response_modes_supported}
-          onChange={val => onChange("response_mode", val)}
-          moderators={{frontChannelTokenRequest}}
-        />
-      </div>
+          <ResponseType
+              value={response_type}
+              options={store.config.response_types_supported}
+              onChange={val => onChange("response_type", val)}
+              moderators={{auth_protocol, grant_type}}
+          />
+          <ResponseMode
+              value={response_mode}
+              options={store.config.response_modes_supported}
+              onChange={val => onChange("response_mode", val)}
+              moderators={{frontChannelTokenRequest}}
+          />
+      </div>}
 
       <Scopes
         value={scope}
@@ -84,39 +86,40 @@ export const SettingsForm = observer(props => {
         onChange={val => onChange("scope", val)}
         moderators={{auth_protocol}}
       />
-
-      <TokenEndpointAuthMethod
-        value={token_endpoint_auth_method}
-        options={store.config.token_endpoint_auth_methods_supported}
-        onChange={val => onChange("token_endpoint_auth_method", val)}
-        moderators={{grant_type, frontChannelTokenRequest}}
-      />
-
+        {!deviceCodeFlow &&
+            <TokenEndpointAuthMethod
+                value={token_endpoint_auth_method}
+                options={store.config.token_endpoint_auth_methods_supported}
+                onChange={val => onChange("token_endpoint_auth_method", val)}
+                moderators={{grant_type, frontChannelTokenRequest}}
+            />}
+        {!deviceCodeFlow &&
       <Claims
         value={claims}
         options={store.config.claims_supported}
         onChange={val => onChange("claims", val)}
-        moderators={{auth_protocol}}
-      />
+        moderators={{auth_protocol, grant_type}}
+      />}
+        {!deviceCodeFlow &&
+            <div className="field-block">
 
-      <div className="field-block">
-        <fieldset>
-          <InfoLabel label="State" toolTip={stateT()}/>
-          <input value={state} onChange={e => onChange("state", e.target.value)}/>
-        </fieldset>
+                <fieldset>
+                    <InfoLabel label="State" toolTip={stateT()}/>
+                    <input value={state} onChange={e => onChange("state", e.target.value)}/>
+                </fieldset>
 
-        <fieldset>
-          <InfoLabel label="Nonce" toolTip={nonceT()}/>
-          <input value={nonce} onChange={e => onChange("nonce", e.target.value)}/>
-        </fieldset>
-      </div>
+                <fieldset>
+                    <InfoLabel label="Nonce" toolTip={nonceT()}/>
+                    <input value={nonce} onChange={e => onChange("nonce", e.target.value)}/>
+                </fieldset>
+            </div>}
 
-      <div className="field-block">
-        <fieldset>
-          <InfoLabel label="Login Hint" toolTip={loginHintT()}/>
-          <input value={login_hint} onChange={e => onChange("login_hint", e.target.value)}/>
-        </fieldset>
-      </div>
+            <div className="field-block">
+                <fieldset>
+                    <InfoLabel label="Login Hint" toolTip={loginHintT()}/>
+                    <input value={login_hint} onChange={e => onChange("login_hint", e.target.value)}/>
+                </fieldset>
+            </div>
 
       <AcrValues
         value={acr_values}
@@ -152,14 +155,16 @@ export const SettingsForm = observer(props => {
         moderators={{grant_type}}
       />
 
-      <FrontChannelTokenRequest
-        value={frontChannelTokenRequest}
-        onChange={val => onChange("frontChannelTokenRequest", val)}
-        moderators={{grant_type}}
-      />
+        {!deviceCodeFlow &&
+            <FrontChannelTokenRequest value={frontChannelTokenRequest}
+                                      onChange={val => onChange("frontChannelTokenRequest", val)}
+                                      moderators={{grant_type}}
+            />}
 
-      <SignedJWT value={signedJWT} onChange={val => onChange("signedJWT", val)}
-                 moderators={{auth_protocol, frontChannelTokenRequest}}/>
+        {!deviceCodeFlow &&
+            <SignedJWT value={signedJWT}
+                       onChange={val => onChange("signedJWT", val)}
+                       moderators={{auth_protocol, frontChannelTokenRequest}}/>}
 
       <fieldset>
         <button type="submit" className="button blue">

@@ -1,0 +1,19 @@
+@import "../stylesheets/vars.scss";
+
+.device_authorization {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    a {
+        font-weight: 600;
+        color: $blue;
+        &:visited {
+            color: $blue;
+        }
+    }
+    img {
+        width: 225px;
+        height: auto;
+    }
+}

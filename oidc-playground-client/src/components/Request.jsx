@@ -3,15 +3,16 @@ import JSONPretty from "react-json-pretty";
 import {observer} from "mobx-react";
 import store from "store";
 import {InfoLabel} from "./InfoLabel";
+import "./Requests.scss";
 import {
-  authorizationRequestT,
-  clientAssertionToolTip,
-  discoveryT,
-  introspectT,
-  signedJWTRequestParameterT,
-  tokenRequestFrontChannelT,
-  tokenRequestT,
-  userInfoT
+    authorizationRequestT,
+    clientAssertionToolTip, deviceAuthorizationT,
+    discoveryT,
+    introspectT,
+    signedJWTRequestParameterT,
+    tokenRequestFrontChannelT,
+    tokenRequestT,
+    userInfoT
 } from "./settings/Tooltips";
 import {DecodeToken} from "./JWT";
 
@@ -51,6 +52,10 @@ export const Request = observer(() => {
             requestLabel: "Discovery endpoint",
             toolTip: discoveryT()
           } :
+            (request_url && request_url.endsWith("device_authorization")) ? {
+                  requestLabel: "Device Authorization Request",
+                  toolTip: deviceAuthorizationT()
+                } :
           (request_url && frontChannelTokenRequest) ? {
             requestLabel: "Token Request - front channel request",
             toolTip: tokenRequestFrontChannelT()
@@ -119,6 +124,20 @@ export const Request = observer(() => {
           }/>
         </div>
       )}
+
+        {(request_url && request_url.endsWith("device_authorization")) &&
+            <div className="fieldset">
+                <label>Device Verification Codes</label>
+                <div className="__json-pretty__ device_authorization">
+                    <a href={result.verification_uri} target="_blank">Verification URI - {result.verification_uri}</a>
+                    <a href={result.verification_uri_complete} target="_blank">Verification URI Complete - {result.verification_uri_complete}</a>
+                    <img src={`data:image/png;base64,${result.qr_code}`} alt="qr-code"/>
+
+
+                </div>
+            </div>
+
+        }
     </div>
   );
 });

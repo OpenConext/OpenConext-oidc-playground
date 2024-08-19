@@ -2,11 +2,7 @@ package playground.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JOSEObjectType;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -23,9 +19,13 @@ import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import com.nimbusds.oauth2.sdk.util.OrderedJSONObject;
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
+import lombok.SneakyThrows;
 import net.minidev.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.NoConnectionReuseStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,16 +33,13 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -50,33 +47,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.Security;
+import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
-import static com.nimbusds.oauth2.sdk.ResponseMode.FORM_POST;
-import static com.nimbusds.oauth2.sdk.ResponseMode.FRAGMENT;
-import static com.nimbusds.oauth2.sdk.ResponseMode.QUERY;
+import static com.nimbusds.oauth2.sdk.ResponseMode.*;
 import static com.nimbusds.oauth2.sdk.auth.JWTAuthentication.CLIENT_ASSERTION_TYPE;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -87,45 +67,45 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 @SuppressWarnings("unchecked")
 public class Oidc implements URLSupport {
 
-    static TypeReference<Map<String, Object>> mapTypeReference = new TypeReference<Map<String, Object>>() {
+    static TypeReference<Map<String, Object>> mapTypeReference = new TypeReference<>() {
     };
 
-    private static ParameterizedTypeReference<LinkedHashMap<String, Object>> mapResponseType = new ParameterizedTypeReference<LinkedHashMap<String, Object>>() {
+    private static final ParameterizedTypeReference<LinkedHashMap<String, Object>> mapResponseType = new ParameterizedTypeReference<LinkedHashMap<String, Object>>() {
     };
 
     private static final Log LOG = LogFactory.getLog(Oidc.class);
 
-    private Pattern uuidPattern = Pattern.compile("([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}");
+    private final Pattern uuidPattern = Pattern.compile("([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}");
 
-    private String clientId;
+    private final String clientId;
 
-    private String secret;
+    private final String secret;
 
-    private String jwtSecret;
+    private final String jwtSecret;
 
-    private String resourceServerId;
+    private final String resourceServerId;
 
-    private String resourceServerSecret;
+    private final String resourceServerSecret;
 
-    private String redirectUri;
+    private final String redirectUri;
 
-    private String redirectUriFormPost;
+    private final String redirectUriFormPost;
 
-    private String clientRedirectUri;
+    private final String clientRedirectUri;
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    private Resource discoveryEndpoint;
+    private final Resource discoveryEndpoint;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
-    private String rsaKeyId = "play_key_id";
+    private final String rsaKeyId = "play_key_id";
 
-    private RSAKey rsaKey;
+    private final RSAKey rsaKey;
 
     private Map<String, Object> wellKnownConfiguration;
 
-    private ACR acr;
+    private final ACR acr;
 
     @Autowired
     public Oidc(@Value("${oidc.discovery_endpoint}") Resource discoveryEndpoint,
@@ -153,6 +133,12 @@ public class Oidc implements URLSupport {
         this.discoveryEndpoint = discoveryEndpoint;
         this.rsaKey = generateRsaKey();
         this.acr = acr;
+        this.restTemplate = new RestTemplate();
+        HttpClient httpClient = HttpClientBuilder.create()
+                .setRetryHandler((exception, executionCount, context) -> false)
+                .setConnectionReuseStrategy(new NoConnectionReuseStrategy())
+                .build();
+        this.restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
     }
 
     private Map<String, Object> readWellKnownConfiguration() {
@@ -171,7 +157,7 @@ public class Oidc implements URLSupport {
     }
 
     @GetMapping("/discovery")
-    public Map<String, Object> discovery() throws IOException {
+    public Map<String, Object> discovery() {
         return readWellKnownConfiguration();
     }
 
@@ -197,10 +183,7 @@ public class Oidc implements URLSupport {
         ResponseType responseType = new ResponseType(((String) body.get("response_type")).split(" "));
         parameters.put("response_type", responseType.toString());
 
-        List<String> scopes = (List<String>) body.get("scope");
-        if (!CollectionUtils.isEmpty(scopes)) {
-            parameters.put("scope", String.join(" ", scopes));
-        }
+        addScopeValues(body, parameters);
 
         String responseMode = (String) body.getOrDefault("response_mode",
                 responseType.impliesCodeFlow() ? QUERY.getValue() : FRAGMENT.getValue());
@@ -215,16 +198,7 @@ public class Oidc implements URLSupport {
 
         parameters.put("redirect_uri", determineRedirectUri(responseMode));
 
-        List<String> prompt = new ArrayList<>();
-        if ((boolean) body.getOrDefault("forceAuthentication", false)) {
-            prompt.add("login");
-        }
-        if ((boolean) body.getOrDefault("forceConsent", false)) {
-            prompt.add("consent");
-        }
-        if (!prompt.isEmpty()) {
-            parameters.put("prompt", String.join(" ", prompt));
-        }
+        addPromptValues(body, parameters);
 
         parameters.put("nonce", (String) body.get("nonce"));
         parameters.put("state", (String) body.get("state"));
@@ -254,8 +228,43 @@ public class Oidc implements URLSupport {
         return mutableMap("url", builder.build().toUriString());
     }
 
-    private String determineRedirectUri(String responseMode) {
-        return responseMode.equals(FORM_POST.getValue()) ? redirectUriFormPost : redirectUri;
+    private void addPromptValues(Map<String, Object> body, Map<String, String> parameters) {
+        List<String> prompt = new ArrayList<>();
+        if ((boolean) body.getOrDefault("forceAuthentication", false)) {
+            prompt.add("login");
+        }
+        if ((boolean) body.getOrDefault("forceConsent", false)) {
+            prompt.add("consent");
+        }
+        if (!prompt.isEmpty()) {
+            parameters.put("prompt", String.join(" ", prompt));
+        }
+    }
+
+    @PostMapping(value = {"/urn:ietf:params:oauth:grant-type:device_code"})
+    public Map<String, Object> deviceFlow(@RequestBody Map<String, Object> body) throws URISyntaxException {
+        sanitizeMap(body);
+
+        Map<String, String> parameters = new HashMap<>();
+
+        parameters.put("client_id", (String) body.getOrDefault("client_id", clientId));
+
+        String loginHint = (String) body.get("login_hint");
+        if (StringUtils.hasText(loginHint)) {
+            parameters.put("login_hint", loginHint);
+        }
+
+        addPromptValues(body, parameters);
+
+        addScopeValues(body, parameters);
+
+        String endpoint = (String) readWellKnownConfiguration().get("device_authorization_endpoint");
+        RequestEntity.BodyBuilder builder = RequestEntity
+                .post(new URI(endpoint))
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        return callPostEndpoint(parameters, endpoint, builder);
     }
 
     @PostMapping("/token")
@@ -370,11 +379,9 @@ public class Oidc implements URLSupport {
             }
         });
 
-        if (body.containsKey("scope")) {
-            List<String> scopes = (List<String>) body.get("scope");
-            if (!CollectionUtils.isEmpty(scopes)) {
-                requestBody.put("scope", String.join(" ", (List<String>) body.get("scope")));
-            }
+        List<String> scopes = (List<String>) body.get("scope");
+        if (!CollectionUtils.isEmpty(scopes)) {
+            requestBody.put("scope", String.join(" ", (List<String>) body.get("scope")));
         }
 
         if ((boolean) body.getOrDefault("pkce", false)) {
@@ -457,13 +464,23 @@ public class Oidc implements URLSupport {
         requestBody.put("client_assertion", jwtAuthentication.getClientAssertion().serialize());
     }
 
-    private Map<String, Object> callPostEndpoint(Map<String, String> requestBody, String endpoint, RequestEntity.BodyBuilder builder) {
-        LinkedMultiValueMap form = new LinkedMultiValueMap();
+    @SneakyThrows
+    private Map<String, Object> callPostEndpoint(Map<String, String> requestBody,
+                                                 String endpoint,
+                                                 RequestEntity.BodyBuilder builder) {
+        LinkedMultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         requestBody.forEach(form::set);
-        RequestEntity<LinkedMultiValueMap> requestEntity = builder.body(form);
+        RequestEntity<LinkedMultiValueMap<String, String>> requestEntity = builder.body(form);
 
         Map<String, Object> result = new HashMap();
-        result.put("result", restTemplate.exchange(requestEntity, mapResponseType).getBody());
+        Map<String, Object> body;
+        try {
+            body = restTemplate.exchange(requestEntity, mapResponseType).getBody();
+        } catch (HttpClientErrorException e) {
+            String responseBodyAsString = e.getResponseBodyAsString();
+            body = objectMapper.readValue(responseBodyAsString, Map.class);
+        }
+        result.put("result", body);
         result.put("request_body", anonymizeInformation(requestBody));
         result.put("request_url", endpoint);
         result.put("request_headers", anonymizeInformation(requestEntity.getHeaders().toSingleValueMap()));
@@ -530,6 +547,18 @@ public class Oidc implements URLSupport {
         JWSSigner jswsSigner = new RSASSASigner(this.rsaKey.toPrivateKey());
         signedJWT.sign(jswsSigner);
         return signedJWT;
+    }
+
+
+    private void addScopeValues(Map<String, Object> body, Map<String, String> parameters) {
+        List<String> scopes = (List<String>) body.get("scope");
+        if (!CollectionUtils.isEmpty(scopes)) {
+            parameters.put("scope", String.join(" ", scopes));
+        }
+    }
+
+    private String determineRedirectUri(String responseMode) {
+        return responseMode.equals(FORM_POST.getValue()) ? redirectUriFormPost : redirectUri;
     }
 
     private Map<String, String> mutableMap(String key, String value) {

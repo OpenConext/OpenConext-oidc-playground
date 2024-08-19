@@ -64,6 +64,11 @@ export function postRefreshToken(body) {
   return postPutJson(`/oidc/api/refresh_token`, body, "POST");
 }
 
+
+export function postDeviceAuthorization(body) {
+  xxxxxx
+}
+
 export function decodeJWT(jwt) {
   return fetchJson(`/oidc/api/decode_jwt?jwt=${jwt}`);
 }

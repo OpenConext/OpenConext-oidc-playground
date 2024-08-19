@@ -153,7 +153,9 @@ export const Config = observer(
                         this.setState({
                             form: {
                                 ...this.state.form,
-                                pkce: false, omitAuthentication: false, response_mode: "fragment"
+                                pkce: false,
+                                omitAuthentication: false,
+                                response_mode: "fragment"
                             }
                         });
                     } else if (grant_type === "client_credentials") {

@@ -390,6 +390,12 @@ export const refreshTokenT = () => (
   The OpenConext OIDC Server Refresh Tokens are JSON Web Tokens (JWT) with the user claims encrypted for caching purposes.</span>
 );
 
+export const deviceAuthorizationT = () => (
+    <span>The Device Authorization Request endpoint defines a mechanism for an OAuth device client to request <br/>
+    authorization by requesting a set of verification codes from the authorization server by making an HTTP <br/>
+   "POST" request to the device authorization endpoint</span>
+);
+
 export const apiT = () => (
   <span>URL for an external API, for example <code>https://voot.test.surfconext.nl/me/groups</code>.<br/><br/>
     The API endpoint will be called by the playground server and the obtained <code>access token</code><br/>

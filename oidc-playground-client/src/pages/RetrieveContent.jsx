@@ -45,6 +45,9 @@ export const RetrieveContent = observer(props => {
           .then(handleResult)
           .catch(err => handleError(err, "refresh_token"));
 
+    const handleDeviceResult = () => postDeviceAuthorization({...state.form, ...store.config, ...body})
+        .then(handleResult)
+        .catch(err => handleError(err, "device_authorize"));
     const handleDiscovery = () => discovery().then(res => {
         delete res.remote_client_id;
         delete res.redirect_uri;
@@ -70,18 +73,23 @@ export const RetrieveContent = observer(props => {
                         disabled={!(accessToken && !store.clientCredentialsAccessToken)}
                         onClick={handleUserInfo}>Userinfo
                     </button>
-                    <button
+                    {accessToken && <button
                         type="button"
                         className="button introspect"
                         disabled={!(accessToken)}
                         onClick={handleIntrospect}>Introspect
-                    </button>
-                    <button
+                    </button>}
+                    {refreshToken && <button
                         type="button"
                         className="button refresh-token"
                         disabled={!refreshToken}
                         onClick={handleRefreshToken}>Refresh token
-                    </button>
+                    </button>}
+                    {(store.request || {}).device_code && <button
+                        type="button"
+                        className="button refresh-token"
+                        onClick={handleDeviceResult}>Poll Device Request
+                    </button>}
                     <button
                         type="button"
                         className="button discovery"
