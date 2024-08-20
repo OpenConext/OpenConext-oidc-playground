@@ -15,6 +15,7 @@ class Store {
   configLoaded = false;
   activeTab = "JWT";
   apiCall = false;
+  deviceAuthentication = undefined;
   config = {
     acr_values_supported: [],
     claims_parameter_supported: false,
@@ -45,7 +46,8 @@ decorate(Store, {
   config: observable,
   configLoaded: observable,
   activeTab: observable,
-  apiCall: observable
+  apiCall: observable,
+  deviceAuthentication: observable
 });
 
 const store = new Store();

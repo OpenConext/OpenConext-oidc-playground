@@ -6,7 +6,8 @@ import {InfoLabel} from "./InfoLabel";
 import "./Requests.scss";
 import {
     authorizationRequestT,
-    clientAssertionToolTip, deviceAuthorizationT,
+    clientAssertionToolTip,
+    deviceAuthorizationT,
     discoveryT,
     introspectT,
     signedJWTRequestParameterT,
@@ -30,6 +31,7 @@ export const Request = observer(() => {
   }
   const {request_url, request_headers, request_body, result} = store.request || {};
   const {processingTime} = store;
+    const {deviceAuthentication} = store;
 
   const queryParameters = {};
   if (authorization_url) {
@@ -125,13 +127,17 @@ export const Request = observer(() => {
         </div>
       )}
 
-        {(request_url && request_url.endsWith("device_authorization")) &&
+        {deviceAuthentication &&
             <div className="fieldset">
                 <label>Device Verification Codes</label>
                 <div className="__json-pretty__ device_authorization">
-                    <a href={result.verification_uri} target="_blank">Verification URI - {result.verification_uri}</a>
-                    <a href={result.verification_uri_complete} target="_blank">Verification URI Complete - {result.verification_uri_complete}</a>
-                    <img src={`data:image/png;base64,${result.qr_code}`} alt="qr-code"/>
+                    <a href={deviceAuthentication.verification_uri}
+                       rel="noreferrer"
+                       target="_blank">Verification URI - {deviceAuthentication.verification_uri}</a>
+                    <a href={deviceAuthentication.verification_uri_complete}
+                       rel="noreferrer"
+                       target="_blank">Verification URI Complete - {deviceAuthentication.verification_uri_complete}</a>
+                    <img src={`data:image/png;base64,${deviceAuthentication.qr_code}`} alt="qr-code"/>
 
 
                 </div>

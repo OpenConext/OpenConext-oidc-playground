@@ -166,11 +166,15 @@ export const SettingsForm = observer(props => {
                        onChange={val => onChange("signedJWT", val)}
                        moderators={{auth_protocol, frontChannelTokenRequest}}/>}
 
-      <fieldset>
-        <button type="submit" className="button blue">
-          Submit
+        <fieldset>
+            <button type="reset" className="button"
+                onClick={() => document.location.replace("/")}>
+                Reset
         </button>
-      </fieldset>
+        <button type="submit" className="button blue">
+            Submit
+            </button>
+        </fieldset>
     </form>
   );
 });

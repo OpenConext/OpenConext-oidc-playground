@@ -105,6 +105,11 @@ export const Config = observer(
                         store.clientCredentialsAccessToken = json.result.access_token;
                         store.activeTab = "JWT";
                     }
+
+                    if (json.result && json.result.device_code) {
+                        store.deviceAuthentication = json.result;
+                        store.activeTab = "Request";
+                    }
                 })
                 .catch(err =>
                     err.json().then(

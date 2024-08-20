@@ -64,9 +64,8 @@ export function postRefreshToken(body) {
   return postPutJson(`/oidc/api/refresh_token`, body, "POST");
 }
 
-
-export function postDeviceAuthorization(body) {
-  xxxxxx
+export function postPollDeviceAuthorization(body) {
+  return postPutJson(`/oidc/api/poll_device_authorization`, body, "POST");
 }
 
 export function decodeJWT(jwt) {

@@ -1,13 +1,13 @@
 import React from "react";
 import {observer} from "mobx-react";
 import store from "store";
-import {discovery, postIntrospect, postRefreshToken, postUserinfo} from "../api";
+import {discovery, postIntrospect, postPollDeviceAuthorization, postRefreshToken, postUserinfo} from "../api";
 
 export const RetrieveContent = observer(props => {
     const accessToken = store.normalFlowAccessToken || store.hybridFlowAccessToken || store.clientCredentialsAccessToken ||
         ((store.request || {}).result || {}).access_token;
-
     const refreshToken = store.refreshToken || ((store.request || {}).result || {}).refresh_token;
+    const deviceCode = (store.deviceAuthentication || {}).device_code;
     const body = {
         token: accessToken,
         refresh_token: refreshToken,
@@ -45,9 +45,10 @@ export const RetrieveContent = observer(props => {
           .then(handleResult)
           .catch(err => handleError(err, "refresh_token"));
 
-    const handleDeviceResult = () => postDeviceAuthorization({...state.form, ...store.config, ...body})
+    const handleDeviceResult = () => postPollDeviceAuthorization({...state.form, ...store.config, ...body, ...store.deviceAuthentication})
         .then(handleResult)
         .catch(err => handleError(err, "device_authorize"));
+
     const handleDiscovery = () => discovery().then(res => {
         delete res.remote_client_id;
         delete res.redirect_uri;
@@ -73,23 +74,24 @@ export const RetrieveContent = observer(props => {
                         disabled={!(accessToken && !store.clientCredentialsAccessToken)}
                         onClick={handleUserInfo}>Userinfo
                     </button>
-                    {accessToken && <button
+                    <button
                         type="button"
                         className="button introspect"
                         disabled={!(accessToken)}
                         onClick={handleIntrospect}>Introspect
-                    </button>}
-                    {refreshToken && <button
+                    </button>
+                    <button
                         type="button"
                         className="button refresh-token"
                         disabled={!refreshToken}
                         onClick={handleRefreshToken}>Refresh token
-                    </button>}
-                    {(store.request || {}).device_code && <button
-                        type="button"
-                        className="button refresh-token"
-                        onClick={handleDeviceResult}>Poll Device Request
-                    </button>}
+                    </button>
+                    {deviceCode &&
+                        <button type="button"
+                                className="button refresh-token"
+                                onClick={handleDeviceResult}>Poll Device Request
+                        </button>
+                    }
                     <button
                         type="button"
                         className="button discovery"

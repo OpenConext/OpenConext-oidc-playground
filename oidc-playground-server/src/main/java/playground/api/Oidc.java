@@ -8,6 +8,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.oauth2.sdk.GrantType;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretJWT;
 import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
@@ -248,6 +249,7 @@ public class Oidc implements URLSupport {
         Map<String, String> parameters = new HashMap<>();
 
         parameters.put("client_id", (String) body.getOrDefault("client_id", clientId));
+        parameters.put("acr_values", (String) body.get("acr_values"));
 
         String loginHint = (String) body.get("login_hint");
         if (StringUtils.hasText(loginHint)) {
@@ -255,7 +257,6 @@ public class Oidc implements URLSupport {
         }
 
         addPromptValues(body, parameters);
-
         addScopeValues(body, parameters);
 
         String endpoint = (String) readWellKnownConfiguration().get("device_authorization_endpoint");
@@ -314,6 +315,24 @@ public class Oidc implements URLSupport {
 
         Map<String, String> requestBody = mutableMap("access_token", token);
         return callPostEndpoint(requestBody, (String) readWellKnownConfiguration().get("userinfo_endpoint"), builder);
+    }
+
+    @PostMapping("/poll_device_authorization")
+    public Map<String, Object> pollDeviceAuthorization(@RequestBody Map<String, Object> body) throws URISyntaxException, JOSEException {
+        String endpoint = (String) readWellKnownConfiguration().get("token_endpoint");
+        RequestEntity.BodyBuilder builder = RequestEntity
+                .post(new URI(endpoint))
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+        String clientIdToUse = (String) body.get("client_id");
+        clientIdToUse = StringUtils.hasText(clientIdToUse) ? clientIdToUse : clientId;
+
+        Map<String, String> requestBody = Map.of(
+                "client_id", clientIdToUse,
+                "grant_type", GrantType.DEVICE_CODE.getValue(),
+                "device_code", (String) body.get("device_code")
+        );
+        return callPostEndpoint(requestBody, endpoint, builder);
     }
 
     @GetMapping("/decode_jwt")
@@ -504,7 +523,7 @@ public class Oidc implements URLSupport {
 
     private Map<String, String> anonymizeInformation(Map<String, String> headers) {
         Map<String, String> result = new HashMap<>(headers);
-        List<String> sensitiveHeaders = Arrays.asList("client_id", "client_secret", AUTHORIZATION);
+        List<String> sensitiveHeaders = Arrays.asList("client_secret", AUTHORIZATION);
         sensitiveHeaders.forEach(header -> result.replace(header, "XXX"));
         return result;
     }
