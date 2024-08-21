@@ -148,7 +148,7 @@ export const SettingsForm = observer(props => {
         onChange={val => onChange("forceAuthentication", val)}
         moderators={{grant_type}}
       />
-        
+
         {!deviceCodeFlow &&
             <ForceConsent
                 value={forceConsent}

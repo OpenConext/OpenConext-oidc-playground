@@ -1,6 +1,6 @@
 import React from "react";
-import { CheckBox } from "components";
-import { frontChannelTokenRequestT } from "components/settings/Tooltips";
+import {CheckBox} from "components";
+import {frontChannelTokenRequestT} from "components/settings/Tooltips";
 
 export const FrontChannelTokenRequest = props => {
   const grantType = props.moderators.grant_type;
