@@ -148,12 +148,13 @@ export const SettingsForm = observer(props => {
         onChange={val => onChange("forceAuthentication", val)}
         moderators={{grant_type}}
       />
-
-      <ForceConsent
-        value={forceConsent}
-        onChange={val => onChange("forceConsent", val)}
-        moderators={{grant_type}}
-      />
+        
+        {!deviceCodeFlow &&
+            <ForceConsent
+                value={forceConsent}
+                onChange={val => onChange("forceConsent", val)}
+                moderators={{grant_type}}
+            />}
 
         {!deviceCodeFlow &&
             <FrontChannelTokenRequest value={frontChannelTokenRequest}
