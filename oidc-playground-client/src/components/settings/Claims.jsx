@@ -14,9 +14,7 @@ export function Claims(props) {
     "at_hash",
     "c_hash",
     "s_hash",
-    "at_hash",
-    "sub",
-    "uids"
+    "at_hash"
   ];
   const options = props.options.filter(claim => !excludedClaims.includes(claim));
 
