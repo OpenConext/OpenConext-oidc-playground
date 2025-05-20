@@ -130,7 +130,7 @@ jobs:
         with:
           context: oidc-playground-server
           file: oidc-playground-server/docker/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64, linux/arm64
           push: true
           tags: ${{ steps.meta_server.outputs.tags }}
           labels: ${{ steps.meta_server.outputs.labels }}
