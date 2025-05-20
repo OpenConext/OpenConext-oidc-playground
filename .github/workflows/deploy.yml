@@ -120,7 +120,7 @@ jobs:
         with:
           context: oidc-playground-client
           file: oidc-playground-client/docker/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64, linux/arm64
           push: true
           tags: ${{ steps.meta_gui.outputs.tags }}
           labels: ${{ steps.meta_gui.outputs.labels }}
