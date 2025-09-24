@@ -8,9 +8,7 @@ updates:
       - dependency-type: "production"
 
   - package-ecosystem: maven
-    directory:
-      - "/oidc-playground-client"
-      - "/oidc-playground-server"
+    directory: "/"
     schedule:
       interval: "weekly"
     allow:
