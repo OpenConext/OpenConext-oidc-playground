@@ -6,7 +6,20 @@ updates:
       interval: "weekly"
     allow:
       - dependency-type: "production"
+
+  - package-ecosystem: maven
+    directory:
+      - "/oidc-playground-client"
+      - "/oidc-playground-server"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: "production"
+
   - package-ecosystem: "github-actions"
     directory: "/"
+    groups:
+      gha:
+        update-types: [ "major", "minor", "patch" ]
     schedule:
       interval: "weekly"
