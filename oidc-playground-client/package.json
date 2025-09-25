@@ -19,7 +19,7 @@
     "react-json-pretty": "^2.1.0",
     "react-modal": "^3.8.1",
     "react-scripts": "^5.0.1",
-    "react-select": "^2.4.3",
+    "react-select": "^5.10.2",
     "react-test-renderer": "^16.8.6",
     "react-tooltip": "^3.10.0"
   },
