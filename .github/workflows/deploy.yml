@@ -116,7 +116,7 @@ jobs:
             type=sha
 
       - name: Build and push the oidc playground gui image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: oidc-playground-client
           file: oidc-playground-client/docker/Dockerfile
@@ -126,7 +126,7 @@ jobs:
           labels: ${{ steps.meta_gui.outputs.labels }}
 
       - name: Build and push the oidc playground server image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: oidc-playground-server
           file: oidc-playground-server/docker/Dockerfile
