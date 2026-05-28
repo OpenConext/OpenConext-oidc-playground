@@ -5,7 +5,7 @@
 
     <groupId>org.openconext</groupId>
     <artifactId>oidc-playground</artifactId>
-    <version>4.1.2</version>
+    <version>4.2.0</version>
     <packaging>pom</packaging>
 
     <name>oidc-playground</name>
