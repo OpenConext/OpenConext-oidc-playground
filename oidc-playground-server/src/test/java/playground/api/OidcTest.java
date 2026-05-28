@@ -47,6 +47,7 @@ public class OidcTest extends AbstractIntegrationTest {
         expected.put("remote_client_id", "playground_client");
         expected.put("redirect_uri", "http://localhost:3006/redirect");
         expected.put("acr_values_supported", this.acr.getValues());
+        expected.put("apiEndpointEnabled", true);
 
         assertEquals(expected, result);
     }

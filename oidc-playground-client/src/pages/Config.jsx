@@ -36,7 +36,7 @@ const initialForm = {
 export const Config = observer(
     class Config extends React.Component {
         state = {
-            tabs: ["Settings", "Authorization", "API"],
+            tabs: ["Settings", "Authorization", "API"].filter(tab => tab !== "API" || store.apiEndpointEnabled),
             activeTab: "Settings",
             form: initialForm
         };

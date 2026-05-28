@@ -30,6 +30,9 @@ oidc:
   redirect_uri_form_post: "http://localhost:3006/oidc/api/redirect"
   client_redirect_uri: "http://localhost:3006/redirect"
 
+features:
+  api_endpoint_enabled: True
+
 gui:
   disclaimer:
     background-color: red
