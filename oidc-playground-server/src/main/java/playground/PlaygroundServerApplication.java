@@ -10,6 +10,7 @@ import org.springframework.boot.actuate.autoconfigure.trace.http.HttpTraceAutoCo
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import playground.api.ACR;
 
 @SpringBootApplication(exclude = {AuditAutoConfiguration.class, HttpTraceAutoConfiguration.class,
@@ -17,6 +18,7 @@ import playground.api.ACR;
         JvmMetricsAutoConfiguration.class, MetricsAutoConfiguration.class, SimpleMetricsExportAutoConfiguration.class,
 })
 @EnableConfigurationProperties(ACR.class)
+@EnableScheduling
 public class PlaygroundServerApplication {
 
     public static void main(String[] args) {
