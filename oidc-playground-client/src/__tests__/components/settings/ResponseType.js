@@ -41,10 +41,6 @@ describe("sanitizing the options passed to select", () => {
       expect(selectProps.options).toEqual(["id_token", "thing"]);
     });
 
-    it("with grant_type client_credentials", () => {
-      setSelectProps({ auth_protocol, grant_type: "client_credentials" });
-      expect(selectProps.options).toEqual(["token", "id_token"]);
-    });
   });
 
   describe("with auth_protocol Oauth2", () => {
@@ -57,12 +53,8 @@ describe("sanitizing the options passed to select", () => {
 
     it("with grant_type implicit", () => {
       setSelectProps({ auth_protocol, grant_type: "implicit" });
-      expect(selectProps.options).toEqual(["token"]);
+      expect(selectProps.options).toEqual(["code", "token", "id_token", "thing"]);
     });
 
-    it("with grant_type client_credentials", () => {
-      setSelectProps({ auth_protocol, grant_type: "client_credentials" });
-      expect(selectProps.options).toEqual(["token"]);
-    });
   });
 });

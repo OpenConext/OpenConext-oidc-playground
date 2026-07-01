@@ -284,11 +284,6 @@ public class Oidc implements URLSupport {
         return doToken(body, "authorization_code");
     }
 
-    @PostMapping("/client_credentials")
-    public Map<String, Object> clientCredentials(@RequestBody Map<String, Object> body) throws URISyntaxException, JOSEException {
-        return doToken(body, "client_credentials");
-    }
-
     @PostMapping("/refresh_token")
     public Map<String, Object> refreshToken(@RequestBody Map<String, Object> body) throws URISyntaxException, JOSEException {
         return doToken(body, "refresh_token");

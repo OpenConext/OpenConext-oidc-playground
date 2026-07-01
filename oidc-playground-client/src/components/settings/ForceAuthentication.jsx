@@ -3,9 +3,6 @@ import { CheckBox } from "components";
 import { forceAuthenticationT } from "components/settings/Tooltips";
 
 export const ForceAuthentication = props => {
-  if (props.moderators.grant_type === "client_credentials") {
-    return null;
-  }
 
   return (
     <fieldset>

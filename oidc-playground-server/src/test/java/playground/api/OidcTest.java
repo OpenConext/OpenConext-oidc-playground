@@ -202,11 +202,6 @@ public class OidcTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void clientCredentials() throws IOException {
-        doToken("client_credentials", "client_credentials");
-    }
-
-    @Test
     public void token() throws IOException {
         doToken("authorization_code", "token");
     }

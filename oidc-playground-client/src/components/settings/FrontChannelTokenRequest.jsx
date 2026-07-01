@@ -4,7 +4,7 @@ import {frontChannelTokenRequestT} from "components/settings/Tooltips";
 
 export const FrontChannelTokenRequest = props => {
   const grantType = props.moderators.grant_type;
-  if (grantType === "client_credentials" || grantType === "implicit") {
+  if (grantType === "implicit") {
     return null;
   }
 

@@ -16,8 +16,6 @@ export class ResponseType extends React.Component {
           return ["code"];
         case "implicit":
           return options.filter(opt => !["code", "token"].includes(opt));
-        case "client_credentials":
-          return ["token", "id_token"];
         default:
           return options;
       }
@@ -27,8 +25,6 @@ export class ResponseType extends React.Component {
       case "authorization_code":
         return ["code"];
       case "implicit":
-      case "client_credentials":
-        return ["token"];
       default:
         return options;
     }

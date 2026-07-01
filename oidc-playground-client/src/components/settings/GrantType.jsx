@@ -5,12 +5,11 @@ import { grantTypesT } from "./Tooltips";
 export class GrantType extends React.Component {
 
   sanitizeOptions() {
-    const isOpenId = this.props.moderators.auth_protocol === "OpenID";
     const frontChannelTokenRequest = this.props.moderators.frontChannelTokenRequest;
 
     return this.props.options
       .filter(opt => opt !== "refresh_token")
-      .filter(opt => !isOpenId || opt !== "client_credentials")
+      .filter(opt => opt !== "client_credentials")
       .filter(opt => !frontChannelTokenRequest || opt !== "implicit");
   }
 

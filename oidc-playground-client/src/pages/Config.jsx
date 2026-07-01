@@ -100,12 +100,6 @@ export const Config = observer(
                         store.activeTab = "Request";
                     }
 
-                    if (json.request_body && json.request_body.grant_type === "client_credentials"
-                        && json.result && json.result.access_token) {
-                        store.clientCredentialsAccessToken = json.result.access_token;
-                        store.activeTab = "JWT";
-                    }
-
                     if (json.result && json.result.device_code) {
                         store.deviceAuthentication = json.result;
                         store.activeTab = "Request";
@@ -161,17 +155,6 @@ export const Config = observer(
                                 pkce: false,
                                 omitAuthentication: false,
                                 response_mode: "fragment"
-                            }
-                        });
-                    } else if (grant_type === "client_credentials") {
-                        this.setState({
-                            form: {
-                                ...this.state.form,
-                                pkce: false,
-                                omitAuthentication: false,
-                                forceAuthentication: false,
-                                forceConsent: false,
-                                frontChannelTokenRequest: false
                             }
                         });
                     } else if (grant_type === "authorization_code") {
