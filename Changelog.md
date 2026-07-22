@@ -1,5 +1,8 @@
 # Changelog
 
+## next
+* Added healthcheck to Dockerfiles
+
 ## 4.2.2.
 * Removed the `client_credentials` grant_type option when the OAuth2 protocol is selected. Both in the GUI as on the Server.
 
