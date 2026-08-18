@@ -1,4 +1,3 @@
-import React from "react";
 import {CheckBox} from "components";
 import {frontChannelTokenRequestT} from "components/settings/Tooltips";
 

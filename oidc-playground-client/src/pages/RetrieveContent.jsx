@@ -1,9 +1,8 @@
-import React from "react";
 import {observer} from "mobx-react";
 import store from "store";
 import {discovery, postIntrospect, postPollDeviceAuthorization, postRefreshToken, postUserinfo} from "../api";
 
-export const RetrieveContent = observer(props => {
+export const RetrieveContent = observer(() => {
     const accessToken = store.normalFlowAccessToken || store.hybridFlowAccessToken || store.clientCredentialsAccessToken ||
         ((store.request || {}).result || {}).access_token;
     const refreshToken = store.refreshToken || ((store.request || {}).result || {}).refresh_token;

@@ -1,4 +1,3 @@
-import React from "react";
 import {ReactSelect} from "components";
 import {scopesT} from "./Tooltips";
 import {InfoLabel} from "../InfoLabel";

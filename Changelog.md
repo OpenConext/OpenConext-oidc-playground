@@ -3,6 +3,11 @@
 ## next
 * Added healthcheck to Dockerfiles
 
+# 5.0.0
+* Migrated to Spring Boot 4.1.0
+* Migrated from react-scripts to vite
+* Added linter to client module
+
 ## 4.2.2.
 * Removed the `client_credentials` grant_type option when the OAuth2 protocol is selected. Both in the GUI as on the Server.
 

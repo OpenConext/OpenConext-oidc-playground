@@ -1,7 +1,5 @@
 package playground.api;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -24,9 +22,9 @@ import lombok.SneakyThrows;
 import net.minidev.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.NoConnectionReuseStrategy;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.impl.NoConnectionReuseStrategy;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,8 +41,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -140,8 +140,8 @@ public class Oidc implements URLSupport {
         this.apiEndpointEnabled = apiEndpointEnabled;
         this.restTemplate = new RestTemplate();
         HttpClient httpClient = HttpClientBuilder.create()
-                .setRetryHandler((exception, executionCount, context) -> false)
-                .setConnectionReuseStrategy(new NoConnectionReuseStrategy())
+                .disableAutomaticRetries()
+                .setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
                 .build();
         this.restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
     }

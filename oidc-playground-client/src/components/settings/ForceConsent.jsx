@@ -1,4 +1,3 @@
-import React from "react";
 import { CheckBox } from "components";
 import { forceConsentT } from "components/settings/Tooltips";
 

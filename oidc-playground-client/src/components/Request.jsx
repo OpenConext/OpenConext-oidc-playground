@@ -1,4 +1,3 @@
-import React from "react";
 import JSONPretty from "react-json-pretty";
 import {observer} from "mobx-react";
 import store from "store";

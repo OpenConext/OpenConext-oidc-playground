@@ -1,4 +1,3 @@
-import React from "react";
 import Select from "react-select";
 import Creatable from "react-select/creatable";
 import form from "../stylesheets/formVars.js";

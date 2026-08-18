@@ -1,4 +1,3 @@
-import React from "react";
 import { InfoLabel, ReactSelect } from "components";
 import { requestedClaimsT } from "components/settings/Tooltips";
 

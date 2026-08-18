@@ -1,4 +1,3 @@
-import React from "react";
 import { CheckBox } from "components";
 import { signedJWTT } from "components/settings/Tooltips";
 

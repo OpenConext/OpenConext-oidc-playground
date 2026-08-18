@@ -1,4 +1,3 @@
-import React from "react";
 
 export const authorizationProtocolT = () => (
   <span>
@@ -187,7 +186,7 @@ export const loginHintT = () => (
       <br/>
       OIDC OpenConext passes the <code>login_hint</code> authorization parameter to the<br/>
       SAML Proxy to scope the WAYF. <br/>
-      <br/>The <code>login_hint</code> is a comma-separated string of entity ID's<br/>
+      <br/>The <code>login_hint</code> is a comma-separated string of entity ID&apos;s<br/>
       which will be added to the IDPList element in the SAML authn request.
         <br/>
 
@@ -254,7 +253,7 @@ export const codeChallengeT = () => (
     <br/>
     The Code Challenge is the base64 URL-encoded SHA-256 hash of the Code Verifier.
     <br/>
-    <br/> It is intended for public / native clients, but can also be used by regular RP's.
+    <br/> It is intended for public / native clients, but can also be used by regular RP&apos;s.
   </span>
 );
 
@@ -275,8 +274,8 @@ export const codeChallengeMethodT = () => (
 
 export const forceAuthenticationT = () => (
   <span>
-    The 'Force authentication' option adds the <code>prompt</code> parameter with the value <code>login</code> to the<br/>
-    authorization request. This will be 'translated' to <code>ForceAuthn="true"</code> as an attribute for the SAML <code>AuthnRequest</code>.
+    The &apos;Force authentication&apos; option adds the <code>prompt</code> parameter with the value <code>login</code> to the<br/>
+    authorization request. This will be &apos;translated&apos; to <code>ForceAuthn=&quot;true&quot;</code> as an attribute for the SAML <code>AuthnRequest</code>.
     <br/><br/>
     The Identity Provider must support this option in order to force the user to re-authenticate.
   </span>
@@ -284,7 +283,7 @@ export const forceAuthenticationT = () => (
 
 export const forceConsentT = () => (
   <span>
-    The 'Force consent' option adds the <code>prompt</code> parameter with the value <code>consent</code> to the<br/>
+    The &apos;Force consent&apos; option adds the <code>prompt</code> parameter with the value <code>consent</code> to the<br/>
     authorization request. The authorization server prompts the user for consent before returning<br/>information to the client.
     <br/><br/>
     Do note that only consent is is prompted when there are scopes requested that belong to a Resource Server<br/>
@@ -339,7 +338,7 @@ export const clientJWTSecretT = () => (
 
 export const authorizationRequestT = () => (
   <span>The request for Authorization Endpoint is a redirect requesting Authentication of the End-User.<br/>
-  The browser sends the user to the OIDC Server's Authorization Endpoint for Authentication and Authorization,<br/>
+  The browser sends the user to the OIDC Server&apos;s Authorization Endpoint for Authentication and Authorization,<br/>
   using request parameters defined by OAuth 2.0 and additional parameters and parameter values<br/>defined by OpenID Connect.</span>
 );
 
@@ -362,7 +361,7 @@ export const userInfoT = () => (
 
 export const discoveryT = () => (
   <span>The discovery endpoint defines a mechanism for an OpenID Connect Relying Party to discover the<br/>
-    End-User's OpenID Provider and obtain information needed to interact with it, including its<br/>
+    End-User&apos;s OpenID Provider and obtain information needed to interact with it, including its<br/>
     OAuth 2.0 endpoint locations.</span>
 );
 
@@ -380,7 +379,7 @@ export const accessTokenT = () => (
 export const idTokenT = () => (
   <span>The ID Token, usually referred to as <code>id_token</code> in code samples, is a JSON Web Token (JWT)<br/>
     that contains the user profile attributes represented in the form of claims. The ID Token is<br/>
-    consumed and validated by the Relying Party. Additional user information like the user's name<br/>
+    consumed and validated by the Relying Party. Additional user information like the user&apos;s name<br/>
     and / or emailcan be requested by the <code>claims</code> request parameter.</span>
 );
 
@@ -393,7 +392,7 @@ export const refreshTokenT = () => (
 export const deviceAuthorizationT = () => (
     <span>The Device Authorization Request endpoint defines a mechanism for an OAuth device client to request <br/>
     authorization by requesting a set of verification codes from the authorization server by making an HTTP <br/>
-   "POST" request to the device authorization endpoint</span>
+   &quot;POST&quot; request to the device authorization endpoint</span>
 );
 
 export const apiT = () => (

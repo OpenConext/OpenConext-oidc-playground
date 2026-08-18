@@ -1,4 +1,3 @@
-import React from "react";
 import { InfoLabel, ReactSelect } from "components";
 import { tokenEndpointAuthenticationT } from "components/settings/Tooltips";
 

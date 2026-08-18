@@ -1,4 +1,3 @@
-import React from "react";
 import { CheckBox } from "components";
 import { forceAuthenticationT } from "components/settings/Tooltips";
 

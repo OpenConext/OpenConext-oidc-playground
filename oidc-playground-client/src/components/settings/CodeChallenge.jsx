@@ -1,4 +1,3 @@
-import React from "react";
 import {CheckBox, InfoLabel, ReactSelect} from "components";
 import {codeChallengeMethodT, codeChallengeT, codeVerifierT, omitAuthenticationT, pkceT} from "./Tooltips";
 import "./CodeChallenge.scss";

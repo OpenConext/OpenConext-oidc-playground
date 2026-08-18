@@ -142,11 +142,12 @@ export const Config = observer(
                 case "code_challenge_method":
                     this.refreshCodeChallenge();
                     break;
-                case "pkce":
+                case "pkce": {
                     const {pkce} = this.state.form;
                     this.setState({form: {...this.state.form, omitAuthentication: pkce}});
                     break;
-                case "grant_type":
+                }
+                case "grant_type": {
                     const {grant_type} = this.state.form;
                     if (grant_type === "implicit") {
                         this.setState({
@@ -163,7 +164,8 @@ export const Config = observer(
                         });
                     }
                     break;
-                case "auth_protocol":
+                }
+                case "auth_protocol": {
                     const {auth_protocol, scope} = this.state.form;
                     const authIsOpenId = auth_protocol === "OpenID";
                     const hasOpenIdScope = scope.includes("openid");
@@ -185,7 +187,8 @@ export const Config = observer(
                         }
                     });
                     break;
-                case "frontChannelTokenRequest":
+                }
+                case "frontChannelTokenRequest": {
                     const {frontChannelTokenRequest} = this.state.form;
                     if (frontChannelTokenRequest) {
                         this.setState({
@@ -200,6 +203,7 @@ export const Config = observer(
                         });
                     }
                     break;
+                }
                 default:
                     break;
             }

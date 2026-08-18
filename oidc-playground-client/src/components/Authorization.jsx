@@ -1,4 +1,3 @@
-import React from "react";
 import {InfoLabel} from "./InfoLabel";
 import {clientIdT, clientJWTSecretT, clientSecretT} from "./settings/Tooltips";
 

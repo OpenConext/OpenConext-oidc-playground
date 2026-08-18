@@ -1,4 +1,3 @@
-import React from "react";
 import {InfoLabel} from "./InfoLabel";
 import {observer} from "mobx-react";
 import {apiT} from "./settings/Tooltips";

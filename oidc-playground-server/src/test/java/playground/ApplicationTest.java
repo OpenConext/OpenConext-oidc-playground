@@ -1,10 +1,9 @@
 package playground;
 
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 
 import static io.restassured.RestAssured.given;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.equalTo;
 
 public class ApplicationTest extends AbstractIntegrationTest {
@@ -15,7 +14,7 @@ public class ApplicationTest extends AbstractIntegrationTest {
                 .when()
                 .get("/oidc/api/actuator/health")
                 .then()
-                .statusCode(SC_OK)
+                .statusCode(HttpStatus.OK.value())
                 .body("status", equalTo("UP"));
     }
 
@@ -25,7 +24,7 @@ public class ApplicationTest extends AbstractIntegrationTest {
                 .when()
                 .get("/oidc/api/nope")
                 .then()
-                .statusCode(SC_NOT_FOUND)
+                .statusCode(HttpStatus.NOT_FOUND.value())
                 .body("error", equalTo("Not Found"));
     }
 

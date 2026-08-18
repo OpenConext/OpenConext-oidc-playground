@@ -1,12 +1,13 @@
 package playground.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
+import org.springframework.boot.webmvc.error.DefaultErrorAttributes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.client.HttpServerErrorException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -16,21 +17,21 @@ import static org.junit.Assert.assertEquals;
 
 public class ErrorControllerTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = JsonMapper.builder().build();
     private final ErrorController errorController = new ErrorController(new DefaultErrorAttributes(), objectMapper);
 
 
     @Test
     public void error() throws IOException {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setAttribute("javax.servlet.error.exception", new IllegalArgumentException());
-        assertEquals(400, errorController.error(request).getStatusCodeValue());
+        request.setAttribute("jakarta.servlet.error.exception", new IllegalArgumentException());
+        assertEquals(400, errorController.error(request).getStatusCode().value());
     }
 
     @Test
     public void errorInternalServerError() throws IOException {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setAttribute("javax.servlet.error.exception",
+        request.setAttribute("jakarta.servlet.error.exception",
                 HttpServerErrorException.create(HttpStatus.INTERNAL_SERVER_ERROR, "Error", new HttpHeaders(),
                         objectMapper.writeValueAsBytes(Collections.singletonMap("key", "value")), Charset.defaultCharset()));
         assertEquals("value", errorController.error(request).getBody().get("key"));
