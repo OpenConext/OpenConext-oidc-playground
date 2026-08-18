@@ -2,15 +2,19 @@ import React from "react";
 import { InfoLabel, ReactSelect } from "components";
 import { grantTypesT } from "./Tooltips";
 
+export function sanitizeGrantTypeOptions(options, moderators) {
+  const frontChannelTokenRequest = moderators.frontChannelTokenRequest;
+
+  return options
+    .filter(opt => opt !== "refresh_token")
+    .filter(opt => opt !== "client_credentials")
+    .filter(opt => !frontChannelTokenRequest || opt !== "implicit");
+}
+
 export class GrantType extends React.Component {
 
   sanitizeOptions() {
-    const frontChannelTokenRequest = this.props.moderators.frontChannelTokenRequest;
-
-    return this.props.options
-      .filter(opt => opt !== "refresh_token")
-      .filter(opt => opt !== "client_credentials")
-      .filter(opt => !frontChannelTokenRequest || opt !== "implicit");
+    return sanitizeGrantTypeOptions(this.props.options, this.props.moderators);
   }
 
   sanitizeValue() {

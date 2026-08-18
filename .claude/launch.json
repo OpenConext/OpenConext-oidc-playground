@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "oidc-client-vite",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["--cwd", "oidc-playground-client", "dev"],
+      "port": 3006
+    }
+  ]
+}

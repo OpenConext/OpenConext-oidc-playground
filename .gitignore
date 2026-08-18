@@ -11,4 +11,5 @@ client/coverage
 *.css
 seeds
 demo.txt
+SPRING_MIGRATION.md
 

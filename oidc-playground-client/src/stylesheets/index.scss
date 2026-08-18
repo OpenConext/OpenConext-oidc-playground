@@ -1,9 +1,9 @@
-@import "reset";
-@import "base";
-@import "loader";
-@import "roboto";
+@use "reset";
+@use "base";
+@use "loader";
+@use "roboto";
 
-@import "app";
-@import "form";
-@import "format_json";
-@import "buttons";
+@use "app";
+@use "form";
+@use "format_json";
+@use "buttons";

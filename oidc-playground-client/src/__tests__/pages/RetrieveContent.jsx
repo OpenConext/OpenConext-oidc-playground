@@ -1,7 +1,7 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import { RetrieveContent } from "pages";
 
 it("renders without crashing", () => {
-  shallow(<RetrieveContent />);
+  render(<RetrieveContent />);
 });

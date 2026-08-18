@@ -1,7 +1,7 @@
 import React from "react";
 import Select from "react-select";
-import Creatable from "react-select/lib/Creatable";
-import form from "../stylesheets/form.scss";
+import Creatable from "react-select/creatable";
+import form from "../stylesheets/formVars.js";
 
 const styles = {
   input: (base, _) => {

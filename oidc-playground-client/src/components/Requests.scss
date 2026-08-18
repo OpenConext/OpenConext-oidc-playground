@@ -1,4 +1,4 @@
-@import "../stylesheets/vars.scss";
+@use "../stylesheets/vars" as *;
 
 .device_authorization {
     display: flex;

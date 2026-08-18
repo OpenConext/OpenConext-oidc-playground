@@ -2,37 +2,32 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.18",
-    "@fortawesome/free-brands-svg-icons": "^5.8.2",
-    "@fortawesome/free-regular-svg-icons": "^5.8.2",
-    "@fortawesome/free-solid-svg-icons": "^7.0.1",
-    "@fortawesome/react-fontawesome": "^0.2.6",
-    "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.13.1",
-    "isomorphic-fetch": "^3.0.0",
-    "mobx": "^5.15.7",
-    "mobx-react": "^6.3.1",
-    "react": "^16.8.6",
-    "react-copy-to-clipboard": "^5.1.0",
-    "react-dom": "^16.8.6",
-    "react-json-pretty": "^2.1.0",
-    "react-modal": "^3.8.1",
-    "react-scripts": "^5.0.1",
-    "react-select": "^2.4.3",
-    "react-test-renderer": "^16.8.6",
-    "react-tooltip": "^3.10.0"
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/free-brands-svg-icons": "^7.3.1",
+    "@fortawesome/free-regular-svg-icons": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@fortawesome/react-fontawesome": "^3.5.0",
+    "mobx": "^7.0.0",
+    "mobx-react": "^10.0.0",
+    "react": "^19.2.8",
+    "react-copy-to-clipboard": "^5.1.1",
+    "react-dom": "^19.2.8",
+    "react-json-pretty": "^2.2.0",
+    "react-modal": "^3.16.3",
+    "react-select": "^5.10.2",
+    "react-tooltip": "^6.0.8"
   },
   "scripts": {
-    "why DANGEROUSLY_DISABLE_HOST_CHECK": "https://stackoverflow.com/questions/70374005/invalid-options-object-dev-server-has-been-initialized-using-an-options-object",
-    "start": "DANGEROUSLY_DISABLE_HOST_CHECK=true PORT=3006 react-scripts start",
-    "build": "DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts build",
-    "test": "DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts test"
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "test": "vitest run"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "proxy": "http://localhost:8079",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -48,6 +43,14 @@
     "printWidth": 120
   },
   "devDependencies": {
-    "sass": "^1.49.7"
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@vitejs/plugin-react": "^6.0.5",
+    "jsdom": "^30.0.1",
+    "sass": "^1.102.0",
+    "vite": "^8.2.1",
+    "vite-plugin-svgr": "^5.2.0",
+    "vitest": "^4.1.10"
   }
 }

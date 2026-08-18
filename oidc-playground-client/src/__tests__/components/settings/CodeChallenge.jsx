@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import { CodeChallenge } from "components/settings";
 
 const props = {
@@ -9,20 +9,20 @@ const props = {
 };
 
 it("renders without crashing", () => {
-  shallow(<CodeChallenge {...props} />);
+  render(<CodeChallenge {...props} />);
 });
 
 it("renders null when grant_type is not authorization_code", () => {
-  const comp = shallow(<CodeChallenge {...props} />);
-  expect(comp.isEmptyRender()).toEqual(true);
+  const { container } = render(<CodeChallenge {...props} />);
+  expect(container).toBeEmptyDOMElement();
 });
 
 it("renders when grant_type is authorization_code", () => {
-  const comp = shallow(
+  const { container } = render(
     <CodeChallenge
       {...props}
       moderators={{ grant_type: "authorization_code" }}
     />
   );
-  expect(comp.isEmptyRender()).toEqual(false);
+  expect(container).not.toBeEmptyDOMElement();
 });

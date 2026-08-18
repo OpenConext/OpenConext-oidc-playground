@@ -1,6 +1,10 @@
 // Store.js
 
-import {decorate, observable} from "mobx";
+import {configure, makeAutoObservable} from "mobx";
+
+// This app mutates observables directly from event/promise handlers rather than
+// wrapping them in mobx actions (a pattern that was allowed by default in mobx 5).
+configure({enforceActions: "never"});
 
 class Store {
   message = undefined;
@@ -32,25 +36,11 @@ class Store {
     token_endpoint_auth_methods_supported: [],
     token_endpoint_auth_method: "",
   };
-}
 
-decorate(Store, {
-  message: observable,
-  request: observable,
-  processingTime: observable,
-  normalFlowIdToken: observable,
-  normalFlowAccessToken: observable,
-  hybridFlowIdToken: observable,
-  hybridFlowAccessToken: observable,
-  clientCredentialsAccessToken: observable,
-  refreshToken: observable,
-  config: observable,
-  configLoaded: observable,
-  activeTab: observable,
-  apiCall: observable,
-  deviceAuthentication: observable,
-  apiEndpointEnabled: observable
-});
+  constructor() {
+    makeAutoObservable(this);
+  }
+}
 
 const store = new Store();
 

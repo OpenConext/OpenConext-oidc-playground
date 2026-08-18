@@ -1,4 +1,5 @@
-@import "../stylesheets/vars.scss";
+@use "sass:color";
+@use "../stylesheets/vars" as *;
 
 div.info-label {
   display: flex;
@@ -46,7 +47,7 @@ div.info-label {
     cursor: pointer;
 
     &:hover {
-      color: darken($blue, 10%);
+      color: color.adjust($blue, $lightness: -10%);
     }
 
     svg.copied {
@@ -61,7 +62,7 @@ div.info-label {
         box-shadow: 0 0 0 0 white;
       }
       55% {
-        box-shadow: 0 0 6px 6px lighten($blue, 15%);
+        box-shadow: 0 0 6px 6px color.adjust($blue, $lightness: 15%);
       }
       100% {
         box-shadow: 0 0 0 0 white;
@@ -72,14 +73,14 @@ div.info-label {
 
 }
 
-.__react_component_tooltip {
+.info-tooltip {
   opacity: 1 !important;
   border-radius: $br;
   box-shadow: 1px 2px 4px 1px $hover;
-  background-color: $lightest-grey;
+  background-color: $lightest-grey !important;
   color: $dark-grey;
 }
 
-.__react_component_tooltip.place-top:after {
-  border-top-color: $lighter-grey !important;
+.info-tooltip-arrow {
+  background-color: $lightest-grey !important;
 }

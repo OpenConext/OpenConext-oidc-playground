@@ -1,4 +1,4 @@
-@import "./vars.scss";
+@use "./vars" as *;
 
 body {
   font-family: "Roboto", Sans-serif;

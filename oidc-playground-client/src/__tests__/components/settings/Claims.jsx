@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { AcrValues } from "components/settings";
+import { Claims } from "components/settings";
 
 const props = {
   moderators: {},
@@ -9,15 +9,15 @@ const props = {
 };
 
 it("renders without crashing", () => {
-  render(<AcrValues {...props} />);
+  render(<Claims {...props} />);
 });
 
 it("renders null if auth_protocol is Oauth2", () => {
-  const { container } = render(<AcrValues {...props} moderators={{ auth_protocol: "Oauth2" }} />);
+  const { container } = render(<Claims {...props} moderators={{ auth_protocol: "Oauth2" }} />);
   expect(container).toBeEmptyDOMElement();
 });
 
 it("renders if auth_protocol is not Oauth2", () => {
-  const { container } = render(<AcrValues {...props} moderators={{ auth_protocol: "OpenID" }} />);
+  const { container } = render(<Claims {...props} moderators={{ auth_protocol: "OpenID" }} />);
   expect(container).not.toBeEmptyDOMElement();
 });

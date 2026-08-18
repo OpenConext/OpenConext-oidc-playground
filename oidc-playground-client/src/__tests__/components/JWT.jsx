@@ -1,7 +1,7 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import { JWT } from "components";
 
 it("renders without crashing", () => {
-  shallow(<JWT />);
+  render(<JWT />);
 });

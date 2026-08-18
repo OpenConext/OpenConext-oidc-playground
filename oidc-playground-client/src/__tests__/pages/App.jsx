@@ -1,7 +1,7 @@
 import React from "react";
-import { mount } from "enzyme";
+import { render } from "@testing-library/react";
 import App from "pages/App";
 
 it("renders without crashing", () => {
-  mount(<App />);
+  render(<App />);
 });

@@ -3,31 +3,30 @@ import { ReactSelect } from "components";
 import { responseTypesT } from "./Tooltips";
 import { InfoLabel } from "../InfoLabel";
 
-export class ResponseType extends React.Component {
-  sanitizeOptions() {
-    const {
-      options,
-      moderators: { auth_protocol, grant_type }
-    } = this.props;
-
-    if (auth_protocol === "OpenID") {
-      switch (grant_type) {
-        case "authorization_code":
-          return ["code"];
-        case "implicit":
-          return options.filter(opt => !["code", "token"].includes(opt));
-        default:
-          return options;
-      }
-    }
-
+export function sanitizeResponseTypeOptions(options, { auth_protocol, grant_type }) {
+  if (auth_protocol === "OpenID") {
     switch (grant_type) {
       case "authorization_code":
         return ["code"];
       case "implicit":
+        return options.filter(opt => !["code", "token"].includes(opt));
       default:
         return options;
     }
+  }
+
+  switch (grant_type) {
+    case "authorization_code":
+      return ["code"];
+    case "implicit":
+    default:
+      return options;
+  }
+}
+
+export class ResponseType extends React.Component {
+  sanitizeOptions() {
+    return sanitizeResponseTypeOptions(this.props.options, this.props.moderators);
   }
 
   sanitizeValue() {

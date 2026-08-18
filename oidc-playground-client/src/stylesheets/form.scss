@@ -1,4 +1,4 @@
-@import "./vars.scss";
+@use "./vars" as *;
 
 $inputPadding: 0 10px;
 
@@ -14,24 +14,6 @@ $fontWeight: 400;
 $color: $dark-grey;
 
 $transition: all 100ms;
-
-// attrs for the ReactSelect component
-:export {
-  inputPadding: $inputPadding;
-  borderColor: $borderColor;
-  borderRadius: $borderRadius;
-  borderWidth: $borderWidth;
-  hoverBorderColor: $hoverBorderColor;
-  fontFamily: $fontFamily;
-  fontSize: $fontSize;
-  fontStyle: $fontStyle;
-  fontWeight: $fontWeight;
-  color: $color;
-  transition: $transition;
-  blue: $blue;
-  red: $red;
-  grey: $medium-grey;
-}
 
 fieldset,
 .fieldset {

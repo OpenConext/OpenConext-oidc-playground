@@ -1,5 +1,6 @@
 import React from "react";
-import ReactTooltip from "react-tooltip";
+import {Tooltip} from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import "./InfoLabel.scss";
@@ -18,12 +19,12 @@ export function InfoLabel({label, toolTip, htmlFor, className = "", onClick = ()
         {label}
       </label>
       <span className="tool-tip-section">
-        <span className="tool-tip-data-container" data-tip data-for={label}>
+        <span className="tool-tip-data-container" data-tooltip-id={label}>
           <FontAwesomeIcon icon="question"/>
         </span>
-        <ReactTooltip id={label} type="light" effect="solid" data-html={true} place="right">
+        <Tooltip id={label} variant="light" place="right" className="info-tooltip" classNameArrow="info-tooltip-arrow">
           {toolTipHtml}
-        </ReactTooltip>
+        </Tooltip>
       </span>
       {copyToClipBoardText && <CopyToClipboard text={copyToClipBoardText}>
         <section className="copy-to-clipboard">

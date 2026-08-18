@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import { ResponseMode } from "components/settings";
 
 const props = {
@@ -9,5 +9,5 @@ const props = {
 };
 
 it("renders without crashing", () => {
-  shallow(<ResponseMode {...props} />);
+  render(<ResponseMode {...props} />);
 });
