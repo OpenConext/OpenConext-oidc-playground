@@ -79,6 +79,8 @@ div.info-label {
   box-shadow: 1px 2px 4px 1px $hover;
   background-color: $lightest-grey !important;
   color: $dark-grey;
+  font-size: 12px!important;
+  z-index: 99;
 }
 
 .info-tooltip-arrow {

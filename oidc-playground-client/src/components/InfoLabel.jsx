@@ -21,7 +21,11 @@ export function InfoLabel({label, toolTip, htmlFor, className = "", onClick = ()
         <span className="tool-tip-data-container" data-tooltip-id={label}>
           <FontAwesomeIcon icon="question"/>
         </span>
-        <Tooltip id={label} variant="light" place="right" className="info-tooltip" classNameArrow="info-tooltip-arrow">
+        <Tooltip id={label}
+                 variant="light"
+                 place="right"
+                 className="info-tooltip"
+                 classNameArrow="info-tooltip-arrow">
           {toolTipHtml}
         </Tooltip>
       </span>
