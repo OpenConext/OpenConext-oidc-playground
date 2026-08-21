@@ -2,6 +2,7 @@
 
 ## next
 * Added healthcheck to Dockerfiles
+* Moved the API call (Config > API tab) from a server-side proxy endpoint to a direct client-side call, removing the `features.api_endpoint_enabled` toggle since the "open proxy" concern it guarded against no longer applies
 
 # 5.0.0
 * Migrated to Spring Boot 4.1.0

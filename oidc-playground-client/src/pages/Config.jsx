@@ -6,7 +6,7 @@ import {getRedirectParams} from "utils/Url";
 import {formPost, generateCodeChallenge} from "api";
 import {isEmpty} from "utils/Utils";
 import {API} from "../components/API";
-import {apiCall} from "../api";
+import {apiCall} from "../api/apiCall";
 
 const initialForm = {
     acr_values: [],
@@ -36,7 +36,7 @@ const initialForm = {
 export const Config = observer(
     class Config extends React.Component {
         state = {
-            tabs: ["Settings", "Authorization", "API"].filter(tab => tab !== "API" || store.apiEndpointEnabled),
+            tabs: ["Settings", "Authorization", "API"],
             activeTab: "Settings",
             form: initialForm
         };
@@ -109,7 +109,7 @@ export const Config = observer(
                     err.json().then(
                         res =>
                             (store.message = `Exception returned from endpoint ${this.state.form.grant_type}.
-                              Error: ${res.error} (${res.status}). Cause ${res.message}`)
+                              Error: ${res.error} (${res.status}). Cause ${JSON.stringify(res.message)}`)
                     ));
         };
 
@@ -131,10 +131,10 @@ export const Config = observer(
                     store.activeTab = "Request";
                     store.apiCall = true;
                     window.scrollTo(0, 0);
-                }).catch(err => err.json().then(
-                res => (store.message = `Exception returned from endpoint ${this.state.form.apiUrl}.
-                              Error: ${res.error} (${res.status}). Cause ${res.message}`)
-            ));
+                }).catch(res =>
+                    (store.message = `Exception returned from endpoint ${this.state.form.apiUrl}.
+                              Error: ${res.error} (${res.status}). Cause ${JSON.stringify(res.message)}`)
+                );
         };
 
         stateInvariant = attr => () => {

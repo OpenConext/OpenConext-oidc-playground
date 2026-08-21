@@ -25,8 +25,6 @@ const App = observer(
 
         componentDidMount() {
             discovery().then(config => {
-                store.apiEndpointEnabled = config.apiEndpointEnabled;
-                delete config.apiEndpointEnabled;
                 store.config = config;
                 store.configLoaded = true;
             });

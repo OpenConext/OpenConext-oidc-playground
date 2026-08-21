@@ -48,10 +48,6 @@ export function formPost(body) {
   return postPutJson(`/oidc/api/${body.grant_type}`, body, "POST");
 }
 
-export function apiCall(body) {
-  return postPutJson(`/oidc/api/apicall`, body, "POST");
-}
-
 export function postIntrospect(body) {
   return postPutJson(`/oidc/api/introspect`, body, "POST");
 }

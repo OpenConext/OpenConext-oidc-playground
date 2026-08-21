@@ -20,7 +20,6 @@ class Store {
   activeTab = "JWT";
   apiCall = false;
   deviceAuthentication = undefined;
-  apiEndpointEnabled = false;
   config = {
     acr_values_supported: [],
     claims_parameter_supported: false,

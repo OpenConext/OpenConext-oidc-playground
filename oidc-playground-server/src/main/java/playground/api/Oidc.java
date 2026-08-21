@@ -104,8 +104,6 @@ public class Oidc implements URLSupport {
 
     private final RSAKey rsaKey;
 
-    private final boolean apiEndpointEnabled;
-
     private Map<String, Object> wellKnownConfiguration;
 
     private final ACR acr;
@@ -120,7 +118,6 @@ public class Oidc implements URLSupport {
                 @Value("${oidc.redirect_uri}") String redirectUri,
                 @Value("${oidc.redirect_uri_form_post}") String redirectUriFormPost,
                 @Value("${oidc.client_redirect_uri}") String clientRedirectUri,
-                @Value("${features.api_endpoint_enabled}") boolean apiEndpointEnabled,
                 ObjectMapper objectMapper,
                 ACR acr
     ) throws NoSuchProviderException, NoSuchAlgorithmException {
@@ -137,7 +134,6 @@ public class Oidc implements URLSupport {
         this.discoveryEndpoint = discoveryEndpoint;
         this.rsaKey = generateRsaKey();
         this.acr = acr;
-        this.apiEndpointEnabled = apiEndpointEnabled;
         this.restTemplate = new RestTemplate();
         HttpClient httpClient = HttpClientBuilder.create()
                 .disableAutomaticRetries()
@@ -157,7 +153,6 @@ public class Oidc implements URLSupport {
             this.wellKnownConfiguration.put("remote_client_id", clientId);
             this.wellKnownConfiguration.put("redirect_uri", redirectUri);
             this.wellKnownConfiguration.put("acr_values_supported", this.acr.getValues());
-            this.wellKnownConfiguration.put("apiEndpointEnabled", apiEndpointEnabled);
         }
         return this.wellKnownConfiguration;
     }
@@ -347,25 +342,6 @@ public class Oidc implements URLSupport {
         result.put("payload", sortMap(signedJWT.getJWTClaimsSet().toJSONObject().entrySet()));
 
         return result.toJSONString();
-    }
-
-    @PostMapping("/apicall")
-    public Object apiCall(@RequestBody Map<String, String> body) throws URISyntaxException {
-        if (!apiEndpointEnabled) {
-            throw new IllegalArgumentException("apicall endpoint is not enabled");
-        }
-        String apiUrl = body.get("apiUrl");
-        String accessToken = body.get("accessToken");
-        RequestEntity<Void> requestEntity = RequestEntity
-                .get(new URI(apiUrl))
-                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + accessToken).build();
-
-        Map<String, Object> result = new HashMap();
-        result.put("result", restTemplate.exchange(requestEntity, Object.class).getBody());
-        result.put("request_url", apiUrl);
-        result.put("request_headers", requestEntity.getHeaders().toSingleValueMap());
-        return result;
     }
 
     private <K, V> Map<K, V> sortMap(Set<Map.Entry<K, V>> entrySet) {

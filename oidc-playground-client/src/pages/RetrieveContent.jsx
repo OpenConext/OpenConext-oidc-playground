@@ -29,7 +29,7 @@ export const RetrieveContent = observer(() => {
     const handleError = (err, endpoint) => err.json && err.json().then(
         res =>
             (store.message = `Exception returned from endpoint ${endpoint}.
-                              Error: ${res.error} (${res.status}). Cause ${res.message}`)
+                              Error: ${res.error} (${res.status}). Cause ${JSON.stringify(res.message)}`)
     );
 
     const handleIntrospect = () => postIntrospect({...state.form, ...body})
