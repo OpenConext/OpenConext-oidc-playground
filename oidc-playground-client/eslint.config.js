@@ -20,7 +20,7 @@ export default [
       }
     },
     settings: {
-      react: { version: "detect" }
+      react: { version: "19.2.8" }
     },
     plugins: {
       react,

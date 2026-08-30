@@ -44,7 +44,9 @@
                 </executions>
                 <configuration>
                     <appendAssemblyId>false</appendAssemblyId>
-                    <descriptor>assembly.xml</descriptor>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
                 </configuration>
             </plugin>
         </plugins>
